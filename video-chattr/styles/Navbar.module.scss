@@ -1,0 +1,38 @@
+$background: rgb(255, 255, 255);
+
+#nav {
+  position: sticky;
+  top: 0;
+  border-bottom: solid 1px rgba(33, 33, 33, 0.237);
+  z-index: 999;
+  background-color: white;
+
+  #inner__nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 30px;
+    align-items: center;
+    min-height: 65px;
+    width: 100%;
+
+    .logo {
+      span:nth-child(1) {
+        font-weight: 600;
+      }
+
+      span:nth-child(2) {
+        color: var(--azure);
+        font-weight: 800;
+      }
+    }
+
+    ul {
+      display: flex;
+      list-style: none;
+
+      li {
+        margin: 0 10px;
+      }
+    }
+  }
+}

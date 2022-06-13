@@ -1,0 +1,187 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&family=Merriweather:wght@300;400&display=swap");
+:root {
+  --azure: rgba(0, 122, 235, 1);
+  --eerie-black: rgba(33, 33, 33, 1);
+  --white: rgb(247, 247, 247);
+}
+
+body {
+  background-color: var(--white);
+}
+
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: "Lato", sans-serif, helvetica, arial;
+}
+
+p,
+span,
+h1,
+h2,
+h3,
+h4,
+h5 {
+  color: var(--eerie-black);
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5 {
+  letter-spacing: 0.8px;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  position: relative;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+#__next {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  position: relative;
+  min-height: 100vh;
+}
+
+.form-control {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.form-control .form-input {
+  margin: 0;
+  font-size: 15px;
+  min-height: 35px;
+  border: 0;
+}
+
+.form-control .form-input::-webkit-input-placeholder {
+  color: rgba(0, 0, 0, 0.519);
+}
+
+.form-control .form-input:-ms-input-placeholder {
+  color: rgba(0, 0, 0, 0.519);
+}
+
+.form-control .form-input::-ms-input-placeholder {
+  color: rgba(0, 0, 0, 0.519);
+}
+
+.form-control .form-input::placeholder {
+  color: rgba(0, 0, 0, 0.519);
+}
+
+.form-control .form-input:focus {
+  outline: #ff5454;
+}
+
+.input__wrapper {
+  border: 2px solid rgba(0, 0, 0, 0.136);
+  border-radius: 5px;
+  margin: 5px 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 2px 5px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 10px;
+}
+
+.input__wrapper svg {
+  cursor: pointer;
+}
+
+.input__wrapper input {
+  -ms-flex-preferred-size: 100%;
+      flex-basis: 100%;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  height: 45px;
+  padding: 2px;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.btn_blue {
+  color: white;
+  background-color: var(--azure);
+}
+
+.container {
+  max-width: 600px;
+}
+
+.card {
+  padding: 30px;
+  background-color: white;
+  -webkit-box-shadow: rgba(100, 100, 111, 0.192) 0px 7px 29px 0px;
+          box-shadow: rgba(100, 100, 111, 0.192) 0px 7px 29px 0px;
+  border-radius: 10px;
+}
+
+.main {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 0 auto;
+          flex: 1 0 auto;
+}
+
+.center {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#toast-container {
+  z-index: 999;
+  background-color: var(--azure);
+}
+
+.toaster {
+  color: red;
+}
+/*# sourceMappingURL=globals.css.map */

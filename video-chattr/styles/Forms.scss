@@ -1,0 +1,47 @@
+.form__wrapper {
+  padding: 5px;
+  background: none;
+  text-align: center;
+  // margin: 0 auto;
+  margin-bottom: 40px;
+  border-radius: 5px;
+  // padding: 10px 5px;
+  // padding-bottom: 5px;
+  min-width: 300px;
+  // min-height: 300px;
+  // margin: 0 auto;
+  box-shadow: none;
+  svg {
+    color: var(--azure);
+  }
+
+  h2 {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 30px;
+  }
+}
+
+.card {
+  text-align: center;
+  .heading {
+    svg {
+      path {
+        color: var(--azure)
+      }
+    }
+  }
+}
+
+.form__container {
+  max-width: 600px;
+  form {      
+    button {
+      margin: 5px 0;
+    }
+  }
+}
+
+.signup__form {
+  // background-color: red;
+}

@@ -1,0 +1,164 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&family=Merriweather:wght@300;400&display=swap");
+
+:root {
+  --azure: rgba(0, 122, 235, 1);
+  --eerie-black: rgba(33, 33, 33, 1);
+  --white: rgb(247, 247, 247);
+}
+
+body {
+  background-color: var(--white);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: "Lato", sans-serif, helvetica, arial;
+}
+
+p,
+span,
+h1,
+h2,
+h3,
+h4,
+h5 {
+  color: var(--eerie-black);
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5 {
+  letter-spacing: 0.8px;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  position: relative;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+#__next {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 100vh;
+}
+
+// input,
+// button,
+// a {
+//   &:focus {
+//     outline: none;
+//   }
+// }
+
+
+.form-control {
+  $ph-input-color: rgba(0, 0, 0, 0.519);
+  // $input-color: rgba(0, 0, 0, 0.519);
+  $outline-color: rgb(255, 84, 84);
+  
+  display: flex;
+  flex-direction: column;
+  .form-input {
+    margin: 0;
+    font-size: 15px;
+    min-height: 35px;
+    border: 0;
+    &::placeholder {
+      color: $ph-input-color;
+    }
+    
+    &:focus {
+      outline: $outline-color;
+    }
+  }
+}
+
+.input__wrapper {
+  $border-color: rgba(0, 0, 0, 0.136);
+
+  svg {
+    cursor: pointer
+  }
+
+  border: 2px solid  $border-color;
+  border-radius: 5px; 
+  margin: 5px 0;
+  display: flex;
+  padding: 2px 5px;
+  input {
+    flex-basis: 100%;
+  }
+
+  align-items: center;
+  gap: 10px;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  height: 45px;
+  padding: 2px;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.btn_blue {
+  color: white;
+  background-color: var(--azure);
+}
+
+.container {
+  max-width: 600px;
+}
+
+.card {
+  $card-bg: rgb(255, 255, 255);
+  padding: 30px;
+  background-color: $card-bg;
+  box-shadow: rgba(100, 100, 111, 0.192) 0px 7px 29px 0px;
+  border-radius: 10px;
+}
+
+.main {
+  flex: 1 0 auto;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#toast-container {
+  z-index: 999;
+  background-color: var(--azure);
+}
+
+.toaster {
+  color: red;
+}

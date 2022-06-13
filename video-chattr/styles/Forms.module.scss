@@ -1,0 +1,20 @@
+.form-control {
+  width: 100%;
+}
+
+#signup__form_wrapper {
+  form {
+    input:nth-child(1) {
+      margin-bottom: 20px;
+    }
+    button {  
+      transition: all 100ms ease-in-out;
+      margin-top: 10px;
+      font-weight: 400;
+
+      &:hover {
+        background-color: rgb(17, 107, 191);
+      }
+    }
+  }
+}

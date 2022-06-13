@@ -1,0 +1,19 @@
+.form-control {
+  width: 100%;
+}
+
+#signup__form_wrapper form input:nth-child(1) {
+  margin-bottom: 20px;
+}
+
+#signup__form_wrapper form button {
+  -webkit-transition: all 100ms ease-in-out;
+  transition: all 100ms ease-in-out;
+  margin-top: 10px;
+  font-weight: 400;
+}
+
+#signup__form_wrapper form button:hover {
+  background-color: #116bbf;
+}
+/*# sourceMappingURL=Forms.module.css.map */
