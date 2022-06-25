@@ -1,0 +1,22 @@
+.mainWrapper {
+  color: red;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  min-height: 50vh;
+  flex: 1 0 auto;
+}
+
+#mainContent {
+  padding: 10px 0;
+}
+#mainContent input {
+  background: rgb(233, 233, 233);
+  border-radius: 4px;
+  position: relative;
+  padding: 5px;
+}
+
+#sidebar {
+  background-color: var(--eerie-black);
+  color: white;
+}/*# sourceMappingURL=Dashboard.module.css.map */

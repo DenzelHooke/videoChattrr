@@ -1,31 +1,20 @@
 #footer {
-  border-top: 1px solid black;
+  border-top: 1px solid rgb(0, 0, 0);
   width: 100%;
-  -ms-flex-negative: 0;
-      flex-shrink: 0;
+  flex-shrink: 0;
   background-color: var(--white);
   height: 60px;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  justify-content: center;
+  align-items: center;
 }
-
 #footer p {
   color: var(--eerie-black);
 }
-
 #footer p span {
   color: inherit;
   font-weight: bold;
 }
-
 #footer p .heart {
-  color: #ee3434;
-}
-/*# sourceMappingURL=Footer.module.css.map */
+  color: rgb(238, 52, 52);
+}/*# sourceMappingURL=Footer.module.css.map */

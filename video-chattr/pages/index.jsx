@@ -46,6 +46,7 @@ export default function Home() {
               form={<SignupForm />}
               svg={<MdHome size={55} />}
               message="Get Started"
+              className="card"
             />
           </div>
         </div>

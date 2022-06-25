@@ -70,12 +70,11 @@ a {
 //   }
 // }
 
-
 .form-control {
   $ph-input-color: rgba(0, 0, 0, 0.519);
   // $input-color: rgba(0, 0, 0, 0.519);
   $outline-color: rgb(255, 84, 84);
-  
+
   display: flex;
   flex-direction: column;
   .form-input {
@@ -86,7 +85,7 @@ a {
     &::placeholder {
       color: $ph-input-color;
     }
-    
+
     &:focus {
       outline: $outline-color;
     }
@@ -97,11 +96,11 @@ a {
   $border-color: rgba(0, 0, 0, 0.136);
 
   svg {
-    cursor: pointer
+    cursor: pointer;
   }
 
-  border: 2px solid  $border-color;
-  border-radius: 5px; 
+  border: 2px solid $border-color;
+  border-radius: 5px;
   margin: 5px 0;
   display: flex;
   padding: 2px 5px;
@@ -161,4 +160,29 @@ button {
 
 .toaster {
   color: red;
+}
+
+//Rooms
+
+.grow {
+  flex: 1 0 auto;
+}
+
+.growContainer {
+  display: flex;
+}
+
+#room-add-form {
+  margin: 0 auto;
+  max-width: 600px;
+  background: var(--eerie-black);
+  padding: 20px;
+  text-align: center;
+
+  .heading {
+    h2 {
+      color: white;
+    }
+    margin-bottom: 50px;
+  }
 }

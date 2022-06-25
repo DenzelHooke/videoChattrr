@@ -64,7 +64,7 @@ const Navbar = () => {
                   <a onClick={onLogout}>Logout</a>
                 </Link>
               </li>
-              <li>
+              <li id={styles.dashboard}>
                 <Link href="/dashboard">
                   <a>Dashboard</a>
                 </Link>

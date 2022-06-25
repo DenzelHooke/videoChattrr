@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-nextjs-toast";
 import { useRouter } from "next/router";
 import { wrapper } from "../app/store";
+import styles from "../styles/Dashboard.module.scss";
+import Rooms from "../componenets/Rooms";
 
 function dashboard({ user }) {
   // const { user } = useSelector((state) => state.auth);
@@ -24,11 +26,24 @@ function dashboard({ user }) {
     toast.notify(`Hello, ${user.username}`);
   }, []);
 
-  useEffect(() => {
-    initAgora();
-  })
-
-  return <div>Hello, {user.username}</div>;
+  return (
+    <>
+      <div className="growContainer grow">
+        <div className={`${styles.mainWrapper}`}>
+          <div id={styles.sidebar}>
+            <ul>
+              <li>Room 1</li>
+              <li>Room 2</li>
+              <li>Room 3</li>
+            </ul>
+          </div>
+          <div id={styles.mainContent}>
+            <Rooms />
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
 
 export const getServerSideProps = wrapper.getServerSideProps(

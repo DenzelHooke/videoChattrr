@@ -32,7 +32,15 @@ $background: rgb(255, 255, 255);
 
       li {
         margin: 0 10px;
+        display: flex;
+        align-items: center;
       }
     }
   }
+}
+
+#dashboard {
+  color: white;
+  background: var(--eerie-black);
+  padding: 10px;
 }

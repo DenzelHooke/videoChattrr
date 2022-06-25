@@ -10,8 +10,7 @@ body {
 }
 
 * {
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   padding: 0;
   margin: 0;
   font-family: "Lato", sans-serif, helvetica, arial;
@@ -56,75 +55,49 @@ a {
 }
 
 #__next {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  flex-direction: column;
   position: relative;
   min-height: 100vh;
 }
 
 .form-control {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  flex-direction: column;
 }
-
 .form-control .form-input {
   margin: 0;
   font-size: 15px;
   min-height: 35px;
   border: 0;
 }
-
-.form-control .form-input::-webkit-input-placeholder {
+.form-control .form-input::-moz-placeholder {
   color: rgba(0, 0, 0, 0.519);
 }
-
 .form-control .form-input:-ms-input-placeholder {
   color: rgba(0, 0, 0, 0.519);
 }
-
-.form-control .form-input::-ms-input-placeholder {
-  color: rgba(0, 0, 0, 0.519);
-}
-
 .form-control .form-input::placeholder {
   color: rgba(0, 0, 0, 0.519);
 }
-
 .form-control .form-input:focus {
-  outline: #ff5454;
+  outline: rgb(255, 84, 84);
 }
 
 .input__wrapper {
   border: 2px solid rgba(0, 0, 0, 0.136);
   border-radius: 5px;
   margin: 5px 0;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   padding: 2px 5px;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  align-items: center;
   gap: 10px;
 }
-
 .input__wrapper svg {
   cursor: pointer;
 }
-
 .input__wrapper input {
-  -ms-flex-preferred-size: 100%;
-      flex-basis: 100%;
+  flex-basis: 100%;
 }
 
 ul {
@@ -152,28 +125,19 @@ button {
 
 .card {
   padding: 30px;
-  background-color: white;
-  -webkit-box-shadow: rgba(100, 100, 111, 0.192) 0px 7px 29px 0px;
-          box-shadow: rgba(100, 100, 111, 0.192) 0px 7px 29px 0px;
+  background-color: rgb(255, 255, 255);
+  box-shadow: rgba(100, 100, 111, 0.192) 0px 7px 29px 0px;
   border-radius: 10px;
 }
 
 .main {
-  -webkit-box-flex: 1;
-      -ms-flex: 1 0 auto;
-          flex: 1 0 auto;
+  flex: 1 0 auto;
 }
 
 .center {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  justify-content: center;
+  align-items: center;
 }
 
 #toast-container {
@@ -184,4 +148,25 @@ button {
 .toaster {
   color: red;
 }
-/*# sourceMappingURL=globals.css.map */
+
+.grow {
+  flex: 1 0 auto;
+}
+
+.growContainer {
+  display: flex;
+}
+
+#room-add-form {
+  margin: 0 auto;
+  max-width: 600px;
+  background: var(--eerie-black);
+  padding: 20px;
+  text-align: center;
+}
+#room-add-form .heading {
+  margin-bottom: 50px;
+}
+#room-add-form .heading h2 {
+  color: white;
+}/*# sourceMappingURL=globals.css.map */

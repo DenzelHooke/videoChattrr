@@ -5,14 +5,11 @@
   margin-bottom: 40px;
   border-radius: 5px;
   min-width: 300px;
-  -webkit-box-shadow: none;
-          box-shadow: none;
+  box-shadow: none;
 }
-
 .form__wrapper svg {
   color: var(--azure);
 }
-
 .form__wrapper h2 {
   color: white;
   font-weight: 600;
@@ -22,7 +19,6 @@
 .card {
   text-align: center;
 }
-
 .card .heading svg path {
   color: var(--azure);
 }
@@ -30,8 +26,6 @@
 .form__container {
   max-width: 600px;
 }
-
 .form__container form button {
   margin: 5px 0;
-}
-/*# sourceMappingURL=Forms.css.map */
+}/*# sourceMappingURL=Forms.css.map */
