@@ -21,11 +21,4 @@
 }
 .card .heading svg path {
   color: var(--azure);
-}
-
-.form__container {
-  max-width: 600px;
-}
-.form__container form button {
-  margin: 5px 0;
 }/*# sourceMappingURL=Forms.css.map */

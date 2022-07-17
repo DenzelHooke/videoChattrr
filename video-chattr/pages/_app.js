@@ -8,6 +8,7 @@ import AppContext from "../states/AppContext";
 import authObject from "../states/auth/authObject";
 import "react-toastify/dist/ReactToastify.css";
 import { wrapper } from "../app/store";
+// import "bootstrap/dist/css/bootstrap.css";
 
 function MyApp({ Component, pageProps }) {
   return (

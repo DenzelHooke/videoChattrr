@@ -12,7 +12,9 @@
   "author": "denzelhooke",
   "license": "ISC",
   "dependencies": {
+    "agora-access-token": "^2.0.4",
     "bcryptjs": "^2.4.3",
+    "bootstrap": "^5.1.3",
     "colors": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",

@@ -12,6 +12,14 @@ function dashboard({ user }) {
   const router = useRouter();
   const dispatch = useDispatch();
 
+  const { rtcToken } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (rtcToken) {
+      console.log("do something!");
+    }
+  }, [rtcToken]);
+
   useEffect(() => {
     if (!user) {
       toast.notify("Must be logged in to view this page.", {
@@ -66,7 +74,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
       }
 
       return {
-        props: { user: user },
+        props: { user },
       };
     }
 );

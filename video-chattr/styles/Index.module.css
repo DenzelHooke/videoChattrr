@@ -114,7 +114,6 @@
   .override :global(.container) {
     max-width: 900px;
   }
-
   .cta {
     max-width: 500px;
     align-items: center;
@@ -127,7 +126,6 @@
   .override :global(.container) {
     max-width: 1100px;
   }
-
   .info_ul {
     grid-template-columns: repeat(3, 300px);
     justify-content: space-between;
@@ -137,7 +135,6 @@
     align-items: center;
     height: 300px;
   }
-
   .intro__message {
     max-width: 600px;
   }
@@ -153,7 +150,6 @@
     font-size: 550px;
     text-align: center;
   }
-
   .cta {
     justify-content: space-between;
     max-width: none;
@@ -163,7 +159,6 @@
   .cta h1 {
     font-size: 3.3rem;
   }
-
   .cta__form {
     max-width: none;
     background-color: white;

@@ -27,17 +27,8 @@
   .heading {
     svg {
       path {
-        color: var(--azure)
+        color: var(--azure);
       }
-    }
-  }
-}
-
-.form__container {
-  max-width: 600px;
-  form {      
-    button {
-      margin: 5px 0;
     }
   }
 }

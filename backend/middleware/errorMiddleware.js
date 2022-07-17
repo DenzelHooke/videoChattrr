@@ -3,13 +3,13 @@ const errorHandler = (err, req, res, next) => {
   const statusCode = res.statusCode ? res.statusCode : 500;
 
   console.log(
-    `------\n[ERROR] : ${req.method} to endpoint ${req.url}  \n${err}\n------`
+    `------\n[ERROR] : ${req.method} to endpoint: ${req.url}  \n${err}\n------`
+      .red
   );
   res.status(statusCode).json({
     message: err.message,
     stack: process.env.NODE_ENV === "development" ? err.stack : null,
   });
-  console.log(err.message);
 };
 
 module.exports = {

@@ -4,9 +4,12 @@ import authService from "./authService";
 const runningOnServer = typeof window === "undefined";
 
 let user = null;
+let rtcToken = null;
 
+// True if nextjs is done SSR'ing.
 if (!runningOnServer) {
   user = JSON.parse(localStorage.getItem("user"));
+  rtcToken = localStorage.getItem("rtcToken");
 }
 
 const initialState = {
@@ -14,6 +17,7 @@ const initialState = {
   isError: null,
   isSuccess: null,
   isLoading: null,
+  rtcToken: rtcToken ? rtcToken : null,
   message: "",
 };
 
@@ -23,7 +27,10 @@ export const login = createAsyncThunk(
     try {
       return await authService.login(userData);
     } catch (error) {
-      const message = (error.message && error.response.data && error.response.data.message) || error.message || error.toString();
+      const message =
+        (error.message && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
 
       return thunkAPI.rejectWithValue(message);
     }
@@ -35,6 +42,23 @@ export const register = createAsyncThunk(
   async (userData, thunkAPI) => {
     try {
       return await authService.register(userData);
+    } catch (error) {
+      const message =
+        (error.message && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const genRTC = createAsyncThunk(
+  "auth/getRTC",
+  async (userData, thunkAPI) => {
+    try {
+      const res = await authService.getRTC(userData);
+      return JSON.stringify(res.data);
     } catch (error) {
       const message =
         (error.message && error.response.data && error.response.data.message) ||
@@ -93,10 +117,19 @@ export const authSlice = createSlice({
         state.message = action.payload;
         console.log(action);
       })
-  
+
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
-      });
+      })
+
+      .addCase(genRTC.fulfilled, (state, action) => {
+        const payload = JSON.parse(action.payload);
+        console.log("action: ", payload);
+        state.rtcToken = payload.rtcToken;
+        state.uid = payload.uid;
+      })
+
+      .addCase(genRTC.rejected, (state, action) => {});
   },
 });
 
