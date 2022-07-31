@@ -21,9 +21,12 @@ const rtcToken = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error("No body data included!");
   }
-  const { roomID, isPublisher } = req.body;
-  const appID = process.env.AGORA_APP_ID;
-  const appCert = process.env.AGORA_APP_CERT;
+  const { roomID } = req.body;
+  console.log(req.body);
+  const isPublisher = true;
+  const appID = process.env.NEXT_PUBLIC_AGORA_APP_ID;
+  const appCert = process.env.NEXT_PUBLIC_AGORA_APP_CERT;
+  console.log("appID: ", appID, "appCERT: ", appCert);
 
   console.log({
     appID,

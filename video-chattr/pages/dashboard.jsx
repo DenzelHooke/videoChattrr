@@ -1,24 +1,24 @@
+import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-nextjs-toast";
 import { useRouter } from "next/router";
 import { wrapper } from "../app/store";
 import styles from "../styles/Dashboard.module.scss";
-import Rooms from "../componenets/Rooms";
+import DisplayRooms from "../componenets/DisplayRooms";
+// import RtcUser from "./video/videoFuncs";
+
+const Rooms = dynamic(async () => await import("../componenets/Rooms"), {
+  loading: () => <p>Loading...</p>,
+  ssr: false,
+});
 
 function dashboard({ user }) {
   // const { user } = useSelector((state) => state.auth);
   // console.log(user);
   const router = useRouter();
-  const dispatch = useDispatch();
-
-  const { rtcToken } = useSelector((state) => state.auth);
-
-  useEffect(() => {
-    if (rtcToken) {
-      console.log("do something!");
-    }
-  }, [rtcToken]);
+  const { rooms } = useSelector((state) => state.room);
+  console.log(rooms);
 
   useEffect(() => {
     if (!user) {
@@ -29,8 +29,6 @@ function dashboard({ user }) {
       router.push("/");
       return;
     }
-
-    console.log("hello");
     toast.notify(`Hello, ${user.username}`);
   }, []);
 
@@ -39,15 +37,9 @@ function dashboard({ user }) {
       <div className="growContainer grow">
         <div className={`${styles.mainWrapper}`}>
           <div id={styles.sidebar}>
-            <ul>
-              <li>Room 1</li>
-              <li>Room 2</li>
-              <li>Room 3</li>
-            </ul>
+            <DisplayRooms rooms={rooms} />
           </div>
-          <div id={styles.mainContent}>
-            <Rooms />
-          </div>
+          <div id={styles.mainContent}>{<Rooms />}</div>
         </div>
       </div>
     </>

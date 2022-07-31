@@ -37,10 +37,12 @@ const logout = () => {
   document.cookie = `user=; expires=${new Date().toUTCString()}`;
 };
 
-const getRTC = async (userData) => {
+const genRTC = async (userData) => {
+  //Calls backend with userData to generate a RTC token.
+  console.log(userData);
   const user = JSON.parse(localStorage.getItem("user"));
   const { token } = user;
-  console.log("TOKEN: ", token);
+  console.log(user);
   const config = {
     headers: {
       authorization: `Bearer: ${token}`,
@@ -50,7 +52,6 @@ const getRTC = async (userData) => {
   const res = await axios.post(API_URL + "/auth/rtcToken", userData, config);
 
   if (res.data) {
-    localStorage.setItem("rtcToken", res.data.rtcToken);
     localStorage.setItem("uid", res.data.uid);
   }
   return res;
@@ -60,7 +61,7 @@ const authService = {
   register,
   login,
   logout,
-  getRTC,
+  genRTC,
 };
 
 export default authService;

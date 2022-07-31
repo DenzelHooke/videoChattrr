@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { genRTC } from "../features/auth/authSlice";
 
-const RoomForm = () => {
+const RoomForm = ({ onClick }) => {
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({ roomID: "", isPublisher: true });
@@ -17,16 +16,14 @@ const RoomForm = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log("submit pressed");
-    dispatch(genRTC(formData));
   };
 
-  const createRoom = (e) => {
-    console.log("Creating room.");
-  };
-
-  const joinRoom = (e) => {
-    console.log("Joining room.");
+  const onFormClick = (e) => {
+    console.log(roomID);
+    if (!roomID) {
+      return;
+    }
+    onClick({ type: e.target.id, room: roomID });
   };
 
   return (
@@ -41,13 +38,18 @@ const RoomForm = () => {
       />
       <button
         className="success"
-        type="submit"
         id="create"
-        onClick={createRoom}
+        type="submit"
+        onClick={onFormClick}
       >
         Create Room
       </button>
-      <button className="yellowish" type="submit" id="join" onClick={joinRoom}>
+      <button
+        className="yellowish"
+        id="join"
+        type="submit"
+        onClick={onFormClick}
+      >
         Join Room
       </button>
     </form>

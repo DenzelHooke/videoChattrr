@@ -6,20 +6,24 @@ const runningOnServer = typeof window === "undefined";
 let user = null;
 let rtcToken = null;
 
-// True if nextjs is done SSR'ing.
+//* only True if nextjs is completed doing SSR'ing.
 if (!runningOnServer) {
   user = JSON.parse(localStorage.getItem("user"));
   rtcToken = localStorage.getItem("rtcToken");
 }
+
+//*─── App State ──────────────────────────────────────────────────────────────────
 
 const initialState = {
   user: user ? user : null,
   isError: null,
   isSuccess: null,
   isLoading: null,
-  rtcToken: rtcToken ? rtcToken : null,
+  rtcToken: null,
   message: "",
 };
+
+//* ─── Reducers ───────────────────────────────────────────────────────────────────
 
 export const login = createAsyncThunk(
   "auth/login",
@@ -57,7 +61,7 @@ export const genRTC = createAsyncThunk(
   "auth/getRTC",
   async (userData, thunkAPI) => {
     try {
-      const res = await authService.getRTC(userData);
+      const res = await authService.genRTC(userData);
       return JSON.stringify(res.data);
     } catch (error) {
       const message =
@@ -74,6 +78,8 @@ export const logout = createAsyncThunk("auth/logout", (userData) => {
   return authService.logout();
 });
 
+//* ─── Slice Reducers And Extra Reducers ──────────────────────────────────────────
+
 export const authSlice = createSlice({
   name: "auth",
   initialState: initialState,
@@ -83,6 +89,9 @@ export const authSlice = createSlice({
       state.isError = false;
       state.isSuccess = false;
       state.message = "";
+    },
+    removeToken: (state) => {
+      state.rtcToken = null;
     },
   },
   extraReducers: (builder) => {
@@ -123,15 +132,18 @@ export const authSlice = createSlice({
       })
 
       .addCase(genRTC.fulfilled, (state, action) => {
+        console.log("action:  ", action);
         const payload = JSON.parse(action.payload);
-        console.log("action: ", payload);
         state.rtcToken = payload.rtcToken;
         state.uid = payload.uid;
       })
 
-      .addCase(genRTC.rejected, (state, action) => {});
+      .addCase(genRTC.rejected, (state, action) => {
+        state.message = action.payload;
+        state.isError = true;
+      });
   },
 });
 
-export const { reset } = authSlice.actions;
+export const { reset, removeToken } = authSlice.actions;
 export default authSlice.reducer;

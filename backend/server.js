@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-const dotenv = require("dotenv").config();
+const dotenv = require("dotenv").config({ path: ".env.local" });
 const colors = require("colors");
 const socketio = require("socket.io");
 const cors = require("cors");
