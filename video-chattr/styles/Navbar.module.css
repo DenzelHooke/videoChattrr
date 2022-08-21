@@ -9,7 +9,6 @@
 #nav #inner__nav {
   display: flex;
   justify-content: space-between;
-  padding: 0 30px;
   align-items: center;
   min-height: 65px;
   width: 100%;
@@ -30,9 +29,16 @@
   display: flex;
   align-items: center;
 }
+#nav #inner__nav ul :nth-child(3) {
+  margin-right: 0;
+}
 
 #dashboard {
   color: white;
   background: var(--eerie-black);
   padding: 10px;
+}
+#dashboard a {
+  display: block;
+  height: 100%;
 }/*# sourceMappingURL=Navbar.module.css.map */

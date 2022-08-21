@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import LoginForm from "../componenets/LoginForm";
-import Form from "../componenets/Form";
+import LoginForm from "../components/LoginForm";
+import Form from "../components/Form";
 import { AiOutlineLogin } from "react-icons/ai";
 import { useSelector, useDispatch } from "react-redux";
 import { reset } from "../features/auth/authSlice";

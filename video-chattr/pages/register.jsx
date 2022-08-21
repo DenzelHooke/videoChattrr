@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import Form from "../componenets/Form";
+import Form from "../components/Form";
 import { BsFillPersonPlusFill } from "react-icons/bs";
-import RegisterForm from "../componenets/RegisterForm";
-import { toast } from 'react-nextjs-toast';
+import RegisterForm from "../components/RegisterForm";
+import { toast } from "react-nextjs-toast";
 
-function Register() { 
-
+function Register() {
   return (
     <div className="main center">
       {

@@ -5,7 +5,12 @@
   --eerie-black: rgba(33, 33, 33, 1);
   --white: rgb(247, 247, 247);
   --yellowish: #ffe333;
+  --callBG: rgba(190, 190, 190, 0.157);
 }
+$videoBG: rgb(255, 255, 255);
+$localBG: rgb(226, 73, 73);
+$leaveBG: rgb(223, 38, 38);
+$panelBG: rgb(255, 255, 255);
 
 body {
   background-color: var(--white);
@@ -91,6 +96,12 @@ a {
       outline: $outline-color;
     }
   }
+}
+
+.constrain {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 30px;
 }
 
 .input__wrapper {
@@ -205,4 +216,157 @@ button {
 
 .yellowish {
   background: var(--yellowish);
+}
+
+#room-container {
+  margin-top: 20px;
+  // background: var(--eerie-black);
+  img {
+    display: block;
+  }
+}
+
+#room-title {
+  display: flex;
+}
+
+#main-container {
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 0.5fr;
+  gap: 5%;
+}
+
+.video {
+  object-fit: cover;
+  width: 100%;
+  // height: 100%;
+}
+
+#video-container {
+  // grid-auto-columns: 1fr 1fr;
+  padding: 10px;
+  min-height: 100vh;
+}
+
+.panel {
+  // margin: 10px;
+  padding: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#remote-streams {
+  background: $panelBG;
+}
+
+#local-stream {
+  // display: flex;
+  // align-items: center;
+}
+
+.centerMe {
+  margin: 0 auto;
+}
+
+#local-element {
+  border-radius: 10px;
+  border: 2px solid $localBG;
+  overflow: hidden;
+  min-width: 300px;
+  max-width: 700px;
+}
+
+#local-camera {
+  display: block;
+  width: 100%;
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  -mox-transform: rotateY(180deg);
+}
+
+//Remote streams
+
+#remote-streams {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  > div {
+    max-width: 400px;
+  }
+}
+
+.streamContainer {
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgb(36, 36, 36);
+  margin: 5px 0;
+  position: relative;
+
+  // max-width: 400px;
+  // max-height: 350px;
+  // min-width: 280px;
+  // min-height: 180px;
+
+  .info {
+    padding: 2% 2%;
+  }
+
+  &:hover {
+    .userControls {
+      display: flex;
+      opacity: 100%;
+      transition: all 250ms ease-in-out;
+    }
+  }
+
+  p {
+    color: white;
+    font-weight: bold;
+  }
+
+  .userControls {
+    opacity: 0;
+    justify-content: space-evenly;
+    position: absolute;
+    bottom: 5%;
+    left: 0;
+    right: 0;
+    // transform: translateX(-50%);
+
+    .true {
+      background-color: var(--azure);
+      transition: all 200ms ease;
+      &:hover {
+        background-color: rgb(11, 103, 188);
+      }
+    }
+
+    .btn {
+      cursor: pointer;
+      padding: 20px;
+      border-radius: 50%;
+    }
+  }
+}
+
+#main-hub {
+  background: $panelBG;
+}
+
+.utils {
+  #exit {
+    background: $leaveBG;
+    color: white;
+    font-weight: bold;
+    width: 100px;
+  }
+}
+
+.focus {
+  // min-width: 400px;
+  // justify-self: center;
+  // grid-column: 1 / -1;
+  // grid-row: 1 / 2;
+  // background-color: #ffe333;
 }

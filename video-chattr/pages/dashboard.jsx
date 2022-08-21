@@ -5,10 +5,10 @@ import { toast } from "react-nextjs-toast";
 import { useRouter } from "next/router";
 import { wrapper } from "../app/store";
 import styles from "../styles/Dashboard.module.scss";
-import DisplayRooms from "../componenets/DisplayRooms";
+import DisplayRooms from "../components/DisplayRooms";
 // import RtcUser from "./video/videoFuncs";
 
-const Rooms = dynamic(async () => await import("../componenets/Rooms"), {
+const Rooms = dynamic(async () => await import("../components/Rooms"), {
   loading: () => <p>Loading...</p>,
   ssr: false,
 });

@@ -4,6 +4,7 @@
   --eerie-black: rgba(33, 33, 33, 1);
   --white: rgb(247, 247, 247);
   --yellowish: #ffe333;
+  --callBG: rgba(190, 190, 190, 0.157);
 }
 
 body {
@@ -83,6 +84,12 @@ a {
 }
 .form-control .form-input:focus {
   outline: rgb(255, 84, 84);
+}
+
+.constrain {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 30px;
 }
 
 .input__wrapper {
@@ -187,4 +194,123 @@ button {
 
 .yellowish {
   background: var(--yellowish);
+}
+
+#room-container {
+  margin-top: 20px;
+}
+#room-container img {
+  display: block;
+}
+
+#room-title {
+  display: flex;
+}
+
+#main-container {
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 0.5fr;
+  gap: 5%;
+}
+
+.video {
+  -o-object-fit: cover;
+     object-fit: cover;
+  width: 100%;
+}
+
+#video-container {
+  padding: 10px;
+  min-height: 100vh;
+}
+
+.panel {
+  padding: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#remote-streams {
+  background: rgb(255, 255, 255);
+}
+
+.centerMe {
+  margin: 0 auto;
+}
+
+#local-element {
+  border-radius: 10px;
+  border: 2px solid rgb(226, 73, 73);
+  overflow: hidden;
+  min-width: 300px;
+  max-width: 700px;
+}
+
+#local-camera {
+  display: block;
+  width: 100%;
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  -mox-transform: rotateY(180deg);
+}
+
+#remote-streams {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+#remote-streams > div {
+  max-width: 400px;
+}
+
+.streamContainer {
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgb(36, 36, 36);
+  margin: 5px 0;
+  position: relative;
+}
+.streamContainer .info {
+  padding: 2% 2%;
+}
+.streamContainer:hover .userControls {
+  display: flex;
+  opacity: 100%;
+  transition: all 250ms ease-in-out;
+}
+.streamContainer p {
+  color: white;
+  font-weight: bold;
+}
+.streamContainer .userControls {
+  opacity: 0;
+  justify-content: space-evenly;
+  position: absolute;
+  bottom: 5%;
+  left: 0;
+  right: 0;
+}
+.streamContainer .userControls .true {
+  background-color: var(--azure);
+  transition: all 200ms ease;
+}
+.streamContainer .userControls .true:hover {
+  background-color: rgb(11, 103, 188);
+}
+.streamContainer .userControls .btn {
+  cursor: pointer;
+  padding: 20px;
+  border-radius: 50%;
+}
+
+#main-hub {
+  background: rgb(255, 255, 255);
+}
+
+.utils #exit {
+  background: rgb(223, 38, 38);
+  color: white;
+  font-weight: bold;
+  width: 100px;
 }/*# sourceMappingURL=globals.css.map */

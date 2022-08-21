@@ -10,7 +10,7 @@ $background: rgb(255, 255, 255);
   #inner__nav {
     display: flex;
     justify-content: space-between;
-    padding: 0 30px;
+    // padding: 0 30px;
     align-items: center;
     min-height: 65px;
     width: 100%;
@@ -35,6 +35,9 @@ $background: rgb(255, 255, 255);
         display: flex;
         align-items: center;
       }
+      :nth-child(3) {
+        margin-right: 0;
+      }
     }
   }
 }
@@ -43,4 +46,9 @@ $background: rgb(255, 255, 255);
   color: white;
   background: var(--eerie-black);
   padding: 10px;
+
+  a {
+    display: block;
+    height: 100%;
+  }
 }
