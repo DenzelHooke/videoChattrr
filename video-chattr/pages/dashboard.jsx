@@ -39,7 +39,12 @@ function dashboard({ user }) {
           <div id={styles.sidebar}>
             <DisplayRooms rooms={rooms} />
           </div>
-          <div id={styles.mainContent}>{<Rooms />}</div>
+          <div id={styles.mainContent}>
+            <div className="greeting">
+              <h2>{`Welcome, ${user.username}`}</h2>
+            </div>
+            {<Rooms />}
+          </div>
         </div>
       </div>
     </>

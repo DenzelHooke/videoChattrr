@@ -234,7 +234,30 @@ button {
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 0.5fr;
-  gap: 5%;
+  grid-template-rows: 1fr 1fr 0.5fr;
+  gap: 10px;
+  // border: 5px solid red;
+  // min-height: 800px;
+  max-height: 650px;
+  max-width: 1200px;
+  overflow: hidden;
+  padding: 10px;
+
+  #video-controls {
+    display: flex;
+    background: $panelBG;
+    min-height: 100px;
+    justify-content: space-evenly;
+    grid-row: 3 / 4;
+    align-items: center;
+  }
+
+  #main-hub {
+    grid-row: 1 / 3;
+  }
+
+  // padding-top: 20px;
+  // padding-bottom: 20px;
 }
 
 .video {
@@ -254,9 +277,8 @@ button {
   padding: 20px;
   border-radius: 10px;
   overflow: hidden;
-}
+  margin: 5px 0;
 
-#remote-streams {
   background: $panelBG;
 }
 
@@ -285,14 +307,30 @@ button {
   -mox-transform: rotateY(180deg);
 }
 
+#local-stream {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
 //Remote streams
 
 #remote-streams {
+  grid-column: 2 / -1;
+  grid-row: 1 / -1;
+
   display: flex;
   flex-direction: column;
   overflow: hidden;
   > div {
     max-width: 400px;
+  }
+
+  .streamContainer {
+    height: 200px;
+    video {
+      height: 100%;
+    }
   }
 }
 
@@ -333,33 +371,6 @@ button {
     left: 0;
     right: 0;
     // transform: translateX(-50%);
-
-    .true {
-      background-color: var(--azure);
-      transition: all 200ms ease;
-      &:hover {
-        background-color: rgb(11, 103, 188);
-      }
-    }
-
-    .btn {
-      cursor: pointer;
-      padding: 20px;
-      border-radius: 50%;
-    }
-  }
-}
-
-#main-hub {
-  background: $panelBG;
-}
-
-.utils {
-  #exit {
-    background: $leaveBG;
-    color: white;
-    font-weight: bold;
-    width: 100px;
   }
 }
 
@@ -369,4 +380,32 @@ button {
   // grid-column: 1 / -1;
   // grid-row: 1 / 2;
   // background-color: #ffe333;
+}
+
+.btn {
+  cursor: pointer;
+  padding: 20px;
+  border-radius: 50%;
+  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.false {
+  background: $leaveBG;
+  color: white;
+  border-radius: 5px;
+}
+
+.true {
+  background-color: var(--azure);
+  transition: all 200ms ease;
+  &:hover {
+    background-color: rgb(11, 103, 188);
+  }
+}
+
+#exit {
+  font-weight: bold;
 }
