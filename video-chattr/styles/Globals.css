@@ -63,9 +63,9 @@ a {
   min-height: 100vh;
 }
 
-.form-control {
-  display: flex;
-  flex-direction: column;
+.form-control button {
+  display: block;
+  min-width: 250px;
 }
 .form-control .form-input {
   margin: 0;
@@ -143,6 +143,14 @@ button {
   flex: 1 0 auto;
 }
 
+.space-text {
+  margin: 10px 0;
+}
+
+.center-text {
+  text-align: center;
+}
+
 .center {
   display: flex;
   justify-content: center;
@@ -166,12 +174,115 @@ button {
   display: flex;
 }
 
-#room-add-form {
+.bold {
+  font-weight: 600;
+}
+
+.dashboard-container {
+  max-width: 800px;
   margin: 0 auto;
+}
+.dashboard-container .greeting {
+  margin-bottom: 60px;
+}
+
+#room-form-container {
+  background: rgb(255, 255, 255);
   max-width: 600px;
-  background: var(--eerie-black);
-  padding: 20px;
+  padding: 10px;
+  margin: 0 auto;
+}
+#room-form-container h1 {
+  margin-bottom: 60px;
+}
+#room-form-container input {
+  display: block;
+  width: 100%;
+}
+#room-form-container .btn-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+#room-form-container .btn-wrapper button {
+  font-size: 15px;
+  max-width: 150px !important;
+  min-width: 100px !important;
+}
+#room-form-container .room-form {
+  margin: 0 auto;
+}
+#room-form-container .room-form .form-control {
+  margin: 30px 0;
+  text-align: start !important;
+}
+#room-form-container .btn {
+  margin: 0;
+  display: block;
+  padding: 0;
+}
+#room-form-container .utils {
+  display: flex;
+  justify-content: space-between;
+}
+#room-form-container .utils p {
+  color: white;
+}
+#room-form-container .utils * {
+  color: var(--eerie-black);
+}
+#room-form-container .utils .delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  background: rgb(223, 38, 38);
+  width: 22px;
   text-align: center;
+  height: 22px;
+  font-weight: bold;
+  padding-bottom: 2.01px;
+  transition: scale 150ms ease-in-out;
+}
+#room-form-container .utils .delete:hover {
+  scale: 1.2;
+}
+#room-form-container .savedRooms {
+  padding: 5px;
+}
+#room-form-container .savedRooms .wrapper {
+  display: flex;
+  justify-content: space-evenly;
+  padding: 10px 0;
+}
+#room-form-container .savedRooms .saved-room {
+  width: 200px;
+  aspect-ratio: 2/1;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.346);
+  border-radius: 5px;
+  padding: 5px;
+  margin: 20px;
+}
+#room-form-container .savedRooms .saved-room .btn-wrapper {
+  display: flex;
+  align-items: flex-end;
+}
+#room-form-container .savedRooms .saved-room .join {
+  width: 100%;
+}
+#room-form-container .savedRooms .saved-room.saved {
+  background: rgb(37, 37, 37);
+}
+#room-form-container .savedRooms .saved-room.not-saved {
+  border: dashed 3px rgb(0, 0, 0);
+  background: rgba(255, 255, 255, 0.394);
+}
+
+#room-add-form {
+  text-align: center;
+}
+#room-add-form .room-form {
+  margin: 0 auto;
 }
 #room-add-form .heading {
   margin-bottom: 50px;
@@ -186,10 +297,11 @@ button {
 
 .form__container {
   text-align: center;
-  max-width: 600px;
+  max-width: 450px;
 }
 .form__container form button {
-  margin: 5px 0;
+  width: 100%;
+  margin: 20px 0;
 }
 
 .yellowish {
@@ -346,4 +458,9 @@ button {
 
 #exit {
   font-weight: bold;
+}
+
+.focus-text {
+  font-weight: bold;
+  margin-bottom: 10px;
 }/*# sourceMappingURL=globals.css.map */

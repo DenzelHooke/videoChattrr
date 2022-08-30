@@ -4,11 +4,12 @@ import { reset, genRTC } from "../features/auth/authSlice";
 import RtcUser from "./video/videoFuncs";
 import Form from "./Form";
 import RoomForm from "./RoomForm";
-import { FaHotdog } from "react-icons/fa";
+import { GrGroup } from "react-icons/gr";
 import AgoraRTC from "agora-rtc-sdk-ng";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { setRoom } from "../features/room/roomSlice";
+import { AiFillDelete } from "react-icons/ai";
 
 const Rooms = () => {
   const router = useRouter();
@@ -40,14 +41,48 @@ const Rooms = () => {
   };
 
   return (
-    <div id="room-add-form">
-      <Form
-        form={<RoomForm onClick={onClick} />}
-        message="Enter a room ID"
-        svg={<FaHotdog />}
-        className="room-form"
-      />
-    </div>
+    //? Have func that generates dotted boxes informing user of room space.
+    <>
+      <div id="room-form-container">
+        <h1
+          className="center-text
+        focus-text"
+        >
+          Rooms
+        </h1>
+        {/* <div className="savedRooms">
+          <h3 className="center">SAVED ROOMS</h3>
+          <div className="wrapper">
+            <div className="saved-room saved">
+              <div className="utils">
+                <p>CoolR..</p>
+                <div className="btn delete">X</div>
+              </div>
+              <div className="btn-wrapper">
+                <button className="join true">JOIN</button>
+              </div>
+            </div>
+            <div className="saved-room saved">
+              <div className="utils">
+                <p>CoolR..</p>
+                <div className="btn delete">X</div>
+              </div>
+            </div>
+            <div className="saved-room not-saved">
+              <div className="utils">
+                <p>CoolR..</p>
+                <div className="btn delete">X</div>
+              </div>
+            </div>
+          </div>
+        </div> */}
+        <Form
+          form={<RoomForm onClick={onClick} />}
+          message=""
+          className="room-form"
+        />
+      </div>
+    </>
   );
 };
 

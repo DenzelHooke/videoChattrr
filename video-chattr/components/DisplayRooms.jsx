@@ -7,9 +7,8 @@ const DisplayRooms = ({ rooms }) => {
 
   return (
     <ul>
-      {rooms.map((room) => {
-        return <li key={generateUID()}>{room.roomName}</li>;
-      })}
+      <li class="tab">Home</li>
+      <li class="tab">Rooms</li>
     </ul>
   );
 };

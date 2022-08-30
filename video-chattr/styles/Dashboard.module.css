@@ -1,5 +1,5 @@
 .mainWrapper {
-  color: red;
+  color: var(--azure);
   display: grid;
   grid-template-columns: 200px 1fr;
   min-height: 50vh;

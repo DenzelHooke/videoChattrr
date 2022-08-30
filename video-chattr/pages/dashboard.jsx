@@ -8,6 +8,8 @@ import styles from "../styles/Dashboard.module.scss";
 import DisplayRooms from "../components/DisplayRooms";
 // import RtcUser from "./video/videoFuncs";
 
+// The Rooms componenet requires the window object which isn't present  with SSR.
+//This loads the component once ssr is done which means this comp isn't loaded in the page source.
 const Rooms = dynamic(async () => await import("../components/Rooms"), {
   loading: () => <p>Loading...</p>,
   ssr: false,
@@ -39,11 +41,13 @@ function dashboard({ user }) {
           <div id={styles.sidebar}>
             <DisplayRooms rooms={rooms} />
           </div>
-          <div id={styles.mainContent}>
-            <div className="greeting">
-              <h2>{`Welcome, ${user.username}`}</h2>
+          <div id={styles.mainContent} className="dashboard">
+            <div className="dashboard-container">
+              <div className="greeting">
+                <h2 className="center-text focus-text">{`Welcome home, ${user.username}`}</h2>
+              </div>
+              {<Rooms />}
             </div>
-            {<Rooms />}
           </div>
         </div>
       </div>

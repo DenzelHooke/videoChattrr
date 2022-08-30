@@ -7,7 +7,18 @@ const RoomForm = ({ onClick }) => {
   const [formData, setFormData] = useState({ roomID: "", isPublisher: true });
   const { roomID } = formData;
 
+  const hasWhiteSpace = (s) => {
+    if (s.indexOf(" ") >= 0) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const onChange = (e) => {
+    if (hasWhiteSpace(e.target.value)) {
+      return;
+    }
     setFormData((prevState) => ({
       ...prevState,
       [e.target.id]: e.target.value,
@@ -27,32 +38,40 @@ const RoomForm = ({ onClick }) => {
   };
 
   return (
-    <form onSubmit={onSubmit} className="form-control">
-      <input
-        type="text"
-        className="form-input"
-        id="roomID"
-        value={roomID}
-        onChange={onChange}
-        placeholder="Room ID"
-      />
-      <button
-        className="success"
-        id="create"
-        type="submit"
-        onClick={onFormClick}
-      >
-        Create Room
-      </button>
-      <button
-        className="yellowish"
-        id="join"
-        type="submit"
-        onClick={onFormClick}
-      >
-        Join Room
-      </button>
-    </form>
+    <>
+      <form onSubmit={onSubmit} className="form-control">
+        <div>
+          <p className="space-text">Room name</p>
+          <input
+            type="text"
+            className="form-input"
+            id="roomID"
+            value={roomID}
+            onChange={onChange}
+            placeholder="Enter room name"
+            maxLength="7"
+          />
+        </div>
+        <div className="btn-wrapper">
+          <button
+            id="create"
+            type="submit"
+            class="btn_blue"
+            onClick={onFormClick}
+          >
+            Create Room
+          </button>
+          <button
+            id="join"
+            type="submit"
+            class="btn_blue"
+            onClick={onFormClick}
+          >
+            Join Room
+          </button>
+        </div>
+      </form>
+    </>
   );
 };
 
