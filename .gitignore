@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+video-chattr/node_modules/
+video-chattr/.next/ 
 /.pnp
 .pnp.js
 
