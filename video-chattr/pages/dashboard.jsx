@@ -7,6 +7,9 @@ import { wrapper } from "../app/store";
 import styles from "../styles/Dashboard.module.scss";
 import DisplayRooms from "../components/DisplayRooms";
 // import RtcUser from "./video/videoFuncs";
+import { genRTC } from "../features/auth/authSlice";
+import { setRoom } from "../features/room/roomSlice";
+import io from "socket.io-client";
 
 // The Rooms componenet requires the window object which isn't present  with SSR.
 //This loads the component once ssr is done which means this comp isn't loaded in the page source.
@@ -16,8 +19,9 @@ const Rooms = dynamic(async () => await import("../components/Rooms"), {
 });
 
 function dashboard({ user }) {
+  const dispatch = useDispatch();
+
   // const { user } = useSelector((state) => state.auth);
-  // console.log(user);
   const router = useRouter();
   const { rooms } = useSelector((state) => state.room);
   console.log(rooms);
@@ -34,6 +38,18 @@ function dashboard({ user }) {
     toast.notify(`Hello, ${user.username}`);
   }, []);
 
+  const onJoin = async ({ type, room }) => {
+    const btnType = type.toLowerCase();
+    if (btnType !== "create" && btnType !== "join") {
+      return;
+    }
+    const data = { roomID: room };
+    // Create rtcToken
+    dispatch(genRTC(data)).then(() => dispatch(setRoom(room)));
+
+    //Connect to room or create room.
+  };
+
   return (
     <>
       <div className="growContainer grow">
@@ -46,7 +62,7 @@ function dashboard({ user }) {
               <div className="greeting">
                 <h2 className="center-text focus-text">{`Welcome home, ${user.username}`}</h2>
               </div>
-              {<Rooms />}
+              {<Rooms onClick={onJoin} />}
             </div>
           </div>
         </div>

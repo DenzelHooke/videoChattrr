@@ -1,1 +1,0 @@
-self.__REACT_LOADABLE_MANIFEST={"dashboard.jsx -> ../components/Rooms":{"id":"dashboard.jsx -> ../components/Rooms","files":["static/chunks/components_Rooms_jsx.js"]}}

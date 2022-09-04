@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import { setRoom } from "../features/room/roomSlice";
 import { AiFillDelete } from "react-icons/ai";
 
-const Rooms = () => {
+const Rooms = ({ onClick }) => {
   const router = useRouter();
   const [client, setClient] = useState(false);
 
@@ -27,18 +27,6 @@ const Rooms = () => {
       });
     }
   }, [rtcToken, roomName]);
-
-  const onClick = async ({ type, room }) => {
-    const btnType = type.toLowerCase();
-    if (btnType !== "create" && btnType !== "join") {
-      return;
-    }
-    const data = { roomID: room };
-    // Create rtcToken
-    dispatch(genRTC(data)).then(() => dispatch(setRoom(room)));
-
-    //Connect to room or create room.
-  };
 
   return (
     //? Have func that generates dotted boxes informing user of room space.
