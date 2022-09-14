@@ -5,6 +5,7 @@
   --white: rgb(247, 247, 247);
   --yellowish: #ffe333;
   --callBG: rgba(190, 190, 190, 0.157);
+  --errorRed: rgb(223, 38, 38);
 }
 
 body {
@@ -126,6 +127,10 @@ button {
 .btn_blue {
   color: white;
   background-color: var(--azure);
+  transition: all 100ms ease-in-out;
+}
+.btn_blue:hover {
+  background-color: rgb(19, 97, 181);
 }
 
 .container {
@@ -192,6 +197,10 @@ button {
   padding: 10px;
   margin: 0 auto;
 }
+#room-form-container .constrain {
+  max-width: 90%;
+  margin: 0 auto;
+}
 #room-form-container h1 {
   margin-bottom: 60px;
 }
@@ -208,9 +217,6 @@ button {
   font-size: 15px;
   max-width: 150px !important;
   min-width: 100px !important;
-}
-#room-form-container .room-form {
-  margin: 0 auto;
 }
 #room-form-container .room-form .form-control {
   margin: 30px 0;
@@ -289,6 +295,12 @@ button {
 }
 #room-add-form .heading h2 {
   color: white;
+}
+
+.loading-room-form {
+  width: 80%;
+  height: 400px;
+  background: rgb(240, 240, 240);
 }
 
 .success {
@@ -463,4 +475,57 @@ button {
 .focus-text {
   font-weight: bold;
   margin-bottom: 10px;
+}
+
+.error_input {
+  border: 2px solid var(--errorRed) !important;
+}
+
+#loading {
+  margin: 0 auto;
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+#loading div {
+  scale: 1.5;
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  margin: 8px;
+  border: 8px solid #fff;
+  border-radius: 50%;
+  -webkit-animation: loadingRing 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+          animation: loadingRing 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: var(--azure) transparent transparent transparent;
+}
+#loading div:nth-child(1) {
+  -webkit-animation-delay: -0.45s;
+          animation-delay: -0.45s;
+}
+#loading div:nth-child(2) {
+  -webkit-animation-delay: -0.3s;
+          animation-delay: -0.3s;
+}
+#loading div:nth-child(3) {
+  -webkit-animation-delay: -0.15s;
+          animation-delay: -0.15s;
+}
+
+@-webkit-keyframes loadingRing {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loadingRing {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }/*# sourceMappingURL=globals.css.map */

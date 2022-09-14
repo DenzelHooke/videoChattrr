@@ -19,25 +19,34 @@ const Rooms = ({ onClick }) => {
   const { rtcToken, user } = useSelector((state) => state.auth);
   const { roomName } = useSelector((state) => state.room);
 
-  useEffect(() => {
-    if (rtcToken) {
-      router.push({
-        pathname: "/room",
-        query: { roomID: roomName, token: rtcToken },
-      });
-    }
-  }, [rtcToken, roomName]);
+  const [modeState, setModeState] = useState({
+    buttonMode: null,
+  });
+
+  const onBtnClick = (obj) => {
+    console.log(obj);
+    setModeState((prevState) => {
+      return {
+        ...prevState,
+        buttonMode: obj.type,
+      };
+    });
+    onClick(obj);
+  };
 
   return (
     //? Have func that generates dotted boxes informing user of room space.
     <>
       <div id="room-form-container">
-        <h1
-          className="center-text
-        focus-text"
-        >
-          Rooms
-        </h1>
+        <div className="constrain">
+          <h1
+            className="center-text
+          focus-text"
+          >
+            Rooms
+          </h1>
+          <p>{`BTN MODE: ${modeState.buttonMode}`}</p>
+        </div>
         {/* <div className="savedRooms">
           <h3 className="center">SAVED ROOMS</h3>
           <div className="wrapper">
@@ -64,11 +73,19 @@ const Rooms = ({ onClick }) => {
             </div>
           </div>
         </div> */}
-        <Form
-          form={<RoomForm onClick={onClick} />}
-          message=""
-          className="room-form"
-        />
+        <div className="constrain">
+          <Form
+            form={
+              <RoomForm
+                onClick={onBtnClick}
+                setModeState={setModeState}
+                modeState={modeState}
+              />
+            }
+            message=""
+            className="room-form"
+          />
+        </div>
       </div>
     </>
   );

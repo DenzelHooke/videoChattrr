@@ -2,15 +2,23 @@ import { useState, useEffect, useContec } from "react";
 import Link from "next/link";
 import styles from "../styles/Navbar.module.scss";
 import { useSelector, useDispatch } from "react-redux";
-import { register, logout, reset } from "../features/auth/authSlice";
+import {
+  register,
+  logout,
+  reset,
+  removeToken,
+} from "../features/auth/authSlice";
 import store from "../app/store";
 import { toast } from "react-nextjs-toast";
+import { useRouter } from "next/router";
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const { user, isError, message, isSuccess, isLoading } = useSelector(
     (state) => state.auth
   );
+
+  const router = useRouter();
 
   const [signedIn, setSignedIn] = useState(false);
 
@@ -30,7 +38,7 @@ const Navbar = () => {
       console.log(message);
       toast.notify(message, {
         type: "error",
-        title: "Uh oh!",
+        title: "Oops!",
       });
       dispatch(reset());
     }
@@ -38,6 +46,13 @@ const Navbar = () => {
 
   const onLogout = () => {
     dispatch(logout());
+  };
+
+  const onClick = (e) => {
+    if (e.target.id === "dashboard") {
+      dispatch(removeToken());
+      router.push("/dashboard");
+    }
   };
 
   // console.log(user);
@@ -65,7 +80,9 @@ const Navbar = () => {
                 </Link>
               </li>
               <li id={styles.dashboard}>
-                <Link href="/dashboard">Dashboard</Link>
+                <a onClick={onClick} id="dashboard">
+                  Dashboard
+                </a>
               </li>
             </>
           ) : (

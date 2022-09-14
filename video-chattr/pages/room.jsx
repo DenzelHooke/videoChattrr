@@ -38,7 +38,6 @@ const room = ({ data }) => {
   useEffect(() => {
     return () => {
       cleanUp();
-      router.push("/");
     };
   }, []);
 
@@ -47,15 +46,13 @@ const room = ({ data }) => {
       //Can't run on server side so we have to run this only when the page completes SSR.
       //* Start Agora
       setUpClient(rtcToken, roomName);
-
-      //* INIT socket.io connection to server
-      socketRef.current = io.connect("http://localhost:8080");
-
-      socketRef.current.emit("init", {
-        username: "test",
-      });
     }
   }, [rtcToken, isServer]);
+
+  useEffect(() => {
+    //* INIT socket.io connection to server
+    socketRef.current = io.connect("http://localhost:8080");
+  }, []);
 
   return (
     <div id="room-container" className="grow">
