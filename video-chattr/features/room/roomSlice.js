@@ -16,6 +16,7 @@ if (!runningOnServer) {
 const initialState = {
   roomName: null,
   isHost: false,
+  host: null,
   isError: null,
   isSuccess: null,
   isLoading: null,

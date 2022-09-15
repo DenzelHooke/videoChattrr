@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { BsCheckCircleFill } from "react-icons/bs";
 
-const RoomForm = ({ onClick, modeState }) => {
+const RoomForm = ({ onClick, modeState, setModeState, onRoomCheck }) => {
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
@@ -30,21 +31,8 @@ const RoomForm = ({ onClick, modeState }) => {
   };
 
   const onSubmit = (e) => {
+    console.log("submmit click");
     e.preventDefault();
-    if (!roomID) {
-      setFormData((prevState) => ({
-        ...prevState,
-        isError: true,
-      }));
-    } else {
-      setFormData((prevState) => ({
-        ...prevState,
-        isError: false,
-      }));
-    }
-  };
-
-  const onFormClick = (e) => {
     if (!roomID) {
       setFormData((prevState) => ({
         ...prevState,
@@ -57,14 +45,33 @@ const RoomForm = ({ onClick, modeState }) => {
         isError: false,
       }));
     }
-    onClick({ type: e.target.id, room: roomID });
+  };
+
+  const onFormClick = (e) => {
+    setModeState((prevState) => ({
+      ...prevState,
+      buttonMode: e.target.id,
+    }));
+
+    //* Check functionality
+    if (e.target.id === "check") {
+      console.log("Check block");
+
+      //TODO call DB
+
+      //TODO retrieve results in some-sort of state.
+
+      //TODO Act on that data.
+    }
+    console.log("form click");
+    // onClick({ type: e.target.id, room: roomID });
   };
 
   return (
     <>
       <form onSubmit={onSubmit} className="form-control">
         <div>
-          <p className="space-text">Room name</p>
+          <p className="space-text">Room ID</p>
           <input
             type="text"
             className={`${
@@ -80,24 +87,38 @@ const RoomForm = ({ onClick, modeState }) => {
         <div className="btn-wrapper">
           <button
             id="create"
-            type="submit"
+            type="button"
             class={`${
               modeState.buttonMode === "create" ? "btn_blue" : "btn_off"
             }`}
             onClick={onFormClick}
           >
-            Create Room
+            Create Mode
           </button>
           <button
             id="join"
-            type="submit"
+            type="button"
             class={`${
               modeState.buttonMode === "join" ? "btn_blue" : "btn_off"
             }`}
             onClick={onFormClick}
           >
-            Join Room
+            Join Mode
           </button>
+        </div>
+        <div className="long-btn">
+          <button id="check" type="button" onClick={onFormClick}>
+            Check
+          </button>
+        </div>
+        <div className="room-constrain" id="room-form-info">
+          <ul>
+            <li>
+              <BsCheckCircleFill />
+              <p>Exists</p>
+            </li>
+            <li></li>
+          </ul>
         </div>
       </form>
     </>

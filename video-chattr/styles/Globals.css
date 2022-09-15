@@ -6,6 +6,7 @@
   --yellowish: #ffe333;
   --callBG: rgba(190, 190, 190, 0.157);
   --errorRed: rgb(223, 38, 38);
+  --happyGreen: rgb(95, 206, 95);
 }
 
 body {
@@ -122,6 +123,18 @@ button {
   padding: 2px;
   font-size: 17px;
   font-weight: 500;
+  transition: background 100ms ease-in-out;
+}
+
+.long-btn button {
+  height: 35px !important;
+  display: block;
+  background: var(--happyGreen);
+  color: white;
+  font-size: 16px;
+}
+.long-btn button:hover {
+  background: rgb(69, 163, 69);
 }
 
 .btn_blue {
@@ -191,15 +204,20 @@ button {
   margin-bottom: 60px;
 }
 
+.room-constrain {
+  max-width: 485px;
+  margin: 0 auto;
+}
+.room-constrain .room-form {
+  margin: 0 auto;
+}
+
 #room-form-container {
   background: rgb(255, 255, 255);
   max-width: 600px;
   padding: 10px;
   margin: 0 auto;
-}
-#room-form-container .constrain {
-  max-width: 90%;
-  margin: 0 auto;
+  margin-top: 150px;
 }
 #room-form-container h1 {
   margin-bottom: 60px;
@@ -221,6 +239,9 @@ button {
 #room-form-container .room-form .form-control {
   margin: 30px 0;
   text-align: start !important;
+}
+#room-form-container .room-form p {
+  font-size: 18px;
 }
 #room-form-container .btn {
   margin: 0;
@@ -282,6 +303,26 @@ button {
 #room-form-container .savedRooms .saved-room.not-saved {
   border: dashed 3px rgb(0, 0, 0);
   background: rgba(255, 255, 255, 0.394);
+}
+
+#room-form-info {
+  border-top: 2px solid var(--azure);
+  margin-top: 10px;
+}
+#room-form-info ul {
+  margin-top: 30px;
+}
+#room-form-info ul li {
+  display: flex;
+  align-items: center;
+}
+#room-form-info ul li > * {
+  display: block;
+  color: rgba(0, 0, 0, 0.588);
+}
+#room-form-info ul li p {
+  display: block;
+  margin-left: 15px;
 }
 
 #room-add-form {

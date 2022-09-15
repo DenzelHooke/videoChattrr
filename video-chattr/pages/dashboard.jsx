@@ -67,22 +67,22 @@ function dashboard({ user }) {
     const data = { roomID: room };
     // Create rtcToken
     dispatch(genRTC(data)).then(() => dispatch(setRoom(room)));
-    const exists = await roomExists(room, authState.user.token);
+    // const exists = await roomExists(room, authState.user.token);
 
-    console.log("HITHITIHTR", exists);
-    if (exists === true) {
-      console.log("GOOD");
-      toast.notify(`${room} Available!`, {
-        title: "Woohoo!",
-        type: "success",
-      });
-    } else {
-      console.log("BAD");
-      toast.notify(`Unfortunatly, "${room}" is  Unavailable.`, {
-        title: "Oops",
-        type: "error",
-      });
-    }
+    // console.log("HITHITIHTR", exists);
+    // if (exists === true) {
+    //   console.log("GOOD");
+    //   toast.notify(`${room} Available!`, {
+    //     title: "Woohoo!",
+    //     type: "success",
+    //   });
+    // } else {
+    //   console.log("BAD");
+    //   toast.notify(`Unfortunatly, "${room}" is  Unavailable.`, {
+    //     title: "Oops",
+    //     type: "error",
+    //   });
+    // }
 
     const btnType = type.toLowerCase();
     if (btnType !== "create" && btnType !== "join") {

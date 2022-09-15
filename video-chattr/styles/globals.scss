@@ -7,6 +7,7 @@
   --yellowish: #ffe333;
   --callBG: rgba(190, 190, 190, 0.157);
   --errorRed: rgb(223, 38, 38);
+  --happyGreen: rgb(95, 206, 95);
 }
 $videoBG: rgb(255, 255, 255);
 $localBG: rgb(226, 73, 73);
@@ -142,6 +143,23 @@ button {
   padding: 2px;
   font-size: 17px;
   font-weight: 500;
+
+  transition: background 100ms ease-in-out;
+}
+
+.long-btn {
+  button {
+    height: 35px !important;
+    display: block;
+    background: var(--happyGreen);
+    color: white;
+
+    font-size: 16px;
+
+    &:hover {
+      background: rgb(69, 163, 69);
+    }
+  }
 }
 
 .btn_blue {
@@ -218,23 +236,27 @@ button {
   }
 }
 
+.room-constrain {
+  max-width: 485px;
+  margin: 0 auto;
+
+  .room-form {
+    margin: 0 auto;
+  }
+}
+
 #room-form-container {
   background: rgb(255, 255, 255);
   // border: 1px solid var(--eerie-black);
   // padding: 10px 0;
   max-width: 600px;
   padding: 10px;
-
-  .constrain {
-    max-width: 90%;
-    margin: 0 auto;
-  }
+  margin: 0 auto;
+  margin-top: 150px;
 
   h1 {
     margin-bottom: 60px;
   }
-
-  margin: 0 auto;
 
   input {
     display: block;
@@ -257,6 +279,10 @@ button {
     .form-control {
       margin: 30px 0;
       text-align: start !important;
+    }
+
+    p {
+      font-size: 18px;
     }
   }
 
@@ -337,6 +363,28 @@ button {
       &.not-saved {
         border: dashed 3px $dashedBG;
         background: $not-savedBG;
+      }
+    }
+  }
+}
+
+#room-form-info {
+  border-top: 2px solid var(--azure);
+  margin-top: 10px;
+
+  ul {
+    margin-top: 30px;
+    li {
+      display: flex;
+      align-items: center;
+
+      > * {
+        display: block;
+        color: rgba(0, 0, 0, 0.588);
+      }
+      p {
+        display: block;
+        margin-left: 15px;
       }
     }
   }

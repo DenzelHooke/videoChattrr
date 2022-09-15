@@ -7,7 +7,11 @@ const roomModel = mongoose.Schema({
   },
   host: {
     type: String,
-    required: [true, "Please enter a room name."],
+    required: [true, "Please enter a host name."],
+  },
+  joinable: {
+    type: String,
+    required: [true, "Please enter a joinability status."],
   },
 });
 

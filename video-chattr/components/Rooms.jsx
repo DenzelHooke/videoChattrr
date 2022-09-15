@@ -25,12 +25,6 @@ const Rooms = ({ onClick }) => {
 
   const onBtnClick = (obj) => {
     console.log(obj);
-    setModeState((prevState) => {
-      return {
-        ...prevState,
-        buttonMode: obj.type,
-      };
-    });
     onClick(obj);
   };
 
@@ -38,14 +32,13 @@ const Rooms = ({ onClick }) => {
     //? Have func that generates dotted boxes informing user of room space.
     <>
       <div id="room-form-container">
-        <div className="constrain">
+        <div className="room-constrain">
           <h1
             className="center-text
           focus-text"
           >
             Rooms
           </h1>
-          <p>{`BTN MODE: ${modeState.buttonMode}`}</p>
         </div>
         {/* <div className="savedRooms">
           <h3 className="center">SAVED ROOMS</h3>
@@ -73,7 +66,7 @@ const Rooms = ({ onClick }) => {
             </div>
           </div>
         </div> */}
-        <div className="constrain">
+        <div className="room-constrain">
           <Form
             form={
               <RoomForm
