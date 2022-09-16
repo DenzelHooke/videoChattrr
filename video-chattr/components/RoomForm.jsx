@@ -2,7 +2,14 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { BsCheckCircleFill } from "react-icons/bs";
 
-const RoomForm = ({ onClick, modeState, setModeState, onRoomCheck }) => {
+const RoomForm = ({
+  onClick,
+  modeState,
+  setModeState,
+  roomState,
+  setRoomState,
+  onRoomCheck,
+}) => {
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
@@ -48,23 +55,29 @@ const RoomForm = ({ onClick, modeState, setModeState, onRoomCheck }) => {
   };
 
   const onFormClick = (e) => {
-    setModeState((prevState) => ({
-      ...prevState,
-      buttonMode: e.target.id,
-    }));
+    if (e.target.id === "create" || e.target.id === "join") {
+      setModeState((prevState) => ({
+        ...prevState,
+        buttonMode: e.target.id,
+      }));
+    }
 
-    //* Check functionality
     if (e.target.id === "check") {
-      console.log("Check block");
-
-      //TODO call DB
-
-      //TODO retrieve results in some-sort of state.
-
-      //TODO Act on that data.
+      if (!roomID) {
+        setFormData((prevState) => ({
+          ...prevState,
+          isError: true,
+        }));
+        return;
+      } else {
+        setFormData((prevState) => ({
+          ...prevState,
+          isError: false,
+        }));
+      }
+      onClick({ type: e.target.id, room: roomID });
     }
     console.log("form click");
-    // onClick({ type: e.target.id, room: roomID });
   };
 
   return (
@@ -114,8 +127,28 @@ const RoomForm = ({ onClick, modeState, setModeState, onRoomCheck }) => {
         <div className="room-constrain" id="room-form-info">
           <ul>
             <li>
-              <BsCheckCircleFill />
-              <p>Exists</p>
+              <BsCheckCircleFill
+                className={`${roomState.exists ? "error_svg" : null}`}
+              />
+              {
+                // If null
+                modeState.buttonMode === null ? (
+                  <>
+                    <p className={`${roomState.exists ? "" : ""}`}>Exists</p>
+                  </>
+                ) : // If create mode is on
+                modeState.buttonMode === "create" ? (
+                  <>
+                    <p className={`${roomState.exists ? "" : ""}`}>Exists</p>
+                  </>
+                ) : (
+                  modeState.buttonMode === "join" && (
+                    <>
+                      <p className={`${roomState.exists ? "" : ""}`}>Exists</p>
+                    </>
+                  )
+                )
+              }
             </li>
             <li></li>
           </ul>

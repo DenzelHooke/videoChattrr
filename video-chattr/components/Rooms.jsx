@@ -10,6 +10,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { setRoom } from "../features/room/roomSlice";
 import { AiFillDelete } from "react-icons/ai";
+import LoadingCircle from "./LoadingCircle";
 
 const Rooms = ({ onClick }) => {
   const router = useRouter();
@@ -19,13 +20,69 @@ const Rooms = ({ onClick }) => {
   const { rtcToken, user } = useSelector((state) => state.auth);
   const { roomName } = useSelector((state) => state.room);
 
+  const [componentState, setComponenetState] = useState({
+    isLoading: false,
+  });
+
   const [modeState, setModeState] = useState({
     buttonMode: null,
   });
 
-  const onBtnClick = (obj) => {
+  const [roomState, setRoomState] = useState({
+    roomName: null,
+    joinable: null,
+    exists: null,
+  });
+
+  const onBtnClick = async (obj) => {
+    const API_URL = "http://localhost:8080/api/room";
+
+    if (obj.type === "check") {
+      setComponenetState((prevState) => ({
+        ...prevState,
+        isLoading: true,
+      }));
+      //* Check functionality
+      //TODO call func
+      const config = {
+        headers: {
+          authorization: `Bearer ${user.token}`,
+        },
+      };
+
+      const payload = {
+        roomName: obj.room,
+      };
+
+      console.log(config);
+      console.log("REQ sent");
+
+      try {
+        const res = await axios.post(API_URL + "/verify/", payload, config);
+        setComponenetState((prevState) => ({
+          ...prevState,
+          isLoading: false,
+        }));
+
+        if (modeState.buttonMode === "create") {
+          roomState.roomName = obj.room;
+          roomState.exists = true;
+        }
+
+        console.log("RES received!");
+        console.log(res);
+        //TODO retrieve results in some-sort of state.
+        //TODO Act on that data.
+      } catch (error) {
+        setComponenetState((prevState) => ({
+          ...prevState,
+          isLoading: false,
+        }));
+      }
+    }
+
     console.log(obj);
-    onClick(obj);
+    // onClick(obj);
   };
 
   return (
@@ -40,6 +97,7 @@ const Rooms = ({ onClick }) => {
             Rooms
           </h1>
         </div>
+        {componentState.isLoading === true && <LoadingCircle />}
         {/* <div className="savedRooms">
           <h3 className="center">SAVED ROOMS</h3>
           <div className="wrapper">
@@ -73,6 +131,8 @@ const Rooms = ({ onClick }) => {
                 onClick={onBtnClick}
                 setModeState={setModeState}
                 modeState={modeState}
+                roomState={roomState}
+                setRoomState={setRoomState}
               />
             }
             message=""

@@ -522,6 +522,14 @@ button {
   border: 2px solid var(--errorRed) !important;
 }
 
+.error_svg {
+  fill: var(--errorRed) !important;
+}
+
+.error_text {
+  color: var(--errorRed) !important;
+}
+
 #loading {
   margin: 0 auto;
   position: relative;
