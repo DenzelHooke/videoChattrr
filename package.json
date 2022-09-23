@@ -26,7 +26,8 @@
     "mongoose": "^6.3.4",
     "react-nextjs-toast": "^1.2.5",
     "react-toastify": "^9.0.1",
-    "socket.io": "^4.5.1"
+    "socket.io": "^4.5.1",
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "concurrently": "^7.2.0",

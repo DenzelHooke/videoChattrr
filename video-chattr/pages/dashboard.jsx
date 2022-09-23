@@ -5,10 +5,9 @@ import { toast } from "react-nextjs-toast";
 import { useRouter } from "next/router";
 import { wrapper } from "../app/store";
 import styles from "../styles/Dashboard.module.scss";
-import DisplayRooms from "../components/DisplayRooms";
 // import RtcUser from "./video/videoFuncs";
 import { genRTC } from "../features/auth/authSlice";
-import { setRoom } from "../features/room/roomSlice";
+import { createRoom, setRoom } from "../features/room/roomSlice";
 import io from "socket.io-client";
 import { roomExists } from "../helpers/RoomsFuncs";
 import LoadingRoomForm from "../components/LoadingRoomForm";
@@ -19,6 +18,14 @@ const Rooms = dynamic(async () => await import("../components/Rooms"), {
   loading: () => <LoadingCircle />,
   ssr: false,
 });
+
+const DisplayRooms = dynamic(
+  async () => await import("../components/DisplayRooms"),
+  {
+    loading: () => <LoadingCircle />,
+    ssr: false,
+  }
+);
 
 function dashboard({ user }) {
   const dispatch = useDispatch();
@@ -41,16 +48,16 @@ function dashboard({ user }) {
       }
 
       toast.notify(`Hello, ${user.username}`);
-      // socketRef.current = io.connect("localhost:8080", {
-      //   auth: {
-      //     token: user.token,
-      //   },
-      // });
+    }
+  }, []);
 
-      // socketRef.current.emit("init", {
-      //   user: user,
-      //   room: "dashboard",
-      // });
+  useEffect(() => {
+    if (user) {
+      socketRef.current = io.connect(process.env.NEXT_PUBLIC_BACKEND_URL, {
+        auth: {
+          token: user.token,
+        },
+      });
     }
   }, []);
 
@@ -63,10 +70,24 @@ function dashboard({ user }) {
   //   }
   // }, [rtcToken, roomName]);
 
-  const onClick = async ({ type, room }) => {
-    const data = { roomID: room };
+  const onClick = async ({ roomID, buttonMode }) => {
+    if (buttonMode === "create") {
+      console.log("%c Creating room...", "color: #4ce353");
+      dispatch(createRoom({ roomID, user }));
+      // dispatch(genRTC(data)).then(() => dispatch(setRoom(room)));
+    } else if (buttonMode === "join") {
+      console.log(`%c Requesting to join room ${roomID}..`, "color: #4ce353");
+      // TODO Connect to socket channel
+      socketRef.current.emit("joinRoom", {
+        username: user.username,
+        roomID,
+        userID: user._id,
+      });
+
+      //TODO transfer client to room page
+    }
+
     // Create rtcToken
-    dispatch(genRTC(data)).then(() => dispatch(setRoom(room)));
     // const exists = await roomExists(room, authState.user.token);
 
     // console.log("HITHITIHTR", exists);
@@ -83,17 +104,6 @@ function dashboard({ user }) {
     //     type: "error",
     //   });
     // }
-
-    const btnType = type.toLowerCase();
-    if (btnType !== "create" && btnType !== "join") {
-      return;
-    }
-
-    if (btnType === "create") {
-      //Loading useDispatch
-      //Send socket data
-    }
-    //Connect to room or create room.
   };
 
   return (

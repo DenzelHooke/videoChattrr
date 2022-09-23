@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { BsCheckCircleFill } from "react-icons/bs";
+import { BsXCircleFill } from "react-icons/bs";
 
 const RoomForm = ({
   onClick,
@@ -13,10 +14,12 @@ const RoomForm = ({
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
-    roomID: "",
+    roomID: "102efea0-5ed7-4929-b3bf-01cb0a9816e2",
     isPublisher: true,
     isError: false,
+    message: "",
   });
+
   const { roomID } = formData;
 
   const hasWhiteSpace = (s) => {
@@ -38,46 +41,52 @@ const RoomForm = ({
   };
 
   const onSubmit = (e) => {
-    console.log("submmit click");
     e.preventDefault();
+    console.log("submmit click");
+
+    //Reset local room state
+    setRoomState({
+      roomName: null,
+      joinable: null,
+      exists: null,
+    });
+
+    // Look for basic errors
     if (!roomID) {
       setFormData((prevState) => ({
         ...prevState,
         isError: true,
+        message: "Please enter a room ID before continuing.",
       }));
       return;
-    } else {
+    } else if (!modeState.buttonMode) {
       setFormData((prevState) => ({
         ...prevState,
-        isError: false,
+        isError: true,
+        message: "Please select a mode before continuing.",
       }));
+      return;
     }
+
+    setFormData((prevState) => ({
+      ...prevState,
+      isError: false,
+      message: "",
+    }));
+
+    onClick({ roomName: roomID });
   };
 
   const onFormClick = (e) => {
+    console.log("form click");
+
+    //Check if create or join btn was pressed
     if (e.target.id === "create" || e.target.id === "join") {
       setModeState((prevState) => ({
         ...prevState,
         buttonMode: e.target.id,
       }));
     }
-
-    if (e.target.id === "check") {
-      if (!roomID) {
-        setFormData((prevState) => ({
-          ...prevState,
-          isError: true,
-        }));
-        return;
-      } else {
-        setFormData((prevState) => ({
-          ...prevState,
-          isError: false,
-        }));
-      }
-      onClick({ type: e.target.id, room: roomID });
-    }
-    console.log("form click");
   };
 
   return (
@@ -93,9 +102,22 @@ const RoomForm = ({
             id="roomID"
             value={roomID}
             onChange={onChange}
-            placeholder="Enter room name"
-            maxLength="10"
+            placeholder="Please enter a room name"
+            maxLength="50"
           />
+          <small>{formData.message}</small>
+        </div>
+        <div className="options">
+          <div>
+            {modeState.buttonMode === "create" ? (
+              <>
+                <label htmlFor="">Make this room joinable: </label>
+                <input type="checkbox" id="joinable" className="checkbox" />
+              </>
+            ) : (
+              modeState.buttonMode === "join" && <></>
+            )}
+          </div>
         </div>
         <div className="btn-wrapper">
           <button
@@ -120,39 +142,15 @@ const RoomForm = ({
           </button>
         </div>
         <div className="long-btn">
-          <button id="check" type="button" onClick={onFormClick}>
-            Check
+          <button id="execute" type="submit" className="btn_blue">
+            {modeState.buttonMode === null
+              ? "Please select a mode"
+              : modeState.buttonMode === "create"
+              ? "Create Room"
+              : modeState.buttonMode === "join" && "Join Room"}
           </button>
         </div>
-        <div className="room-constrain" id="room-form-info">
-          <ul>
-            <li>
-              <BsCheckCircleFill
-                className={`${roomState.exists ? "error_svg" : null}`}
-              />
-              {
-                // If null
-                modeState.buttonMode === null ? (
-                  <>
-                    <p className={`${roomState.exists ? "" : ""}`}>Exists</p>
-                  </>
-                ) : // If create mode is on
-                modeState.buttonMode === "create" ? (
-                  <>
-                    <p className={`${roomState.exists ? "" : ""}`}>Exists</p>
-                  </>
-                ) : (
-                  modeState.buttonMode === "join" && (
-                    <>
-                      <p className={`${roomState.exists ? "" : ""}`}>Exists</p>
-                    </>
-                  )
-                )
-              }
-            </li>
-            <li></li>
-          </ul>
-        </div>
+        <div className="room-constrain" id="room-form-info"></div>
       </form>
     </>
   );

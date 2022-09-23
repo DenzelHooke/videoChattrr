@@ -18,7 +18,6 @@ const Rooms = ({ onClick }) => {
 
   const dispatch = useDispatch();
   const { rtcToken, user } = useSelector((state) => state.auth);
-  const { roomName } = useSelector((state) => state.room);
 
   const [componentState, setComponenetState] = useState({
     isLoading: false,
@@ -26,6 +25,7 @@ const Rooms = ({ onClick }) => {
 
   const [modeState, setModeState] = useState({
     buttonMode: null,
+    executePressed: true,
   });
 
   const [roomState, setRoomState] = useState({
@@ -34,16 +34,17 @@ const Rooms = ({ onClick }) => {
     exists: null,
   });
 
-  const onBtnClick = async (obj) => {
-    const API_URL = "http://localhost:8080/api/room";
+  const onBtnClick = async ({ roomName }) => {
+    const API_URL =
+      process.env.NODE_ENV === "production"
+        ? ""
+        : process.env.NEXT_PUBLIC_ROOM_API;
 
-    if (obj.type === "check") {
+    if (modeState.executePressed) {
       setComponenetState((prevState) => ({
         ...prevState,
         isLoading: true,
       }));
-      //* Check functionality
-      //TODO call func
       const config = {
         headers: {
           authorization: `Bearer ${user.token}`,
@@ -51,12 +52,13 @@ const Rooms = ({ onClick }) => {
       };
 
       const payload = {
-        roomName: obj.room,
+        roomName,
       };
 
       console.log(config);
       console.log("REQ sent");
 
+      //* Check functionality
       try {
         const res = await axios.post(API_URL + "/verify/", payload, config);
         setComponenetState((prevState) => ({
@@ -64,10 +66,11 @@ const Rooms = ({ onClick }) => {
           isLoading: false,
         }));
 
-        if (modeState.buttonMode === "create") {
-          roomState.roomName = obj.room;
-          roomState.exists = true;
-        }
+        setRoomState((prevState) => ({
+          ...prevState,
+          roomName,
+          exists: true,
+        }));
 
         console.log("RES received!");
         console.log(res);
@@ -81,8 +84,14 @@ const Rooms = ({ onClick }) => {
       }
     }
 
-    console.log(obj);
-    // onClick(obj);
+    console.log("%c Sending data upstairs...", "color: #4ce353");
+    console.log(roomName);
+    const upstairsPayload = {
+      roomID: roomName,
+      buttonMode: modeState.buttonMode,
+    };
+    console.log(upstairsPayload);
+    onClick(upstairsPayload);
   };
 
   return (

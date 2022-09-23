@@ -56,7 +56,8 @@ export const createRoom = createAsyncThunk(
       const res = await roomService.createRoom(userData);
       return JSON.stringify(res.data);
     } catch (error) {
-      (error.message && error.response.data && error.response.data.message) ||
+      const message =
+        (error.message && error.response.data && error.response.data.message) ||
         error.message ||
         error.toString();
 
@@ -93,6 +94,12 @@ export const roomSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(genRTC.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(createRoom.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createRoom.fulfilled, (state, action) => {
         state.isLoading = false;
       });
   },

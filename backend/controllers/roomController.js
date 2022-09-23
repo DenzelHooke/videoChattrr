@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const Room = require("../models/roomModel");
 const asyncHandler = require("express-async-handler");
+const { uuid } = require("uuidv4");
 
 // @desc Check is room exists already.
 // @route POST /api/room/verify
@@ -43,19 +44,26 @@ const roomExists = asyncHandler(async (req, res) => {
 });
 
 const createRoom = asyncHandler(async (req, res) => {
-  const { roomName, host } = req.body;
+  console.log(req.body);
+  const { roomName, host, joinable } = req.body;
 
-  if (!req.body) {
-    res.json(201);
-    throw new Error("No body data provided.");
+  const user = await User.findById(req.body.host);
+
+  if (user) {
+    await Room.create({
+      roomName,
+      host,
+      joinable,
+      roomID: genRoomID(),
+    });
   }
-
-  const newRoom = await Room.create({
-    roomName: roomName,
-    host,
-  });
 });
+
+const genRoomID = () => {
+  return uuid();
+};
 
 module.exports = {
   roomExists,
+  createRoom,
 };

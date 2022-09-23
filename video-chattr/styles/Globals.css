@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&family=Merriweather:wght@300;400&display=swap");
 :root {
   --azure: rgba(0, 122, 235, 1);
+  --azureHover: rgb(0, 97, 188);
   --eerie-black: rgba(33, 33, 33, 1);
   --white: rgb(247, 247, 247);
   --yellowish: #ffe333;
@@ -129,12 +130,8 @@ button {
 .long-btn button {
   height: 35px !important;
   display: block;
-  background: var(--happyGreen);
   color: white;
   font-size: 16px;
-}
-.long-btn button:hover {
-  background: rgb(69, 163, 69);
 }
 
 .btn_blue {
@@ -143,7 +140,7 @@ button {
   transition: all 100ms ease-in-out;
 }
 .btn_blue:hover {
-  background-color: rgb(19, 97, 181);
+  background-color: var(--azureHover);
 }
 
 .container {
@@ -527,7 +524,18 @@ button {
 }
 
 .error_text {
-  color: var(--errorRed) !important;
+  color: var(--eerie-black) !important;
+  font-weight: 400;
+}
+
+.azureBg {
+  background: var(--azure);
+  color: white;
+}
+
+.checkbox {
+  width: auto !important;
+  display: inline !important;
 }
 
 #loading {

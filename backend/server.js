@@ -8,6 +8,14 @@ const http = require("http");
 const { connectDB } = require("./config/db");
 const { errorHandler } = require("./middleware/errorMiddleware");
 const jwt = require("jsonwebtoken");
+const {
+  verifyRoomExistsInDB,
+  isRoomActive,
+  isRoomJoinable,
+  createRoomInMemory,
+  addUserToRoomInMemory,
+  getRoomFromDB,
+} = require("./helpers/room");
 
 const PORT = process.env.PORT || 8080;
 const dev = process.env.NODE_ENV !== "production";
@@ -28,6 +36,15 @@ const io = socketio(server, {
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+const rooms = [
+  {
+    roomID: "123",
+  },
+  {
+    roomID: "testRoom",
+  },
+];
 
 const isValidJwt = (token) => {
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -56,10 +73,54 @@ io.use((socket, next) => {
 io.on("connection", (socket) => {
   console.log("User connected".america);
 
-  socket.on("init", async (data) => {
-    const user = data.user;
-    const userRoom = data.room;
+  socket.on("joinRoom", async (data) => {
+    const { username, roomID, userID } = data;
+
+    //TODO Check db for a room with that roomID
+    const roomExists = await verifyRoomExistsInDB(roomID);
+    console.log(roomExists);
+
+    // Room exists, proceed further.
+    if (roomExists) {
+      console.log("room exists!");
+
+      // Check if room is running currently with users in it.
+      // TODO Check if any room is in memory with same roomID
+      const activeRoom = await isRoomActive(roomID, rooms);
+      if (!activeRoom) {
+        const user = {
+          username,
+          socket: socket,
+          userID,
+        };
+
+        //Room isn't running currently but check if it's 'joinable'.
+        // If it is then add client to socket channel and to the room in memory
+        //TODO assign user to that room channel
+        const room = await getRoomFromDB(roomID);
+        if (room.joinable) {
+          socket.join(roomID);
+          createRoomInMemory(roomID, rooms);
+          addUserToRoomInMemory(roomID, user, rooms);
+
+          console.log(`Client connected to room ${activeRoom.roomID}`);
+          return;
+        }
+      }
+      if (activeRoom) {
+        console.log(`Room found: ${activeRoom}`);
+      } else {
+        console.log("room not found!");
+      }
+    }
+
+    // TODO create room with that room ID
+
+    // TODO Auth client depending on whether they are the host or not of that room.
+    console.log(data);
   });
+
+  socket.on("init", async (data) => {});
 });
 
 // Room join

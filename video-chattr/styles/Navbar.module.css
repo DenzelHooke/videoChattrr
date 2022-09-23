@@ -36,9 +36,9 @@
 #dashboard {
   color: white;
   background: var(--eerie-black);
-  padding: 10px;
 }
 #dashboard a {
+  padding: 10px;
   display: block;
   height: 100%;
 }/*# sourceMappingURL=Navbar.module.css.map */
