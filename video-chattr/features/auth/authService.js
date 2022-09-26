@@ -39,7 +39,6 @@ const logout = () => {
 
 const genRTC = async (userData) => {
   //Calls backend with userData to generate a RTC token.
-  console.log(userData);
   const user = JSON.parse(localStorage.getItem("user"));
   const { token } = user;
   console.log(user);

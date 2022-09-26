@@ -2,6 +2,8 @@ const User = require("../models/userModel");
 const Room = require("../models/roomModel");
 const asyncHandler = require("express-async-handler");
 const { uuid } = require("uuidv4");
+const { getRoomFromDB } = require("../helpers/room");
+const { json } = require("express");
 
 // @desc Check is room exists already.
 // @route POST /api/room/verify
@@ -44,17 +46,44 @@ const roomExists = asyncHandler(async (req, res) => {
 });
 
 const createRoom = asyncHandler(async (req, res) => {
-  console.log(req.body);
-  const { roomName, host, joinable } = req.body;
+  const { roomName, host, options } = req.body;
+  const { joinable } = options;
+  const user = await User.findById(host);
 
-  const user = await User.findById(req.body.host);
+  console.log(`User: `, user);
 
   if (user) {
-    await Room.create({
+    const newRoom = {
       roomName,
       host,
       joinable,
       roomID: genRoomID(),
+    };
+    await Room.create(newRoom);
+
+    res.status(201).json(newRoom);
+  } else {
+    throw new Error(
+      "The userID who sent this request can't be found on the server."
+    );
+  }
+});
+
+const getRoomData = asyncHandler(async (req, res) => {
+  // console.log(`GET room hit.`, req);
+  const roomID = req.query.roomID;
+  console.log("ROOMID", roomID);
+  const room = await getRoomFromDB(roomID);
+
+  if (room) {
+    res.status(200).json({
+      room: room,
+      exists: false,
+    });
+  } else {
+    res.status(200).json({
+      room: false,
+      exists: false,
     });
   }
 });
@@ -66,4 +95,5 @@ const genRoomID = () => {
 module.exports = {
   roomExists,
   createRoom,
+  getRoomData,
 };

@@ -35,32 +35,17 @@ const Rooms = ({ onClick }) => {
   });
 
   const onBtnClick = async ({ roomName }) => {
-    const API_URL =
-      process.env.NODE_ENV === "production"
-        ? ""
-        : process.env.NEXT_PUBLIC_ROOM_API;
-
     if (modeState.executePressed) {
       setComponenetState((prevState) => ({
         ...prevState,
         isLoading: true,
       }));
-      const config = {
-        headers: {
-          authorization: `Bearer ${user.token}`,
-        },
-      };
 
-      const payload = {
-        roomName,
-      };
-
-      console.log(config);
-      console.log("REQ sent");
+      // console.log(config);
+      // console.log("REQ sent");
 
       //* Check functionality
       try {
-        const res = await axios.post(API_URL + "/verify/", payload, config);
         setComponenetState((prevState) => ({
           ...prevState,
           isLoading: false,
@@ -69,13 +54,10 @@ const Rooms = ({ onClick }) => {
         setRoomState((prevState) => ({
           ...prevState,
           roomName,
-          exists: true,
+          exists: null,
         }));
 
         console.log("RES received!");
-        console.log(res);
-        //TODO retrieve results in some-sort of state.
-        //TODO Act on that data.
       } catch (error) {
         setComponenetState((prevState) => ({
           ...prevState,
@@ -85,12 +67,10 @@ const Rooms = ({ onClick }) => {
     }
 
     console.log("%c Sending data upstairs...", "color: #4ce353");
-    console.log(roomName);
     const upstairsPayload = {
       roomID: roomName,
       buttonMode: modeState.buttonMode,
     };
-    console.log(upstairsPayload);
     onClick(upstairsPayload);
   };
 

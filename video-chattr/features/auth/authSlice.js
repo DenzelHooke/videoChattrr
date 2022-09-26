@@ -132,7 +132,7 @@ export const authSlice = createSlice({
       })
 
       .addCase(genRTC.fulfilled, (state, action) => {
-        console.log("action:  ", action);
+        // console.log("action:  ", action);
         const payload = JSON.parse(action.payload);
         state.rtcToken = payload.rtcToken;
         state.uid = payload.uid;

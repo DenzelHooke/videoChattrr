@@ -6,12 +6,16 @@ import { useRouter } from "next/router";
 import { wrapper } from "../app/store";
 import styles from "../styles/Dashboard.module.scss";
 // import RtcUser from "./video/videoFuncs";
-import { genRTC } from "../features/auth/authSlice";
+import { genRTC, reset, removeToken } from "../features/auth/authSlice";
 import { createRoom, setRoom } from "../features/room/roomSlice";
 import io from "socket.io-client";
-import { roomExists } from "../helpers/RoomsFuncs";
+import roomService from "../features/room/roomService";
 import LoadingRoomForm from "../components/LoadingRoomForm";
 import LoadingCircle from "../components/LoadingCircle";
+import uuid4 from "uuid4";
+import cookies from "js-cookie";
+import axios from "axios";
+
 // The Rooms componenet requires the window object which isn't present  with SSR.
 //This loads the component once ssr is done which means this comp isn't loaded in the page source.
 const Rooms = dynamic(async () => await import("../components/Rooms"), {
@@ -32,10 +36,19 @@ function dashboard({ user }) {
   const isServer = typeof window === "undefined";
   const router = useRouter();
   const authState = useSelector((state) => state.auth);
-  const { rooms } = useSelector((state) => state.room);
-  const socketRef = useRef();
+  const { rtcToken } = useSelector((state) => state.auth);
+  const { rooms, roomName, roomID, isSuccess, exists, isError, message } =
+    useSelector((state) => state.room);
 
   useEffect(() => {
+    if (rtcToken) {
+    }
+
+    // return () => dispatch(removeToken());
+  }, [rtcToken]);
+
+  useEffect(() => {
+    console.log("USSR: ", user);
     if (!isServer) {
       console.log(authState.user.token);
       if (!user) {
@@ -51,59 +64,69 @@ function dashboard({ user }) {
     }
   }, []);
 
-  useEffect(() => {
-    if (user) {
-      socketRef.current = io.connect(process.env.NEXT_PUBLIC_BACKEND_URL, {
-        auth: {
-          token: user.token,
-        },
-      });
-    }
-  }, []);
-
   // useEffect(() => {
-  //   if (rtcToken) {
-  //     router.push({
-  //       pathname: "/room",
-  //       query: { roomID: roomName, token: rtcToken },
-  //     });
+  //   if(isError) {
+  //     if(buttonMode) {
+
+  //     }
   //   }
-  // }, [rtcToken, roomName]);
+  // }, [isError, message]);
 
   const onClick = async ({ roomID, buttonMode }) => {
     if (buttonMode === "create") {
       console.log("%c Creating room...", "color: #4ce353");
-      dispatch(createRoom({ roomID, user }));
-      // dispatch(genRTC(data)).then(() => dispatch(setRoom(room)));
+
+      try {
+        dispatch(createRoom({ roomID, user }));
+        dispatch(genRTC({ roomID })).then(() => {
+          //TODO Transfer client to page.
+          router.push({
+            pathname: "/room",
+          });
+        });
+      } catch (error) {
+        //TODO catch common errors
+        console.error(error);
+      }
     } else if (buttonMode === "join") {
       console.log(`%c Requesting to join room ${roomID}..`, "color: #4ce353");
-      // TODO Connect to socket channel
-      socketRef.current.emit("joinRoom", {
-        username: user.username,
-        roomID,
-        userID: user._id,
-      });
 
-      //TODO transfer client to room page
+      //Check whether roopm exists on db.
+      //Proceed if true, return if false.
+
+      try {
+        const data = await roomService.getRoomData(roomID);
+        console.log(data);
+
+        // If doesnt exist
+        if (data.exists === false) {
+          const err = new Error("No room was found with that ID.");
+          err.exists = false;
+          throw err;
+        }
+
+        //TODO transfer client to room page
+        // dispatch(genRTC({ roomID }))
+        //   .then  (() => dispatch(setRoom(roomID)))
+        //   .then(() => {
+        //     router.push({
+        //       pathname: "/room",
+        //     });
+        //   });
+      } catch (error) {
+        console.error(error);
+        if (!error.exists) {
+          toast.notify(
+            `Unfortunatley,  room ${roomID.slice(0, 5)} doesn't exist.`,
+            {
+              title: "Darn it!",
+              type: "error",
+            }
+          );
+          return;
+        }
+      }
     }
-
-    // Create rtcToken
-    // const exists = await roomExists(room, authState.user.token);
-
-    // console.log("HITHITIHTR", exists);
-    // if (exists === true) {
-    //   console.log("GOOD");
-    //   toast.notify(`${room} Available!`, {
-    //     title: "Woohoo!",
-    //     type: "success",
-    //   });
-    // } else {
-    //   console.log("BAD");
-    //   toast.notify(`Unfortunatly, "${room}" is  Unavailable.`, {
-    //     title: "Oops",
-    //     type: "error",
-    //   });
-    // }
   };
 
   return (
@@ -130,7 +153,6 @@ function dashboard({ user }) {
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) =>
     async ({ res, req }) => {
-      const { auth } = store.getState();
       // console.log(auth);
       // console.log(req.cookies);
       let { user } = req.cookies;

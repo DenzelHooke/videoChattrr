@@ -15,8 +15,10 @@ if (!runningOnServer) {
 
 const initialState = {
   roomName: null,
+  roomID: null,
   isHost: false,
   host: null,
+  exists: null,
   isError: null,
   isSuccess: null,
   isLoading: null,
@@ -53,8 +55,23 @@ export const createRoom = createAsyncThunk(
   "room/createRoom",
   async (userData, thunkAPI) => {
     try {
-      const res = await roomService.createRoom(userData);
-      return JSON.stringify(res.data);
+      return await roomService.createRoom(userData);
+    } catch (error) {
+      const message =
+        (error.message && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const getRoomData = createAsyncThunk(
+  "room/getRoomData",
+  async (roomID, thunkAPI) => {
+    try {
+      return await roomService.getRoomData(roomID);
     } catch (error) {
       const message =
         (error.message && error.response.data && error.response.data.message) ||
@@ -81,6 +98,15 @@ export const roomSlice = createSlice({
     setRoom: (state, action) => {
       state.roomName = action.payload;
     },
+    setLoading: (state) => {
+      state.isLoading = true;
+    },
+    stopLoading: (state) => {
+      state.isLoading = false;
+    },
+    setRoomID: (state, action) => {
+      state.roomID = action.payload;
+    },
     leave: (state, action) => {
       state.isHost = false;
     },
@@ -101,6 +127,15 @@ export const roomSlice = createSlice({
       })
       .addCase(createRoom.fulfilled, (state, action) => {
         state.isLoading = false;
+        console.log(action.payload);
+        state.roomName = action.payload.roomName;
+      })
+      .addCase(getRoomData.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getRoomData.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isHost = action.payload.host;
       });
   },
 });

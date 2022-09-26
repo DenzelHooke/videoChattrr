@@ -1,6 +1,9 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/api";
+const API_URL =
+  process.env.NODE_ENV === "production"
+    ? ""
+    : "http://localhost:8080/api/room/";
 
 const roomExists = async (roomName, authToken) => {
   console.log("token: ", authToken);
@@ -29,5 +32,4 @@ const roomExists = async (roomName, authToken) => {
 
   return false;
 };
-
 export { roomExists };

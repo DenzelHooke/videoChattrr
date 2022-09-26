@@ -49,7 +49,7 @@ const Navbar = () => {
   };
 
   const onClick = (e) => {
-    if (e.target.id === "dashboard") {
+    if (e.target.id === "logout") {
       dispatch(removeToken());
       router.push("/dashboard");
     }
@@ -80,9 +80,7 @@ const Navbar = () => {
                 </Link>
               </li>
               <li className="button" id={styles.dashboard}>
-                <Link href="/dashboard" onClick={onClick}>
-                  Dashboard
-                </Link>
+                <Link href="/dashboard">Dashboard</Link>
               </li>
             </>
           ) : (

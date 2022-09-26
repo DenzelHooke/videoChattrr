@@ -23,7 +23,7 @@ const isRoomActive = (roomID, rooms) => {
   if (verifyRoomExistsInDB(roomID)) {
     for (let i = 0; i < rooms.length; i++) {
       const room = rooms[i];
-      console.log(room, rooms);
+      // console.log(room, rooms);
       if (room.roomID.toLowerCase() === roomID.toLowerCase()) {
         return room;
       }
@@ -54,29 +54,23 @@ const verifyRoomExistsInDB = async (roomID) => {
   }
 };
 
-const createUserInMemory = async (roomID, user) => {
-  return {
-    username: user.username,
-    isHost: isHost(roomID),
-  };
-};
-
-const createRoomInMemory = async (roomID, rooms) => {
+const createRoomInMemory = (roomID, rooms) => {
   const room = {
     roomID,
     users: [],
   };
 
   rooms.push(room);
+  console.log("Rooms: ", rooms);
   console.log("Added room to room array");
-  return true;
+  return room;
 };
 
-const addUserToRoomInMemory = async (roomID, user, rooms) => {
-  const room = isRoomActive(roomID, rooms);
-
+const addUserToRoomInMemory = (user, room) => {
+  console.log(`Room to add to memory: `, room);
+  // console.log(room.users);
   room.users.push(user);
-  console.log(`User ${user.username} added to room ${roomID.slice(0, 7)}`);
+  console.log(`User ${user.username} added to room ${room.roomID.slice(0, 7)}`);
 };
 
 module.exports = {

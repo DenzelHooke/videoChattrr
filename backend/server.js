@@ -44,6 +44,10 @@ const rooms = [
   {
     roomID: "testRoom",
   },
+  // {
+  //   roomID: "102efea0-5ed7-4929-b3bf-01cb0a9816e2",
+  //   users: []
+  // },
 ];
 
 const isValidJwt = (token) => {
@@ -73,6 +77,10 @@ io.use((socket, next) => {
 io.on("connection", (socket) => {
   console.log("User connected".america);
 
+  socket.on("createRoom", async (data) => {
+    console.log(data);
+  });
+
   socket.on("joinRoom", async (data) => {
     const { username, roomID, userID } = data;
 
@@ -87,31 +95,33 @@ io.on("connection", (socket) => {
       // Check if room is running currently with users in it.
       // TODO Check if any room is in memory with same roomID
       const activeRoom = await isRoomActive(roomID, rooms);
+      const user = {
+        username,
+        socket: socket,
+        userID,
+      };
       if (!activeRoom) {
-        const user = {
-          username,
-          socket: socket,
-          userID,
-        };
-
         //Room isn't running currently but check if it's 'joinable'.
         // If it is then add client to socket channel and to the room in memory
         //TODO assign user to that room channel
         const room = await getRoomFromDB(roomID);
         if (room.joinable) {
+          const newRoom = createRoomInMemory(roomID, rooms);
+          addUserToRoomInMemory(user, newRoom);
           socket.join(roomID);
-          createRoomInMemory(roomID, rooms);
-          addUserToRoomInMemory(roomID, user, rooms);
 
-          console.log(`Client connected to room ${activeRoom.roomID}`);
+          console.log(`Client connected to room ${newRoom.roomID}`);
+          console.log("ALL ROOMS: ", rooms);
           return;
         }
-      }
-      if (activeRoom) {
+      } else if (activeRoom) {
         console.log(`Room found: ${activeRoom}`);
+        console.log(rooms);
       } else {
         console.log("room not found!");
       }
+    } else {
+      return;
     }
 
     // TODO create room with that room ID
