@@ -16,6 +16,7 @@ if (!runningOnServer) {
 const initialState = {
   roomName: null,
   roomID: null,
+  mode: null,
   isHost: false,
   host: null,
   exists: null,
@@ -94,6 +95,11 @@ export const roomSlice = createSlice({
       state.isSuccess = false;
       state.isError = false;
       state.message = "";
+      state.exists = null;
+      state.host = null;
+      state.mode = null;
+      state.roomName = null;
+      state.roomID = null;
     },
     setRoom: (state, action) => {
       state.roomName = action.payload;
@@ -127,8 +133,9 @@ export const roomSlice = createSlice({
       })
       .addCase(createRoom.fulfilled, (state, action) => {
         state.isLoading = false;
-        console.log(action.payload);
         state.roomName = action.payload.roomName;
+        state.roomID = action.payload.roomID;
+        state.mode = "create";
       })
       .addCase(getRoomData.pending, (state) => {
         state.isLoading = true;
@@ -140,5 +147,5 @@ export const roomSlice = createSlice({
   },
 });
 
-export const { reset, setRoom } = roomSlice.actions;
+export const { reset, setRoom, setLoading, stopLoading } = roomSlice.actions;
 export default roomSlice.reducer;

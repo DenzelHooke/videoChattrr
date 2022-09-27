@@ -1,8 +1,11 @@
 import React from "react";
 import { GoUnmute } from "react-icons/go";
 import { BsFillCameraVideoFill } from "react-icons/bs";
+import { useSelector } from "react-redux";
 
-const Video = ({ roomName }) => {
+const Video = () => {
+  const { roomName, roomID } = useSelector((state) => state.room);
+
   return (
     <div>
       <div id="main-container" className="constrain">
@@ -12,6 +15,7 @@ const Video = ({ roomName }) => {
               <span className="room-name">{roomName}</span>
             </h1>
           </div>
+          <div className="roomID">Room ID: {roomID}</div>
           <div id="local-stream" className="focus">
             <div id="local-element">
               <video

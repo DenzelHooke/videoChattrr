@@ -1,25 +1,27 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
-import {
-  removeToken,
-  setLoading,
-  stopLoading,
-} from "../features/auth/authSlice";
+import { setLoading, stopLoading } from "../features/room/roomSlice";
+import { removeToken } from "../features/auth/authSlice";
+import { reset } from "../features/room/roomSlice";
+
 import RoomClient from "../helpers/RoomsClass";
 import LoadingCircle from "../components/LoadingCircle";
 import Video from "../components/Video";
 import io from "socket.io-client";
 import axios from "axios";
+import { wrapper } from "../app/store";
 
 /**
  * A room page for generating video call enviroments.
  * @param {object} Data
  * @returns HTML
  */
-const room = () => {
-  const { rtcToken, uid } = useSelector((state) => state.auth);
-  const { roomName, roomID, isLoading } = useSelector((state) => state.room);
+const room = ({ data }) => {
+  const { rtcToken, uid, user } = useSelector((state) => state.auth);
+  const { roomName, roomID, mode, isLoading } = useSelector(
+    (state) => state.room
+  );
   const socketRef = useRef();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -28,13 +30,11 @@ const room = () => {
   const cleanUp = () => {
     //Removes the user token on page dismount because the state persits unless page is refreshed.
     dispatch(removeToken());
+    dispatch(reset());
   };
 
   /**
    * Initializes my Agora room connection class wrapper
-   *
-   * @param "None"
-   * @return "None"
    */
   const setUpClient = async () => {
     const videoClient = new RoomClient(roomID, uid);
@@ -58,14 +58,36 @@ const room = () => {
       //* Start Agora
       // setUpClient(rtcToken, roomName);
       //* INIT socket.io connection to server
-      socketRef.current = io.connect(process.env.NEXT_PUBLIC_BACKEND_URL);
+      dispatch(setLoading(true));
 
-      // TODO Connect to socket channel
-      // socketRef.current.emit("joinRoom", {
-      //   username: user.username,
-      //   roomID,
-      //   userID: user._id,
-      // });
+      if (isLoading) {
+        socketRef.current = io.connect(process.env.NEXT_PUBLIC_BACKEND_URL, {
+          auth: {
+            token: user.token,
+            user: {
+              userID: user.id,
+              username: user.username,
+            },
+          },
+        });
+
+        if (mode === "create") {
+          socketRef.current.emit("createRoom", {
+            roomID: roomID,
+          });
+
+          socketRef.current.on("roomCreated", async () => {
+            await setUpClient();
+          });
+        }
+
+        // TODO Connect to socket channel
+        // socketRef.current.emit("joinRoom", {
+        //   username: user.username,
+        //   roomID,
+        //   userID: user._id,
+        // });
+      }
     }
   }, [rtcToken, isServer]);
 
@@ -88,20 +110,10 @@ const room = () => {
 
 //! Make this page private
 
-export const getServerSideProps = async (res, req) => {
-  console.log(req);
-
-  // const user = req.cookies.user;
-  // const { token } = user;
-  // const config = {
-  //   headers: {
-  //     authorization: `Bearer: ${token}`,
-  //   },
-  // };
-  console.log(res.cookies);
-  return {
-    props: { test: "d" },
-  };
-};
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) => async (req, res) => {
+    console.log(store);
+  }
+);
 
 export default room;

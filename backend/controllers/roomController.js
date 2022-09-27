@@ -50,7 +50,7 @@ const createRoom = asyncHandler(async (req, res) => {
   const { joinable } = options;
   const user = await User.findById(host);
 
-  console.log(`User: `, user);
+  // console.log(`User: `, user);
 
   if (user) {
     const newRoom = {

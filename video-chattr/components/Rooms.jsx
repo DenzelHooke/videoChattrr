@@ -18,6 +18,7 @@ const Rooms = ({ onClick }) => {
 
   const dispatch = useDispatch();
   const { rtcToken, user } = useSelector((state) => state.auth);
+  const { isLoading } = useSelector((state) => state.room);
 
   const [componentState, setComponenetState] = useState({
     isLoading: false,
@@ -86,7 +87,7 @@ const Rooms = ({ onClick }) => {
             Rooms
           </h1>
         </div>
-        {componentState.isLoading === true && <LoadingCircle />}
+        {isLoading && <LoadingCircle />}
         {/* <div className="savedRooms">
           <h3 className="center">SAVED ROOMS</h3>
           <div className="wrapper">

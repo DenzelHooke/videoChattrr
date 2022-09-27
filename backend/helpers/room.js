@@ -1,4 +1,5 @@
 const Room = require("../models/roomModel");
+const User = require("../models/userModel");
 
 const getRoomFromDB = async (roomID) => {
   const room = await Room.findOne({ roomID });
@@ -66,6 +67,20 @@ const createRoomInMemory = (roomID, rooms) => {
   return room;
 };
 
+const createUserInMemory = async (username, socket, userID) => {
+  const user = await User.findOne({ userID });
+
+  if (user) {
+    return {
+      username,
+      socket: socket,
+      userID,
+    };
+  } else {
+    throw new Error("No user with that ID found!");
+  }
+};
+
 const addUserToRoomInMemory = (user, room) => {
   console.log(`Room to add to memory: `, room);
   // console.log(room.users);
@@ -78,6 +93,7 @@ module.exports = {
   isRoomActive,
   isRoomJoinable,
   createRoomInMemory,
+  createUserInMemory,
   addUserToRoomInMemory,
   getRoomFromDB,
   isHost,

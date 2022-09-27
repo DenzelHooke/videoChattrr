@@ -12,6 +12,7 @@ const {
   verifyRoomExistsInDB,
   isRoomActive,
   isRoomJoinable,
+  createUserInMemory,
   createRoomInMemory,
   addUserToRoomInMemory,
   getRoomFromDB,
@@ -51,12 +52,16 @@ const rooms = [
 ];
 
 const isValidJwt = (token) => {
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-  if (!decoded) {
-    return false;
-  } else {
-    return true;
+    if (!decoded) {
+      return false;
+    } else {
+      return true;
+    }
+  } catch (error) {
+    throw new Error(error);
   }
 };
 
@@ -65,6 +70,7 @@ const isValidJwt = (token) => {
 //* Verifies token of incoming socket connection.
 io.use((socket, next) => {
   const unverifiedToken = socket.handshake.auth.token;
+  console.log("User attempting to connect.".bgCyan.white);
 
   if (isValidJwt(unverifiedToken)) {
     console.log(`USER: ${socket.id} is using valid data!`.bgBlue.white);
@@ -79,6 +85,12 @@ io.on("connection", (socket) => {
 
   socket.on("createRoom", async (data) => {
     console.log(data);
+    const { roomID, username, userID } = data;
+
+    createRoomInMemory(roomID, rooms);
+    const user = await createUserInMemory(username, socket, userID);
+
+    addUserToRoomInMemory();
   });
 
   socket.on("joinRoom", async (data) => {
@@ -95,11 +107,8 @@ io.on("connection", (socket) => {
       // Check if room is running currently with users in it.
       // TODO Check if any room is in memory with same roomID
       const activeRoom = await isRoomActive(roomID, rooms);
-      const user = {
-        username,
-        socket: socket,
-        userID,
-      };
+      const user = await createUserInMemory(username, socket, userID);
+
       if (!activeRoom) {
         //Room isn't running currently but check if it's 'joinable'.
         // If it is then add client to socket channel and to the room in memory
