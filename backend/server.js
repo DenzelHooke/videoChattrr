@@ -13,10 +13,12 @@ const {
   isRoomActive,
   isRoomJoinable,
   createUserInMemory,
+  removeUserFromRoomInMemory,
   createRoomInMemory,
   addUserToRoomInMemory,
   getRoomFromDB,
 } = require("./helpers/room");
+const { on } = require("events");
 
 const PORT = process.env.PORT || 8080;
 const dev = process.env.NODE_ENV !== "production";
@@ -81,16 +83,33 @@ io.use((socket, next) => {
 });
 
 io.on("connection", (socket) => {
+  const { username, userID } = JSON.parse(socket.handshake.auth.user);
   console.log("User connected".america);
 
-  socket.on("createRoom", async (data) => {
+  socket.on("disconnect", async (data) => {
+    const roomID = socket.handshake.auth.roomID;
+    removeUserFromRoomInMemory(userID, roomID, rooms);
+    console.log(roomID);
     console.log(data);
-    const { roomID, username, userID } = data;
+  });
 
-    createRoomInMemory(roomID, rooms);
-    const user = await createUserInMemory(username, socket, userID);
+  socket.on("removeUser", async (data) => {
+    const { roomID } = data;
+    console.log(data);
+    removeUserFromRoomInMemory(userID, roomID, rooms);
+  });
 
-    addUserToRoomInMemory();
+  socket.on("createRoom", async (data) => {
+    console.log("Create room in mem called", data);
+    console.log(data);
+    const { roomID } = data;
+
+    const room = createRoomInMemory(roomID, rooms);
+    // await createUserInMemory(username, socket, userID);
+
+    addUserToRoomInMemory(username, socket, userID, room);
+    console.log(rooms);
+    socket.emit("roomJoined");
   });
 
   socket.on("joinRoom", async (data) => {

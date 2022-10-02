@@ -17,17 +17,20 @@ import { wrapper } from "../app/store";
  * @param {object} Data
  * @returns HTML
  */
-const room = ({ data }) => {
-  const { rtcToken, uid, user } = useSelector((state) => state.auth);
-  const { roomName, roomID, mode, isLoading } = useSelector(
-    (state) => state.room
-  );
+const room = ({ mode, rtcToken }) => {
+  const { uid, user } = useSelector((state) => state.auth);
+  const { roomName, roomID, isLoading } = useSelector((state) => state.room);
   const socketRef = useRef();
   const router = useRouter();
   const dispatch = useDispatch();
   const isServer = typeof window === "undefined";
 
   const cleanUp = () => {
+    // socketRef.current.emit("removeUser", {
+    //   roomID,
+    // });
+    socketRef.current.disconnect();
+
     //Removes the user token on page dismount because the state persits unless page is refreshed.
     dispatch(removeToken());
     dispatch(reset());
@@ -36,9 +39,10 @@ const room = ({ data }) => {
   /**
    * Initializes my Agora room connection class wrapper
    */
-  const setUpClient = async () => {
+  const setUpClient = async (rtcToken, roomID) => {
     const videoClient = new RoomClient(roomID, uid);
     await videoClient.init(rtcToken);
+    dispatch(setLoading(false));
   };
 
   useEffect(() => {
@@ -46,64 +50,77 @@ const room = ({ data }) => {
       router.push("/dashboard");
     }
 
+    if (!isServer) {
+      //Can't run on server side so we have to run this only when the page completes SSR.
+
+      // TODO Connect to socket channel
+
+      //Connect to socket server
+      socketRef.current = io.connect(process.env.NEXT_PUBLIC_BACKEND_URL, {
+        auth: {
+          token: user.token,
+          roomID: roomID,
+          user: JSON.stringify({
+            userID: user._id,
+            username: user.username,
+          }),
+        },
+      });
+
+      socketRef.current.on("roomJoined", () => {
+        //* Start Agora
+        setUpClient(rtcToken, roomID);
+        //* INIT socket.io connection to server
+      });
+
+      if (mode === "create" && roomID) {
+        console.log("roomID: ", roomID);
+        socketRef.current.emit("createRoom", {
+          roomID: roomID,
+        });
+      }
+
+      // window.addEventListener("beforeunload", () => {
+      //   socketRef.current.emit("disconnect", {
+      //     msg: "Unloaded browser window",
+      //   });
+      // });
+
+      // socketRef.current.on("disconnect", () => {
+      //   socketRef.current.emit("removeUser", { roomID: roomID });
+      // });
+    }
+  }, [rtcToken, isServer, roomID]);
+
+  useEffect(() => {
+    dispatch(setLoading(true));
+
     return () => {
       cleanUp();
+      socketRef.current.disconnect();
     };
   }, []);
 
   useEffect(() => {
-    if (!isServer) {
-      //Can't run on server side so we have to run this only when the page completes SSR.
-
-      //* Start Agora
-      // setUpClient(rtcToken, roomName);
-      //* INIT socket.io connection to server
-      dispatch(setLoading(true));
-
-      if (isLoading) {
-        socketRef.current = io.connect(process.env.NEXT_PUBLIC_BACKEND_URL, {
-          auth: {
-            token: user.token,
-            user: {
-              userID: user.id,
-              username: user.username,
-            },
-          },
-        });
-
-        if (mode === "create") {
-          socketRef.current.emit("createRoom", {
-            roomID: roomID,
-          });
-
-          socketRef.current.on("roomCreated", async () => {
-            await setUpClient();
-          });
-        }
-
-        // TODO Connect to socket channel
-        // socketRef.current.emit("joinRoom", {
-        //   username: user.username,
-        //   roomID,
-        //   userID: user._id,
-        // });
-      }
-    }
-  }, [rtcToken, isServer]);
-
-  useEffect(() => {
-    return () => dispatch(removeToken());
+    // if (mode === "create") {
+    //   socketRef.current.emit("createRoom", {
+    //     roomID: roomID,
+    //   });
+    //   socketRef.current.on("roomCreated", async () => {
+    //     await setUpClient();
+    //   });
+    // }
   }, []);
 
-  return (
+  return isServer ? (
     <>
-      {isLoading ? (
-        <LoadingCircle />
-      ) : (
-        <div id="room-container" className="grow">
-          <Video roomName={roomName} />
-        </div>
-      )}
+      <LoadingCircle />
+    </>
+  ) : (
+    <>
+      <div id="room-container" className="grow">
+        {isLoading ? <LoadingCircle /> : <Video roomName={roomName} />}
+      </div>
     </>
   );
 };
@@ -111,9 +128,18 @@ const room = ({ data }) => {
 //! Make this page private
 
 export const getServerSideProps = wrapper.getServerSideProps(
-  (store) => async (req, res) => {
-    console.log(store);
-  }
+  (store) =>
+    async ({ res, req }) => {
+      let { roomData } = req.cookies;
+      roomData = JSON.parse(roomData);
+
+      return {
+        props: {
+          mode: roomData.mode,
+          rtcToken: roomData.rtcToken,
+        },
+      };
+    }
 );
 
 export default room;

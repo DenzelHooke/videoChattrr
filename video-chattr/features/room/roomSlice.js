@@ -91,9 +91,9 @@ export const roomSlice = createSlice({
   initialState: initialState,
   reducers: {
     reset: (state) => {
-      state.isLoading = false;
-      state.isSuccess = false;
-      state.isError = false;
+      state.isLoading = null;
+      state.isSuccess = null;
+      state.isError = null;
       state.message = "";
       state.exists = null;
       state.host = null;
@@ -104,8 +104,11 @@ export const roomSlice = createSlice({
     setRoom: (state, action) => {
       state.roomName = action.payload;
     },
-    setLoading: (state) => {
-      state.isLoading = true;
+    setMode: (state, action) => {
+      state.mode = action.payload;
+    },
+    setLoading: (state, action) => {
+      state.isLoading = action.payload;
     },
     stopLoading: (state) => {
       state.isLoading = false;
@@ -125,14 +128,12 @@ export const roomSlice = createSlice({
       .addCase(genRTC.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(genRTC.fulfilled, (state) => {
-        state.isLoading = false;
-      })
+      .addCase(genRTC.fulfilled, (state) => {})
       .addCase(createRoom.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(createRoom.fulfilled, (state, action) => {
-        state.isLoading = false;
+        // state.isLoading = false;
         state.roomName = action.payload.roomName;
         state.roomID = action.payload.roomID;
         state.mode = "create";
@@ -147,5 +148,6 @@ export const roomSlice = createSlice({
   },
 });
 
-export const { reset, setRoom, setLoading, stopLoading } = roomSlice.actions;
+export const { reset, setRoom, setLoading, stopLoading, setMode } =
+  roomSlice.actions;
 export default roomSlice.reducer;

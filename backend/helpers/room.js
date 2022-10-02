@@ -57,13 +57,13 @@ const verifyRoomExistsInDB = async (roomID) => {
 
 const createRoomInMemory = (roomID, rooms) => {
   const room = {
-    roomID,
+    roomID: roomID,
     users: [],
   };
 
   rooms.push(room);
-  console.log("Rooms: ", rooms);
-  console.log("Added room to room array");
+  // console.log("Rooms: ", rooms);
+  // console.log("Added room to room array");
   return room;
 };
 
@@ -81,11 +81,46 @@ const createUserInMemory = async (username, socket, userID) => {
   }
 };
 
-const addUserToRoomInMemory = (user, room) => {
-  console.log(`Room to add to memory: `, room);
+const addUserToRoomInMemory = (username, socket, userID, room) => {
+  // console.log(`Room to add to memory: `, room);
+  const user = {
+    username,
+    socket,
+    userID,
+  };
   // console.log(room.users);
   room.users.push(user);
-  console.log(`User ${user.username} added to room ${room.roomID.slice(0, 7)}`);
+  // console.log(`User ${user.username} added to room ${room.roomID}`);
+};
+
+const removeUserFromRoomInMemory = (userID, roomID, rooms) => {
+  // console.log(`Removing user: ${userID} from room.`);
+
+  // console.log(room.users);
+
+  // console.log(`Users before deletion`, rooms);
+  let found = false;
+  for (let i = 0; i < rooms.length; i++) {
+    if (found) {
+      break;
+    }
+    const room = rooms[i];
+    if (room.roomID === roomID) {
+      for (let x = 0; x < room.users.length; i++) {
+        // console.log("-- FOUND ROOM --\n".bgRed, rooms[i]);
+        const users = rooms[i].users;
+        if (users[x].userID === userID) {
+          const user = users[x];
+          const userIndex = users.indexOf(user);
+          users.splice(userIndex, 1);
+          found = true;
+          break;
+        }
+      }
+    }
+  }
+
+  // console.log(`Users after deletion`, rooms);
 };
 
 module.exports = {
@@ -93,6 +128,7 @@ module.exports = {
   isRoomActive,
   isRoomJoinable,
   createRoomInMemory,
+  removeUserFromRoomInMemory,
   createUserInMemory,
   addUserToRoomInMemory,
   getRoomFromDB,

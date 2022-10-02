@@ -6,8 +6,14 @@ import { useRouter } from "next/router";
 import { wrapper } from "../app/store";
 import styles from "../styles/Dashboard.module.scss";
 // import RtcUser from "./video/videoFuncs";
-import { genRTC, reset, removeToken } from "../features/auth/authSlice";
-import { createRoom, setRoom } from "../features/room/roomSlice";
+import {
+  genRTC,
+  reset,
+  removeToken,
+  resetPush,
+} from "../features/auth/authSlice";
+import { createRoom, setRoom, setMode } from "../features/room/roomSlice";
+import { createRoomCookie } from "../helpers/RoomsFuncs";
 import io from "socket.io-client";
 import roomService from "../features/room/roomService";
 import LoadingRoomForm from "../components/LoadingRoomForm";
@@ -36,16 +42,20 @@ function dashboard({ user }) {
   const isServer = typeof window === "undefined";
   const router = useRouter();
   const authState = useSelector((state) => state.auth);
-  const { rtcToken } = useSelector((state) => state.auth);
-  const { rooms, roomName, roomID, isSuccess, exists, isError, message } =
+  const { rtcToken, push } = useSelector((state) => state.auth);
+  const { rooms, roomName, roomID, isSuccess, mode, exists, isError, message } =
     useSelector((state) => state.room);
 
   useEffect(() => {
-    if (rtcToken) {
+    if (push === "room" && roomName) {
+      createRoomCookie(mode, rtcToken);
+      router.push({
+        pathname: "/room",
+      });
     }
 
     // return () => dispatch(removeToken());
-  }, [rtcToken]);
+  }, [push, roomName]);
 
   useEffect(() => {
     console.log("USSR: ", user);
@@ -62,6 +72,10 @@ function dashboard({ user }) {
 
       toast.notify(`Hello, ${user.username}`);
     }
+
+    return () => {
+      dispatch(resetPush());
+    };
   }, []);
 
   // useEffect(() => {
@@ -73,17 +87,13 @@ function dashboard({ user }) {
   // }, [isError, message]);
 
   const onClick = async ({ roomID, buttonMode }) => {
+    dispatch(setMode(buttonMode));
     if (buttonMode === "create") {
       console.log("%c Creating room...", "color: #4ce353");
 
       try {
         dispatch(createRoom({ roomID, user }));
-        dispatch(genRTC({ roomID })).then(() => {
-          //TODO Transfer client to page.
-          router.push({
-            pathname: "/room",
-          });
-        });
+        dispatch(genRTC({ roomID }));
       } catch (error) {
         //TODO catch common errors
         console.error(error);

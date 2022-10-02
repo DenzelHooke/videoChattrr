@@ -21,6 +21,7 @@ const initialState = {
   isLoading: null,
   rtcToken: null,
   message: "",
+  push: "",
 };
 
 //* ─── Reducers ───────────────────────────────────────────────────────────────────
@@ -93,6 +94,9 @@ export const authSlice = createSlice({
     removeToken: (state) => {
       state.rtcToken = null;
     },
+    resetPush: (state) => {
+      state.push = "";
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -136,6 +140,7 @@ export const authSlice = createSlice({
         const payload = JSON.parse(action.payload);
         state.rtcToken = payload.rtcToken;
         state.uid = payload.uid;
+        state.push = "room";
       })
 
       .addCase(genRTC.rejected, (state, action) => {
@@ -145,5 +150,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { reset, removeToken } = authSlice.actions;
+export const { reset, removeToken, resetPush } = authSlice.actions;
 export default authSlice.reducer;

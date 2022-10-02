@@ -32,4 +32,16 @@ const roomExists = async (roomName, authToken) => {
 
   return false;
 };
-export { roomExists };
+
+const createRoomCookie = (mode, rtcToken) => {
+  const bundle = {
+    mode,
+    rtcToken,
+  };
+  document.cookie = `roomData=${JSON.stringify(bundle)}; expires=${new Date(
+    2023,
+    0,
+    1
+  ).toUTCString()}`;
+};
+export { roomExists, createRoomCookie };
