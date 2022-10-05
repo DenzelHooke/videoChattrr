@@ -32,6 +32,7 @@ const room = ({ mode, rtcToken }) => {
     socketRef.current.disconnect();
 
     //Removes the user token on page dismount because the state persits unless page is refreshed.
+    console.info("Cleaning up now..");
     dispatch(removeToken());
     dispatch(reset());
   };
@@ -48,18 +49,22 @@ const room = ({ mode, rtcToken }) => {
   useEffect(() => {
     if (!rtcToken) {
       router.push("/dashboard");
+      console.error("No RTC token found! Sending back to dashboard.");
+      return;
     }
 
     if (!isServer) {
       //Can't run on server side so we have to run this only when the page completes SSR.
-
+      console.log("MODE: ", mode);
       // TODO Connect to socket channel
 
       //Connect to socket server
       socketRef.current = io.connect(process.env.NEXT_PUBLIC_BACKEND_URL, {
         auth: {
           token: user.token,
-          roomID: roomID,
+          room: {
+            roomID: roomID,
+          },
           user: JSON.stringify({
             userID: user._id,
             username: user.username,
@@ -68,8 +73,10 @@ const room = ({ mode, rtcToken }) => {
       });
 
       socketRef.current.on("roomJoined", () => {
+        console.log(rtcToken, roomID);
         //* Start Agora
         setUpClient(rtcToken, roomID);
+        console.log("_______ROOM JOINED_______");
         //* INIT socket.io connection to server
       });
 
@@ -78,17 +85,11 @@ const room = ({ mode, rtcToken }) => {
         socketRef.current.emit("createRoom", {
           roomID: roomID,
         });
+      } else if (mode === "join" && roomID) {
+        socketRef.current.emit("joinRoom", {
+          roomID: roomID,
+        });
       }
-
-      // window.addEventListener("beforeunload", () => {
-      //   socketRef.current.emit("disconnect", {
-      //     msg: "Unloaded browser window",
-      //   });
-      // });
-
-      // socketRef.current.on("disconnect", () => {
-      //   socketRef.current.emit("removeUser", { roomID: roomID });
-      // });
     }
   }, [rtcToken, isServer, roomID]);
 
@@ -99,17 +100,6 @@ const room = ({ mode, rtcToken }) => {
       cleanUp();
       socketRef.current.disconnect();
     };
-  }, []);
-
-  useEffect(() => {
-    // if (mode === "create") {
-    //   socketRef.current.emit("createRoom", {
-    //     roomID: roomID,
-    //   });
-    //   socketRef.current.on("roomCreated", async () => {
-    //     await setUpClient();
-    //   });
-    // }
   }, []);
 
   return isServer ? (

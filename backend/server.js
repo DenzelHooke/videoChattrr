@@ -8,6 +8,7 @@ const http = require("http");
 const { connectDB } = require("./config/db");
 const { errorHandler } = require("./middleware/errorMiddleware");
 const jwt = require("jsonwebtoken");
+const log = require("loglevel");
 const {
   verifyRoomExistsInDB,
   isRoomActive,
@@ -42,10 +43,12 @@ app.use(express.urlencoded({ extended: false }));
 
 const rooms = [
   {
-    roomID: "123",
+    roomID: "21b1ea4f-9c5b-400b-9ac4-17f645682cfc",
+    users: [],
   },
   {
     roomID: "testRoom",
+    users: [],
   },
   // {
   //   roomID: "102efea0-5ed7-4929-b3bf-01cb0a9816e2",
@@ -87,10 +90,10 @@ io.on("connection", (socket) => {
   console.log("User connected".america);
 
   socket.on("disconnect", async (data) => {
-    const roomID = socket.handshake.auth.roomID;
+    const { roomID } = socket.handshake.auth.room;
     removeUserFromRoomInMemory(userID, roomID, rooms);
-    console.log(roomID);
-    console.log(data);
+    // console.log(roomID);
+    // console.log(data);
   });
 
   socket.on("removeUser", async (data) => {
@@ -101,52 +104,77 @@ io.on("connection", (socket) => {
 
   socket.on("createRoom", async (data) => {
     console.log("Create room in mem called", data);
-    console.log(data);
     const { roomID } = data;
 
     const room = createRoomInMemory(roomID, rooms);
-    // await createUserInMemory(username, socket, userID);
-
     addUserToRoomInMemory(username, socket, userID, room);
     console.log(rooms);
     socket.emit("roomJoined");
   });
 
   socket.on("joinRoom", async (data) => {
-    const { username, roomID, userID } = data;
+    // const { username, userID } = data;
+    console.log("JOIN room HIT", data);
+    const { roomID } = socket.handshake.auth.room;
 
     //TODO Check db for a room with that roomID
-    const roomExists = await verifyRoomExistsInDB(roomID);
-    console.log(roomExists);
+    const room = await getRoomFromDB(roomID);
 
     // Room exists, proceed further.
-    if (roomExists) {
-      console.log("room exists!");
+    if (room) {
+      let activeRoom;
+      let user;
 
-      // Check if room is running currently with users in it.
-      // TODO Check if any room is in memory with same roomID
-      const activeRoom = await isRoomActive(roomID, rooms);
-      const user = await createUserInMemory(username, socket, userID);
+      try {
+        console.info("- Room exists! -");
+        console.trace(room);
+
+        // Check if room is running currently with users in it.
+        // TODO Check if any room is in memory with same roomID
+        activeRoom = await isRoomActive(roomID, rooms);
+        console.info(" - Checking if room is active - ");
+        console.info(activeRoom);
+        // Create user in memory
+        user = await createUserInMemory(username, socket, userID);
+        console.info(" - Generating user in memory - ");
+        console.info(rooms);
+      } catch (error) {
+        throw new Error(error);
+      }
 
       if (!activeRoom) {
+        console.info("- Room not running - ");
         //Room isn't running currently but check if it's 'joinable'.
         // If it is then add client to socket channel and to the room in memory
         //TODO assign user to that room channel
-        const room = await getRoomFromDB(roomID);
         if (room.joinable) {
+          console.log(" - Creating room - ");
           const newRoom = createRoomInMemory(roomID, rooms);
           addUserToRoomInMemory(user, newRoom);
+          console.log(" - User joined to room - ");
           socket.join(roomID);
+          socket.emit("roomJoined");
 
-          console.log(`Client connected to room ${newRoom.roomID}`);
           console.log("ALL ROOMS: ", rooms);
           return;
         }
       } else if (activeRoom) {
-        console.log(`Room found: ${activeRoom}`);
+        //TODO Join user to active room
+        console.log("____Room already running____");
+        console.log(activeRoom);
+        console.log(" - Joining user to active room -");
+
+        // Push user to active room
+        activeRoom.users.push(user);
+
+        // Join socket to channel
+        socket.join(roomID);
+
+        //Emit event
+        socket.emit("roomJoined");
         console.log(rooms);
-      } else {
-        console.log("room not found!");
+
+        return;
       }
     } else {
       return;

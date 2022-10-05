@@ -8,7 +8,7 @@ const createRoom = async (userData) => {
   //Calls backend with rtcToken as param to create
   // const user = useSelector((state) => state.auth);
 
-  const roomName = userData.roomID;
+  const roomName = userData.userInput;
   const { user } = userData;
 
   const config = {
@@ -34,7 +34,7 @@ const createRoom = async (userData) => {
   }
 };
 
-const getRoomData = async (roomID) => {
+const getRoomData = async (userInput) => {
   let user = localStorage.getItem("user");
   user = JSON.parse(user);
   const { token } = user;
@@ -45,7 +45,7 @@ const getRoomData = async (roomID) => {
     },
   };
 
-  const res = await axios.get(`${API_URL}?roomID=${roomID}`, config);
+  const res = await axios.get(`${API_URL}?roomID=${userInput}`, config);
 
   if (res.data) {
     return res.data;

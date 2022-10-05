@@ -69,6 +69,9 @@ const createRoom = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Check if room exists already.
+// @route GET /api/room/:roomID
+// @access Private
 const getRoomData = asyncHandler(async (req, res) => {
   // console.log(`GET room hit.`, req);
   const roomID = req.query.roomID;
@@ -78,7 +81,7 @@ const getRoomData = asyncHandler(async (req, res) => {
   if (room) {
     res.status(200).json({
       room: room,
-      exists: false,
+      exists: true,
     });
   } else {
     res.status(200).json({

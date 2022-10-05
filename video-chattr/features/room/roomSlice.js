@@ -101,7 +101,7 @@ export const roomSlice = createSlice({
       state.roomName = null;
       state.roomID = null;
     },
-    setRoom: (state, action) => {
+    setRoomName: (state, action) => {
       state.roomName = action.payload;
     },
     setMode: (state, action) => {
@@ -148,6 +148,12 @@ export const roomSlice = createSlice({
   },
 });
 
-export const { reset, setRoom, setLoading, stopLoading, setMode } =
-  roomSlice.actions;
+export const {
+  reset,
+  setRoomName,
+  setRoomID,
+  setLoading,
+  stopLoading,
+  setMode,
+} = roomSlice.actions;
 export default roomSlice.reducer;

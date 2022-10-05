@@ -49,7 +49,8 @@ const rtcToken = asyncHandler(async (req, res) => {
     appCert,
     roomID,
     uid,
-    tokenRole
+    tokenRole,
+    privilegeExpiredTs
   );
 
   res.status(201).json({

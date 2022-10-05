@@ -59,7 +59,7 @@ export const register = createAsyncThunk(
 );
 
 export const genRTC = createAsyncThunk(
-  "auth/getRTC",
+  "auth/genRTC",
   async (userData, thunkAPI) => {
     try {
       const res = await authService.genRTC(userData);
@@ -96,6 +96,9 @@ export const authSlice = createSlice({
     },
     resetPush: (state) => {
       state.push = "";
+    },
+    setPush: (state, action) => {
+      state.push = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -150,5 +153,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { reset, removeToken, resetPush } = authSlice.actions;
+export const { reset, removeToken, resetPush, setPush } = authSlice.actions;
 export default authSlice.reducer;

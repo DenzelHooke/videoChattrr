@@ -14,7 +14,7 @@ const RoomForm = ({
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
-    roomID: "102efea0-5ed7-4929-b3bf-01cb0a9816e2",
+    roomID: "21b1ea4f-9c5b-400b-9ac4-17f645682cfc",
     isPublisher: true,
     isError: false,
     message: "",
@@ -93,7 +93,9 @@ const RoomForm = ({
     <>
       <form onSubmit={onSubmit} className="form-control">
         <div>
-          <p className="space-text">Room ID</p>
+          <p className="space-text">
+            {modeState.buttonMode === "create" ? "Room Name" : "Room ID"}
+          </p>
           <input
             type="text"
             className={`${
@@ -102,7 +104,11 @@ const RoomForm = ({
             id="roomID"
             value={roomID}
             onChange={onChange}
-            placeholder="Please enter a room name"
+            placeholder={
+              modeState.buttonMode === "join"
+                ? "Please enter a room ID"
+                : "Please enter a room name"
+            }
             maxLength="50"
           />
           <small>{formData.message}</small>

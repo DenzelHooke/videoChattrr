@@ -13,11 +13,6 @@ import { AiFillDelete } from "react-icons/ai";
 import LoadingCircle from "./LoadingCircle";
 
 const Rooms = ({ onClick }) => {
-  const router = useRouter();
-  const [client, setClient] = useState(false);
-
-  const dispatch = useDispatch();
-  const { rtcToken, user } = useSelector((state) => state.auth);
   const { isLoading } = useSelector((state) => state.room);
 
   const [componentState, setComponenetState] = useState({
@@ -69,7 +64,7 @@ const Rooms = ({ onClick }) => {
 
     console.log("%c Sending data upstairs...", "color: #4ce353");
     const upstairsPayload = {
-      roomID: roomName,
+      userInput: roomName,
       buttonMode: modeState.buttonMode,
     };
     onClick(upstairsPayload);

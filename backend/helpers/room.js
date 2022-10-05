@@ -94,33 +94,21 @@ const addUserToRoomInMemory = (username, socket, userID, room) => {
 };
 
 const removeUserFromRoomInMemory = (userID, roomID, rooms) => {
-  // console.log(`Removing user: ${userID} from room.`);
-
-  // console.log(room.users);
-
-  // console.log(`Users before deletion`, rooms);
-  let found = false;
-  for (let i = 0; i < rooms.length; i++) {
-    if (found) {
-      break;
-    }
+  for (let i in rooms) {
     const room = rooms[i];
-    if (room.roomID === roomID) {
-      for (let x = 0; x < room.users.length; i++) {
-        // console.log("-- FOUND ROOM --\n".bgRed, rooms[i]);
-        const users = rooms[i].users;
-        if (users[x].userID === userID) {
-          const user = users[x];
-          const userIndex = users.indexOf(user);
-          users.splice(userIndex, 1);
-          found = true;
-          break;
-        }
-      }
+    const userIndex = room.users.findIndex((user) => user.userID === userID);
+    console.log("ROOM: ", room);
+    console.log("USER INDEX: ", userIndex);
+
+    if (userIndex != -1) {
+      const usersInRoom = room.users;
+      console.log("USER: ", usersInRoom[userIndex].username);
+      usersInRoom.splice(userIndex, 1);
+      console.log(room);
+
+      return true;
     }
   }
-
-  // console.log(`Users after deletion`, rooms);
 };
 
 module.exports = {

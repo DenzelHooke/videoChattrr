@@ -11,8 +11,14 @@ import {
   reset,
   removeToken,
   resetPush,
+  setPush,
 } from "../features/auth/authSlice";
-import { createRoom, setRoom, setMode } from "../features/room/roomSlice";
+import {
+  createRoom,
+  setRoomName,
+  setRoomID,
+  setMode,
+} from "../features/room/roomSlice";
 import { createRoomCookie } from "../helpers/RoomsFuncs";
 import io from "socket.io-client";
 import roomService from "../features/room/roomService";
@@ -47,14 +53,13 @@ function dashboard({ user }) {
     useSelector((state) => state.room);
 
   useEffect(() => {
+    // return;
     if (push === "room" && roomName) {
       createRoomCookie(mode, rtcToken);
       router.push({
         pathname: "/room",
       });
     }
-
-    // return () => dispatch(removeToken());
   }, [push, roomName]);
 
   useEffect(() => {
@@ -74,67 +79,75 @@ function dashboard({ user }) {
     }
 
     return () => {
-      dispatch(resetPush());
+      dispatch(resetPush("room"));
     };
   }, []);
 
-  // useEffect(() => {
-  //   if(isError) {
-  //     if(buttonMode) {
+  useEffect(() => {
+    if (isServer) {
+      if (message && isError) {
+        console.error(message);
+        dispatch(removeToken());
+        dispatch(reset());
+        dispatch(resetPush());
+      }
+    }
+  }, [message, isError]);
 
-  //     }
-  //   }
-  // }, [isError, message]);
-
-  const onClick = async ({ roomID, buttonMode }) => {
+  const onClick = async ({ userInput, buttonMode }) => {
     dispatch(setMode(buttonMode));
     if (buttonMode === "create") {
       console.log("%c Creating room...", "color: #4ce353");
 
       try {
-        dispatch(createRoom({ roomID, user }));
-        dispatch(genRTC({ roomID }));
+        dispatch(createRoom({ userInput, user }))
+          .unwrap()
+          .then((state) => dispatch(genRTC({ roomID: state.roomID })));
       } catch (error) {
         //TODO catch common errors
         console.error(error);
       }
     } else if (buttonMode === "join") {
-      console.log(`%c Requesting to join room ${roomID}..`, "color: #4ce353");
+      console.log(
+        `%c Requesting to join room ${userInput}..`,
+        "color: #4ce353"
+      );
 
       //Check whether roopm exists on db.
       //Proceed if true, return if false.
 
       try {
-        const data = await roomService.getRoomData(roomID);
+        const data = await roomService.getRoomData(userInput);
         console.log(data);
 
-        // If doesnt exist
-        if (data.exists === false) {
-          const err = new Error("No room was found with that ID.");
-          err.exists = false;
+        if (!data.exists) {
+          const err = new Error("That room couldn't be found.");
           throw err;
         }
 
-        //TODO transfer client to room page
-        // dispatch(genRTC({ roomID }))
-        //   .then  (() => dispatch(setRoom(roomID)))
-        //   .then(() => {
-        //     router.push({
-        //       pathname: "/room",
-        //     });
-        //   });
-      } catch (error) {
-        console.error(error);
-        if (!error.exists) {
-          toast.notify(
-            `Unfortunatley,  room ${roomID.slice(0, 5)} doesn't exist.`,
-            {
-              title: "Darn it!",
-              type: "error",
-            }
-          );
-          return;
+        toast.notify(`Connecting to room ${userInput.slice(0, 5)}..`, {
+          title: "WooHoo!",
+          type: "success",
+        });
+
+        try {
+          dispatch(genRTC({ roomID: data.room.roomID }))
+            .unwrap()
+            .then(() => {
+              dispatch(setRoomName(data.room.roomName));
+              dispatch(setRoomID(data.room.roomID));
+              dispatch(setPush("room"));
+            });
+        } catch (error) {
+          console.error(error);
+          throw new Error();
         }
+      } catch (error) {
+        toast.notify(`${error}`, {
+          title: "Darn it!",
+          type: "error",
+        });
+        return;
       }
     }
   };
