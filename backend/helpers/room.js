@@ -1,6 +1,8 @@
 const Room = require("../models/roomModel");
 const User = require("../models/userModel");
 
+const roomCapacityLimit = 1;
+
 const getRoomFromDB = async (roomID) => {
   const room = await Room.findOne({ roomID });
 
@@ -93,6 +95,19 @@ const addUserToRoomInMemory = (username, socket, userID, room) => {
   // console.log(`User ${user.username} added to room ${room.roomID}`);
 };
 
+const isRoomOverCapacity = (room) => {
+  if (!room) {
+    throw new Error("Please pass a room as the parameter.");
+  }
+
+  if (room.users.length >= roomCapacityLimit) {
+    console.log("Room is full".bgRed);
+    return true;
+  }
+
+  return false;
+};
+
 const removeUserFromRoomInMemory = (userID, roomID, rooms) => {
   for (let i in rooms) {
     const room = rooms[i];
@@ -118,6 +133,7 @@ module.exports = {
   createRoomInMemory,
   removeUserFromRoomInMemory,
   createUserInMemory,
+  isRoomOverCapacity,
   addUserToRoomInMemory,
   getRoomFromDB,
   isHost,

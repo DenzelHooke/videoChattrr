@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { setLoading, stopLoading } from "../features/room/roomSlice";
 import { removeToken } from "../features/auth/authSlice";
 import { reset } from "../features/room/roomSlice";
+import { toast } from "react-nextjs-toast";
 
 import RoomClient from "../helpers/RoomsClass";
 import LoadingCircle from "../components/LoadingCircle";
@@ -19,20 +20,29 @@ import { wrapper } from "../app/store";
  */
 const room = ({ mode, rtcToken }) => {
   const { uid, user } = useSelector((state) => state.auth);
-  const { roomName, roomID, isLoading } = useSelector((state) => state.room);
+  const { roomName, roomID, isLoading, message, isError } = useSelector(
+    (state) => state.room
+  );
   const socketRef = useRef();
   const router = useRouter();
   const dispatch = useDispatch();
   const isServer = typeof window === "undefined";
 
+  const [socketState, setSocketState] = useState({
+    socketStateMessage: "",
+    isSocketStateError: false,
+  });
+
+  const { socketStateMessage, isSocketStateError } = socketState;
+
   const cleanUp = () => {
+    console.info("Cleaning up now..");
     // socketRef.current.emit("removeUser", {
     //   roomID,
     // });
     socketRef.current.disconnect();
 
     //Removes the user token on page dismount because the state persits unless page is refreshed.
-    console.info("Cleaning up now..");
     dispatch(removeToken());
     dispatch(reset());
   };
@@ -47,7 +57,36 @@ const room = ({ mode, rtcToken }) => {
   };
 
   useEffect(() => {
+    if (isError && message) {
+      toast.notify(message, {
+        title: "An error has occured.",
+        type: "error",
+        duration: 5,
+      });
+      cleanUp();
+      router.push("/dashboard");
+      return;
+    }
+
+    if (isSocketStateError && socketStateMessage) {
+      toast.notify(socketStateMessage, {
+        title: "An error has occured.",
+        type: "error",
+        duration: 3,
+      });
+      cleanUp();
+      router.push("/dashboard");
+      setSocketState({ socketStateMessage: "", isSocketStateError: false });
+      return;
+    }
+  }, [isError, message, isSocketStateError, socketStateMessage]);
+
+  useEffect(() => {
     if (!rtcToken) {
+      toast.notify("You do not have permission to view this page.", {
+        title: "Error",
+        type: "error",
+      });
       router.push("/dashboard");
       console.error("No RTC token found! Sending back to dashboard.");
       return;
@@ -70,6 +109,14 @@ const room = ({ mode, rtcToken }) => {
             username: user.username,
           }),
         },
+      });
+
+      socketRef.current.on("errorTriggered", (data) => {
+        setSocketState((prevState) => ({
+          ...prevState,
+          socketStateMessage: data.message,
+          isSocketStateError: true,
+        }));
       });
 
       socketRef.current.on("roomJoined", () => {

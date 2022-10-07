@@ -18,6 +18,7 @@ const {
   createRoomInMemory,
   addUserToRoomInMemory,
   getRoomFromDB,
+  isRoomOverCapacity,
 } = require("./helpers/room");
 const { on } = require("events");
 
@@ -132,6 +133,14 @@ io.on("connection", (socket) => {
         // Check if room is running currently with users in it.
         // TODO Check if any room is in memory with same roomID
         activeRoom = await isRoomActive(roomID, rooms);
+
+        if (isRoomOverCapacity) {
+          socket.emit("errorTriggered", {
+            message: "The room you are trying to join is full.",
+          });
+          console.log("ROOM FULL".bgRed);
+          return;
+        }
         console.info(" - Checking if room is active - ");
         console.info(activeRoom);
         // Create user in memory
