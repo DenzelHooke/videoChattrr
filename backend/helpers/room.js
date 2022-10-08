@@ -1,7 +1,21 @@
 const Room = require("../models/roomModel");
 const User = require("../models/userModel");
+const rooms = [
+  {
+    roomID: "21b1ea4f-9c5b-400b-9ac4-17f645682cfc",
+    users: [],
+  },
+  {
+    roomID: "testRoom",
+    users: [],
+  },
+  // {
+  //   roomID: "102efea0-5ed7-4929-b3bf-01cb0a9816e2",
+  //   users: []
+  // },
+];
 
-const roomCapacityLimit = 1;
+const roomCapacityLimit = 2;
 
 const getRoomFromDB = async (roomID) => {
   const room = await Room.findOne({ roomID });
@@ -22,7 +36,7 @@ const isRoomJoinable = async (roomID) => {
   }
 };
 
-const isRoomActive = (roomID, rooms) => {
+const isRoomActive = (roomID) => {
   if (verifyRoomExistsInDB(roomID)) {
     for (let i = 0; i < rooms.length; i++) {
       const room = rooms[i];
@@ -137,4 +151,5 @@ module.exports = {
   addUserToRoomInMemory,
   getRoomFromDB,
   isHost,
+  rooms,
 };

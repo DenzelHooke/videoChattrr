@@ -19,6 +19,7 @@ const {
   addUserToRoomInMemory,
   getRoomFromDB,
   isRoomOverCapacity,
+  rooms,
 } = require("./helpers/room");
 const { on } = require("events");
 
@@ -41,21 +42,6 @@ const io = socketio(server, {
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
-const rooms = [
-  {
-    roomID: "21b1ea4f-9c5b-400b-9ac4-17f645682cfc",
-    users: [],
-  },
-  {
-    roomID: "testRoom",
-    users: [],
-  },
-  // {
-  //   roomID: "102efea0-5ed7-4929-b3bf-01cb0a9816e2",
-  //   users: []
-  // },
-];
 
 const isValidJwt = (token) => {
   try {
@@ -132,15 +118,15 @@ io.on("connection", (socket) => {
 
         // Check if room is running currently with users in it.
         // TODO Check if any room is in memory with same roomID
-        activeRoom = await isRoomActive(roomID, rooms);
+        activeRoom = isRoomActive(roomID);
 
-        if (isRoomOverCapacity) {
-          socket.emit("errorTriggered", {
-            message: "The room you are trying to join is full.",
-          });
-          console.log("ROOM FULL".bgRed);
-          return;
-        }
+        // if (isRoomOverCapacity) {
+        //   socket.emit("errorTriggered", {
+        //     message: "The room you are trying to join is full.",
+        //   });
+        //   console.log("ROOM FULL".bgRed);
+        //   return;
+        // }
         console.info(" - Checking if room is active - ");
         console.info(activeRoom);
         // Create user in memory
@@ -198,14 +184,6 @@ io.on("connection", (socket) => {
   socket.on("init", async (data) => {});
 });
 
-// Room join
-
-//Room leave
-
-// Room quantity
-
-// real time chat
-
 app.use("/api/users/", require("./routes/userRoutes"));
 app.use("/api/auth/", require("./routes/authRoutes"));
 app.use("/api/room/", require("./routes/roomRoutes"));
@@ -221,3 +199,7 @@ server.listen(PORT, (e) => {
   }
   console.log(`running on port ${PORT}`);
 });
+
+module.exports = {
+  runningRooms: rooms,
+};

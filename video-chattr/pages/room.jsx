@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { setLoading, stopLoading } from "../features/room/roomSlice";
 import { removeToken } from "../features/auth/authSlice";
-import { reset } from "../features/room/roomSlice";
+import { resetRoomState } from "../features/room/roomSlice";
 import { toast } from "react-nextjs-toast";
 
 import RoomClient from "../helpers/RoomsClass";
@@ -44,7 +44,7 @@ const room = ({ mode, rtcToken }) => {
 
     //Removes the user token on page dismount because the state persits unless page is refreshed.
     dispatch(removeToken());
-    dispatch(reset());
+    dispatch(resetRoomState());
   };
 
   /**
@@ -63,6 +63,7 @@ const room = ({ mode, rtcToken }) => {
         type: "error",
         duration: 5,
       });
+      console.trace("isError: ", message);
       cleanUp();
       router.push("/dashboard");
       return;
@@ -74,6 +75,7 @@ const room = ({ mode, rtcToken }) => {
         type: "error",
         duration: 3,
       });
+      console.trace("socketError: ", socketStateMessage);
       cleanUp();
       router.push("/dashboard");
       setSocketState({ socketStateMessage: "", isSocketStateError: false });

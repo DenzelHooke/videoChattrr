@@ -2,9 +2,13 @@ const User = require("../models/userModel");
 const Room = require("../models/roomModel");
 const asyncHandler = require("express-async-handler");
 const { uuid } = require("uuidv4");
-const { getRoomFromDB } = require("../helpers/room");
+const {
+  getRoomFromDB,
+  isRoomActive,
+  isRoomOverCapacity,
+} = require("../helpers/room");
 const { json } = require("express");
-
+const { runningRooms } = require("../server");
 // @desc Check is room exists already.
 // @route POST /api/room/verify
 // @access Private
@@ -95,8 +99,37 @@ const genRoomID = () => {
   return uuid();
 };
 
+// @desc Check if room exists already.
+// @route GET /api/room/:roomID
+// @access Private
+const getRunningRooms = asyncHandler(async (req, res) => {
+  const roomID = req.query.roomID;
+
+  console.log(module.exports);
+  console.log(runningRooms);
+  const room = isRoomActive(roomID);
+  if (!room) {
+    res.status(404).json({
+      message: "Room not running.",
+    });
+    return;
+  }
+  console.log(room);
+  const overcapacity = isRoomOverCapacity(room);
+
+  if (overcapacity) {
+    res.status(200).json({
+      overcapacity: true,
+    });
+  } else {
+    res.status(200).json({
+      overcapacity: false,
+    });
+  }
+});
 module.exports = {
   roomExists,
   createRoom,
   getRoomData,
+  getRunningRooms,
 };

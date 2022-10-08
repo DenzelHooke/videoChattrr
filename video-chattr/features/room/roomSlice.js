@@ -90,7 +90,7 @@ export const roomSlice = createSlice({
   name: "room",
   initialState: initialState,
   reducers: {
-    reset: (state) => {
+    resetRoomState: (state) => {
       state.isLoading = null;
       state.isSuccess = null;
       state.isError = null;
@@ -115,6 +115,10 @@ export const roomSlice = createSlice({
     },
     setRoomID: (state, action) => {
       state.roomID = action.payload;
+    },
+    setError: (state, action) => {
+      state.isError = true;
+      state.message = action.payload.message;
     },
     leave: (state, action) => {
       state.isHost = false;
@@ -149,11 +153,12 @@ export const roomSlice = createSlice({
 });
 
 export const {
-  reset,
+  resetRoomState,
   setRoomName,
   setRoomID,
   setLoading,
   stopLoading,
   setMode,
+  setError,
 } = roomSlice.actions;
 export default roomSlice.reducer;

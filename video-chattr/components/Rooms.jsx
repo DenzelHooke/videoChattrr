@@ -42,11 +42,6 @@ const Rooms = ({ onClick }) => {
 
       //* Check functionality
       try {
-        setComponenetState((prevState) => ({
-          ...prevState,
-          isLoading: false,
-        }));
-
         setRoomState((prevState) => ({
           ...prevState,
           roomName,

@@ -18,8 +18,10 @@ import {
   setRoomName,
   setRoomID,
   setMode,
+  setError,
+  resetRoomState,
 } from "../features/room/roomSlice";
-import { createRoomCookie } from "../helpers/RoomsFuncs";
+import { createRoomCookie, getRunningRoom } from "../helpers/RoomsFuncs";
 import io from "socket.io-client";
 import roomService from "../features/room/roomService";
 import LoadingRoomForm from "../components/LoadingRoomForm";
@@ -62,6 +64,19 @@ function dashboard({ user }) {
     }
   }, [push, roomName]);
 
+  // useEffect(() => {
+  //   if (exists === null) {
+  //     return;
+  //   }
+
+  //   if (exists === true) {
+  //     toast.notify(`Room found!`, {
+  //       title: "Success",
+  //       type: "success",
+  //     });
+  //   }
+  // }, exists);
+
   useEffect(() => {
     console.log("USSR: ", user);
     if (!isServer) {
@@ -84,13 +99,17 @@ function dashboard({ user }) {
   }, []);
 
   useEffect(() => {
-    if (isServer) {
-      if (message && isError) {
-        console.error(message);
-        dispatch(removeToken());
-        dispatch(reset());
-        dispatch(resetPush());
-      }
+    if (message && isError) {
+      console.error(message);
+
+      toast.notify(message, {
+        title: "An error has occured.",
+        type: "error",
+        duration: 5,
+      });
+      dispatch(removeToken());
+      dispatch(resetRoomState());
+      // dispatch(resetPush());
     }
   }, [message, isError]);
 
@@ -113,7 +132,7 @@ function dashboard({ user }) {
         "color: #4ce353"
       );
 
-      //Check whether roopm exists on db.
+      //Check whether room exists on db.
       //Proceed if true, return if false.
 
       try {
@@ -125,28 +144,35 @@ function dashboard({ user }) {
           throw err;
         }
 
+        const { overcapacity } = await getRunningRoom(
+          data.room.roomID,
+          user.token
+        );
+
+        if (overcapacity) {
+          dispatch(setError({ message: "This room is full." }));
+          return;
+        }
+
         toast.notify(`Connecting to room ${userInput.slice(0, 5)}..`, {
           title: "WooHoo!",
           type: "success",
         });
 
-        try {
-          dispatch(genRTC({ roomID: data.room.roomID }))
-            .unwrap()
-            .then(() => {
-              dispatch(setRoomName(data.room.roomName));
-              dispatch(setRoomID(data.room.roomID));
-              dispatch(setPush("room"));
-            });
-        } catch (error) {
-          console.error(error);
-          throw new Error();
-        }
+        // Generate RTC then set a few perdinent states
+
+        dispatch(genRTC({ roomID: data.room.roomID }))
+          .unwrap()
+          .then(() => {
+            dispatch(setRoomName(data.room.roomName));
+            dispatch(setRoomID(data.room.roomID));
+            dispatch(setPush("room"));
+          });
       } catch (error) {
-        toast.notify(`${error}`, {
-          title: "Darn it!",
-          type: "error",
-        });
+        if (`${error}` === "AxiosError: Network Error") {
+          dispatch(setError({ message: "Failed to connect to server." }));
+        }
+        // dispatch(setError({ message: `${error}` }));
         return;
       }
     }
