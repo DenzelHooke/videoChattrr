@@ -74,27 +74,28 @@ io.use((socket, next) => {
 
 io.on("connection", (socket) => {
   const { username, userID } = JSON.parse(socket.handshake.auth.user);
+  const agoraUID = socket.handshake.auth.agoraUID;
   console.log("User connected".america);
 
   socket.on("disconnect", async (data) => {
     const { roomID } = socket.handshake.auth.room;
     removeUserFromRoomInMemory(userID, roomID, rooms);
+
+    io.to(roomID).emit("userLeft", {
+      username: username,
+      userID: userID,
+      agoraUID: agoraUID,
+    });
     // console.log(roomID);
     // console.log(data);
-  });
-
-  socket.on("removeUser", async (data) => {
-    const { roomID } = data;
-    console.log(data);
-    removeUserFromRoomInMemory(userID, roomID, rooms);
   });
 
   socket.on("createRoom", async (data) => {
     console.log("Create room in mem called", data);
     const { roomID } = data;
-
+    socket.join(roomID);
     const room = createRoomInMemory(roomID, rooms);
-    addUserToRoomInMemory(username, socket, userID, room);
+    addUserToRoomInMemory(username, socket, userID, room, agoraUID);
     console.log(rooms);
     socket.emit("roomJoined");
   });
@@ -130,7 +131,7 @@ io.on("connection", (socket) => {
         console.info(" - Checking if room is active - ");
         console.info(activeRoom);
         // Create user in memory
-        user = await createUserInMemory(username, socket, userID);
+        user = await createUserInMemory(username, socket, userID, agoraUID);
         console.info(" - Generating user in memory - ");
         console.info(rooms);
       } catch (error) {
@@ -199,7 +200,3 @@ server.listen(PORT, (e) => {
   }
   console.log(`running on port ${PORT}`);
 });
-
-module.exports = {
-  runningRooms: rooms,
-};

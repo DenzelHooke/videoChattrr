@@ -15,6 +15,7 @@ const rooms = [
   // },
 ];
 
+//! CHANGE TO ENV VAR
 const roomCapacityLimit = 2;
 
 const getRoomFromDB = async (roomID) => {
@@ -83,7 +84,7 @@ const createRoomInMemory = (roomID, rooms) => {
   return room;
 };
 
-const createUserInMemory = async (username, socket, userID) => {
+const createUserInMemory = async (username, socket, userID, agoraUID) => {
   const user = await User.findOne({ userID });
 
   if (user) {
@@ -91,18 +92,20 @@ const createUserInMemory = async (username, socket, userID) => {
       username,
       socket: socket,
       userID,
+      agoraUID,
     };
   } else {
     throw new Error("No user with that ID found!");
   }
 };
 
-const addUserToRoomInMemory = (username, socket, userID, room) => {
+const addUserToRoomInMemory = (username, socket, userID, room, agoraUID) => {
   // console.log(`Room to add to memory: `, room);
   const user = {
     username,
     socket,
     userID,
+    agoraUID,
   };
   // console.log(room.users);
   room.users.push(user);
@@ -140,6 +143,17 @@ const removeUserFromRoomInMemory = (userID, roomID, rooms) => {
   }
 };
 
+const getUserFromRoomInMemory = (agoraUID, roomID) => {
+  const room = isRoomActive(roomID);
+
+  const user = room.users.find((item) => item.agoraUID === agoraUID);
+
+  if (!user) {
+    return false;
+  }
+  return user;
+};
+
 module.exports = {
   verifyRoomExistsInDB,
   isRoomActive,
@@ -151,5 +165,6 @@ module.exports = {
   addUserToRoomInMemory,
   getRoomFromDB,
   isHost,
+  getUserFromRoomInMemory,
   rooms,
 };

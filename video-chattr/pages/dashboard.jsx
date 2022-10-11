@@ -154,7 +154,7 @@ function dashboard({ user }) {
           return;
         }
 
-        toast.notify(`Connecting to room ${userInput.slice(0, 5)}..`, {
+        toast.notify(`Connecting to room`, {
           title: "WooHoo!",
           type: "success",
         });

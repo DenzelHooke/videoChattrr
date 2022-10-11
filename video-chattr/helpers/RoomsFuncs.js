@@ -1,15 +1,19 @@
 import axios from "axios";
 
+import { useSelector } from "react-redux";
+
 const API_URL =
   process.env.NODE_ENV === "production" ? "" : "http://localhost:8080/api/room";
 
 const roomExists = async (roomName, authToken) => {
-  console.log("token: ", authToken);
   const config = {
     headers: {
       authorization: `Bearer ${authToken}`,
     },
   };
+
+  console.log("token: ", authToken);
+
   console.log("REQ SENT");
   const res = await axios.post(
     API_URL + "/room/verify/",
@@ -43,6 +47,10 @@ const createRoomCookie = (mode, rtcToken) => {
   ).toUTCString()}`;
 };
 
+const removeRoomCookie = () => {
+  document.cookie = `roomData=; expires=${new Date().toUTCString()}`;
+};
+
 const getRunningRoom = async (roomID, authToken) => {
   const config = {
     headers: {
@@ -50,10 +58,46 @@ const getRunningRoom = async (roomID, authToken) => {
     },
   };
 
-  const res = await axios.get(`${API_URL}/running/?roomID=${roomID}`, config);
+  try {
+    const res = await axios.get(`${API_URL}/running/?roomID=${roomID}`, config);
 
-  if (res.data) {
-    return res.data;
+    if (res.data) {
+      return res.data;
+    }
+  } catch (error) {
+    console.error(error);
+    return error;
   }
 };
-export { roomExists, createRoomCookie, getRunningRoom };
+
+const getUserFromRunningRoom = async (roomID, uid) => {
+  try {
+    const user = JSON.parse(localStorage.getItem("user"));
+    console.log(user);
+    const authToken = user.token;
+    const config = {
+      headers: {
+        authorization: `Bearer ${authToken}`,
+      },
+    };
+    const res = await axios.get(
+      `${API_URL}/running/user?roomID=${roomID}&uid=${uid}`,
+      config
+    );
+
+    if (res.data) {
+      return res.data;
+    }
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+};
+
+export {
+  roomExists,
+  createRoomCookie,
+  removeRoomCookie,
+  getRunningRoom,
+  getUserFromRunningRoom,
+};

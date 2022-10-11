@@ -210,7 +210,6 @@ button {
 //Rooms
 
 .displayRoomContainer {
-  
 }
 
 .grow {
@@ -452,9 +451,9 @@ button {
   gap: 10px;
   // border: 5px solid red;
   // min-height: 800px;
-  max-height: 650px;
+  // max-height: 650px;
   max-width: 1200px;
-  overflow: hidden;
+  // overflow: hidden;
   padding: 10px;
 
   #video-controls {
@@ -496,11 +495,6 @@ button {
   background: $panelBG;
 }
 
-#local-stream {
-  // display: flex;
-  // align-items: center;
-}
-
 .centerMe {
   margin: 0 auto;
 }
@@ -516,15 +510,26 @@ button {
 #local-camera {
   display: block;
   width: 100%;
+}
+
+video {
   transform: rotateY(180deg);
   -webkit-transform: rotateY(180deg);
   -mox-transform: rotateY(180deg);
 }
 
 #local-stream {
+  z-index: 100;
+  position: relative;
   display: flex;
-  align-items: center;
-  height: 100%;
+  min-height: 80%;
+  video {
+    position: relative !important;
+  }
+  > div {
+    border: 5px solid $leaveBG;
+    height: auto !important;
+  }
 }
 
 //Remote streams
@@ -536,24 +541,19 @@ button {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  > div {
-    max-width: 400px;
-  }
 
-  .streamContainer {
-    height: 200px;
-    video {
-      height: 100%;
-    }
+  video {
+    max-width: 100%;
+    min-height: auto;
   }
 }
 
 .streamContainer {
   border-radius: 10px;
   overflow: hidden;
+  background: rgb(238, 0, 0);
   background: rgb(36, 36, 36);
   margin: 5px 0;
-  position: relative;
 
   // max-width: 400px;
   // max-height: 350px;
@@ -562,6 +562,22 @@ button {
 
   .info {
     padding: 2% 2%;
+  }
+
+  // Video container div
+  > div {
+    height: auto !important;
+    width: auto !important;
+    max-width: 100% !important;
+
+    video {
+      position: relative !important;
+      height: auto !important;
+      width: auto !important;
+
+      // Fixes margin at bottom of video element
+      display: block;
+    }
   }
 
   &:hover {

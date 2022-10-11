@@ -375,9 +375,7 @@ button {
   grid-template-columns: 1fr 0.5fr;
   grid-template-rows: 1fr 1fr 0.5fr;
   gap: 10px;
-  max-height: 650px;
   max-width: 1200px;
-  overflow: hidden;
   padding: 10px;
 }
 #main-container #video-controls {
@@ -426,15 +424,26 @@ button {
 #local-camera {
   display: block;
   width: 100%;
+}
+
+video {
   transform: rotateY(180deg);
   -webkit-transform: rotateY(180deg);
   -mox-transform: rotateY(180deg);
 }
 
 #local-stream {
+  z-index: 100;
+  position: relative;
   display: flex;
-  align-items: center;
-  height: 100%;
+  min-height: 80%;
+}
+#local-stream video {
+  position: relative !important;
+}
+#local-stream > div {
+  border: 5px solid rgb(223, 38, 38);
+  height: auto !important;
 }
 
 #remote-streams {
@@ -444,25 +453,31 @@ button {
   flex-direction: column;
   overflow: hidden;
 }
-#remote-streams > div {
-  max-width: 400px;
-}
-#remote-streams .streamContainer {
-  height: 200px;
-}
-#remote-streams .streamContainer video {
-  height: 100%;
+#remote-streams video {
+  max-width: 100%;
+  min-height: auto;
 }
 
 .streamContainer {
   border-radius: 10px;
   overflow: hidden;
+  background: rgb(238, 0, 0);
   background: rgb(36, 36, 36);
   margin: 5px 0;
-  position: relative;
 }
 .streamContainer .info {
   padding: 2% 2%;
+}
+.streamContainer > div {
+  height: auto !important;
+  width: auto !important;
+  max-width: 100% !important;
+}
+.streamContainer > div video {
+  position: relative !important;
+  height: auto !important;
+  width: auto !important;
+  display: block;
 }
 .streamContainer:hover .userControls {
   display: flex;

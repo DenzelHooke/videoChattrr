@@ -6,6 +6,7 @@ const {
   getRoomFromDB,
   isRoomActive,
   isRoomOverCapacity,
+  getUserFromRoomInMemory,
 } = require("../helpers/room");
 const { json } = require("express");
 const { runningRooms } = require("../server");
@@ -127,9 +128,29 @@ const getRunningRooms = asyncHandler(async (req, res) => {
     });
   }
 });
+
+const getUserRunning = asyncHandler(async (req, res) => {
+  const { roomID, agoraUID } = req.query;
+
+  const user = getUserFromRoomInMemory(agoraUID, roomID);
+
+  if (!user) {
+    res.status(404);
+    return;
+  }
+
+  res.status(200).json({
+    exists: true,
+    user: {
+      username: user.username,
+      agoraUID: agoraUID,
+    },
+  });
+});
 module.exports = {
   roomExists,
   createRoom,
   getRoomData,
   getRunningRooms,
+  getUserRunning,
 };

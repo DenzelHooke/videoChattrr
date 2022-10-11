@@ -1,9 +1,25 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { GoUnmute } from "react-icons/go";
 import { BsFillCameraVideoFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
+import LoadingCircle from "./LoadingCircle";
 
 const Video = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  let localStreamChildrenLength = 0;
+
+  useEffect(() => {
+    const localStreamElement = document.querySelector("#local-stream");
+    localStreamChildrenLength = localStreamElement.children.length;
+    console.log(localStreamChildrenLength);
+    if (localStreamChildrenLength < 1) {
+      setIsLoading(true);
+      return;
+    }
+
+    setIsLoading(false);
+  }, [localStreamChildrenLength]);
+
   const { roomName, roomID } = useSelector((state) => state.room);
 
   return (
@@ -17,18 +33,19 @@ const Video = () => {
           </div>
           <div className="roomID">Room ID: {roomID}</div>
           <div id="local-stream" className="focus">
-            <div id="local-element">
+            {isLoading && <LoadingCircle />}
+            {/* <div id="local-element">
               <video
                 src="./test/test_mountain.mp4"
                 className="video"
                 autoplay="true"
                 loop="true"
               ></video>
-            </div>
+            </div> */}
           </div>
         </div>
         <div id="remote-streams" className="panel">
-          <div className="streamContainer">
+          {/* <div className="streamContainer">
             <p className="info">John Snow</p>
             <div className="userControls">
               <div className="btn true">
@@ -78,7 +95,7 @@ const Video = () => {
               autoplay="true"
               loop="true"
             ></video>
-          </div>
+          </div> */}
         </div>
         <div id="video-controls" className="panel">
           <div className="btn true">

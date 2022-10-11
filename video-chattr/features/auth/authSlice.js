@@ -22,6 +22,7 @@ const initialState = {
   rtcToken: null,
   message: "",
   push: "",
+  uid: null,
 };
 
 //* ─── Reducers ───────────────────────────────────────────────────────────────────

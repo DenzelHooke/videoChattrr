@@ -12,6 +12,7 @@ import Video from "../components/Video";
 import io from "socket.io-client";
 import axios from "axios";
 import { wrapper } from "../app/store";
+import { removeRoomCookie } from "../helpers/RoomsFuncs";
 
 /**
  * A room page for generating video call enviroments.
@@ -23,6 +24,7 @@ const room = ({ mode, rtcToken }) => {
   const { roomName, roomID, isLoading, message, isError } = useSelector(
     (state) => state.room
   );
+
   const socketRef = useRef();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -45,13 +47,14 @@ const room = ({ mode, rtcToken }) => {
     //Removes the user token on page dismount because the state persits unless page is refreshed.
     dispatch(removeToken());
     dispatch(resetRoomState());
+    removeRoomCookie();
   };
 
   /**
    * Initializes my Agora room connection class wrapper
    */
   const setUpClient = async (rtcToken, roomID) => {
-    const videoClient = new RoomClient(roomID, uid);
+    const videoClient = new RoomClient(roomID, uid, user.username);
     await videoClient.init(rtcToken);
     dispatch(setLoading(false));
   };
@@ -110,6 +113,7 @@ const room = ({ mode, rtcToken }) => {
             userID: user._id,
             username: user.username,
           }),
+          agoraUID: uid,
         },
       });
 
@@ -127,6 +131,13 @@ const room = ({ mode, rtcToken }) => {
         setUpClient(rtcToken, roomID);
         console.log("_______ROOM JOINED_______");
         //* INIT socket.io connection to server
+      });
+
+      socketRef.current.on("userLeft", (user) => {
+        //* Execute remove user from dom func
+        console.log("USER LEFT: ", user);
+
+        //* Execute unsubscribing user on Agora.
       });
 
       if (mode === "create" && roomID) {
@@ -151,16 +162,18 @@ const room = ({ mode, rtcToken }) => {
     };
   }, []);
 
-  return isServer ? (
-    <>
-      <LoadingCircle />
-    </>
-  ) : (
-    <>
-      <div id="room-container" className="grow">
-        {isLoading ? <LoadingCircle /> : <Video roomName={roomName} />}
-      </div>
-    </>
+  return (
+    <div>
+      {isServer ? (
+        <LoadingCircle />
+      ) : (
+        <>
+          <div id="room-container" className="grow">
+            {!isLoading && <Video roomName={roomName} />}
+          </div>
+        </>
+      )}
+    </div>
   );
 };
 
@@ -169,15 +182,24 @@ const room = ({ mode, rtcToken }) => {
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) =>
     async ({ res, req }) => {
-      let { roomData } = req.cookies;
-      roomData = JSON.parse(roomData);
+      try {
+        let { roomData } = req.cookies;
+        roomData = JSON.parse(roomData);
 
-      return {
-        props: {
-          mode: roomData.mode,
-          rtcToken: roomData.rtcToken,
-        },
-      };
+        return {
+          props: {
+            mode: roomData.mode,
+            rtcToken: roomData.rtcToken,
+          },
+        };
+      } catch (error) {
+        return {
+          redirect: {
+            destination: "/dashboard",
+            permanent: false,
+          },
+        };
+      }
     }
 );
 
