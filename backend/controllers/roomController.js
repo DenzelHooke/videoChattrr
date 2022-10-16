@@ -130,15 +130,17 @@ const getRunningRooms = asyncHandler(async (req, res) => {
 });
 
 const getUserRunning = asyncHandler(async (req, res) => {
+  console.log("REQ: ", req.query);
   const { roomID, agoraUID } = req.query;
-
-  const user = getUserFromRoomInMemory(agoraUID, roomID);
+  const user = await getUserFromRoomInMemory(agoraUID, roomID);
 
   if (!user) {
+    console.error("[getUserRunning] : No user found!");
     res.status(404);
     return;
   }
 
+  console.error("[getUserRunning] : User found!");
   res.status(200).json({
     exists: true,
     user: {

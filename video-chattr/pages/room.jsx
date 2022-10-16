@@ -10,7 +10,6 @@ import RoomClient from "../helpers/RoomsClass";
 import LoadingCircle from "../components/LoadingCircle";
 import Video from "../components/Video";
 import io from "socket.io-client";
-import axios from "axios";
 import { wrapper } from "../app/store";
 import { removeRoomCookie } from "../helpers/RoomsFuncs";
 
@@ -25,6 +24,8 @@ const room = ({ mode, rtcToken }) => {
     (state) => state.room
   );
 
+  let _roomClient;
+
   const socketRef = useRef();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -38,12 +39,12 @@ const room = ({ mode, rtcToken }) => {
   const { socketStateMessage, isSocketStateError } = socketState;
 
   const cleanUp = () => {
-    console.info("Cleaning up now..");
-    // socketRef.current.emit("removeUser", {
-    //   roomID,
-    // });
     socketRef.current.disconnect();
+    console.info("Cleaning up now..");
+    _roomClient.removeLocalStream();
+    _roomClient.reset();
 
+    location.reload();
     //Removes the user token on page dismount because the state persits unless page is refreshed.
     dispatch(removeToken());
     dispatch(resetRoomState());
@@ -54,8 +55,8 @@ const room = ({ mode, rtcToken }) => {
    * Initializes my Agora room connection class wrapper
    */
   const setUpClient = async (rtcToken, roomID) => {
-    const videoClient = new RoomClient(roomID, uid, user.username);
-    await videoClient.init(rtcToken);
+    _roomClient = new RoomClient(roomID, uid, user.username);
+    await _roomClient.init(rtcToken);
     dispatch(setLoading(false));
   };
 
@@ -134,10 +135,15 @@ const room = ({ mode, rtcToken }) => {
       });
 
       socketRef.current.on("userLeft", (user) => {
-        //* Execute remove user from dom func
-        console.log("USER LEFT: ", user);
+        try {
+          _roomClient.removeRemoteStream(user.agoraUID);
+          //* Execute remove user from dom func
+          console.log("USER LEFT: ", user);
 
-        //* Execute unsubscribing user on Agora.
+          //* Execute unsubscribing user on Agora.
+        } catch (error) {
+          console.error(error);
+        }
       });
 
       if (mode === "create" && roomID) {
@@ -156,10 +162,7 @@ const room = ({ mode, rtcToken }) => {
   useEffect(() => {
     dispatch(setLoading(true));
 
-    return () => {
-      cleanUp();
-      socketRef.current.disconnect();
-    };
+    return () => cleanUp();
   }, []);
 
   return (

@@ -8,6 +8,7 @@ class Rooms {
   #appID = process.env.NEXT_PUBLIC_AGORA_APP_ID;
 
   constructor(roomID, uid, username) {
+    this.videoProfile = "1080p_5";
     this.roomID = roomID;
     this.username = username;
     this.uid = uid;
@@ -24,7 +25,7 @@ class Rooms {
       },
     };
     this.remoteStreams = {};
-    this.cameraVideoProfile = "1080p_5";
+    this.cameraVideoProfile = this.videoProfile;
   }
 
   // /**
@@ -35,6 +36,25 @@ class Rooms {
   //   console.log(this.#token);
   // }
 
+  reset() {
+    this.roomID = null;
+    this.username = null;
+    this.uid = null;
+    this.localStreams = {
+      camera: {
+        id: null,
+        stream: {},
+        element: null,
+      },
+      screen: {
+        id: null,
+        stream: {},
+        element: null,
+      },
+    };
+    this.remoteStreams = {};
+    this.cameraVideoProfile = this.videoProfile;
+  }
   async init(token) {
     this.#token = token;
     this.#client = AgoraRTC.createClient({ mode: "rtc", codec: "h264" });
@@ -126,51 +146,86 @@ class Rooms {
     const remoteID = remoteStream.getId();
 
     try {
+      console.log("BEFORE getUser");
+      //TODO Call api func to return username with same uid from stream to get a username as a string.
       const res = await getUserFromRunningRoom(this.roomID, remoteID);
+      console.log("AFTER getUser");
 
-      if (res.data) {
-        console.log(res.data);
+      //! Throw err is no res.data.
+      if (!res.data) {
+        throw new Error(
+          "Couldn't add connecting user stream because user could not be found on server."
+        );
       }
-    } catch (error) {}
 
-    console.log(remoteUser);
+      const { exists, user } = res.data;
 
-    return;
-    const peerStreams = document.querySelector("#remote-streams");
+      //* Add user stream to dom
+      const peerStreams = document.querySelector("#remote-streams");
 
-    // peerStreams.append(new_video);
-    const remoteStreamContainer = document.createElement("div");
-    remoteStreamContainer.className = "streamContainer";
-    remoteStreamContainer.id = "remote-stream";
-    const info = document.createElement("p");
-    info.className = "info";
+      // peerStreams.append(new_video);
+      const remoteStreamContainer = document.createElement("div");
+      remoteStreamContainer.className = "streamContainer";
+      remoteStreamContainer.id = remoteID;
+      const info = document.createElement("p");
+      info.className = "info";
 
-    //TODO Call api func to return username with same uid from stream to get a username as a string.
-    info.innerText = remoteStream.user["username"];
+      info.innerText = user["username"];
 
-    remoteStreamContainer.appendChild(info);
-    peerStreams.appendChild(remoteStreamContainer);
-    console.log(peerStreams);
-    await remoteStream.play(`remote-stream`, {}, () => {
-      console.log("stream added to DOM!");
+      remoteStreamContainer.appendChild(info);
+      peerStreams.appendChild(remoteStreamContainer);
       console.log(peerStreams);
-      for (let i = 0; i < peerStreams.children.length; i++) {
-        // removes default styles on all video container elements set by agoraSDK
-        console.log(peerStreams[0]);
-        const videoContainer = peerStreams.children[i];
-        const videoElement = peerStreams.children[i].children[0];
 
-        // videoContainer.removeAttribute("style");
-        // Removes the style attributes on the video element
-        videoElement.removeAttribute("style");
-        videoElement.classList.add("video");
-      }
-    });
+      //* Play user stream in dom.
+      await remoteStream.play(`${remoteID}`, {}, () => {
+        console.log("stream added to DOM!");
+        console.log(peerStreams);
+        for (let i = 0; i < peerStreams.children.length; i++) {
+          //* Remove default style attributes on video elements set by AgoraSDK.
+          const videoElement = peerStreams.children[i].children[0];
+
+          // videoContainer.removeAttribute("style");
+          // Removes the style attributes on the video element
+          videoElement.removeAttribute("style");
+          videoElement.classList.add("video");
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      return;
+    }
   }
 
-  async removeRemoteStream(uid) {
-    const remoteStream = this.remoteStreams[uid];
-    console.log("REMOTE STREAM: ", remoteStream);
+  removeRemoteStream(uid) {
+    try {
+      console.log(`Removing stream ${uid}`);
+      const remoteStream = this.remoteStreams[uid];
+      console.log("REMOTE STREAM: ", remoteStream);
+      //TODO Find stream with uid
+      //? Maybe use element ID.
+
+      delete this.remoteStreams[uid];
+
+      //TODO Remove from dom
+      const remoteStreamElement = document.getElementById(`${uid}`);
+      remoteStreamElement.remove();
+      console.log(remoteStreamElement);
+
+      //TODO Unsubsribe
+
+      this.#client.unsubscribe(remoteStream.camera.stream);
+    } catch (error) {}
+  }
+
+  removeLocalStream() {
+    try {
+      const remoteStreamElement = document.getElementById(`${this.uid}`);
+      remoteStreamElement.remove();
+      const localStream = this.localStreams.camera.stream;
+      console.log("Remvoing local stream.");
+      localStream.stop();
+      localStream.close();
+    } catch (error) {}
   }
 }
 

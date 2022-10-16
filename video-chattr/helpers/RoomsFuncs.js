@@ -71,27 +71,20 @@ const getRunningRoom = async (roomID, authToken) => {
 };
 
 const getUserFromRunningRoom = async (roomID, uid) => {
-  try {
-    const user = JSON.parse(localStorage.getItem("user"));
-    console.log(user);
-    const authToken = user.token;
-    const config = {
-      headers: {
-        authorization: `Bearer ${authToken}`,
-      },
-    };
-    const res = await axios.get(
-      `${API_URL}/running/user?roomID=${roomID}&uid=${uid}`,
-      config
-    );
+  const user = JSON.parse(localStorage.getItem("user"));
+  console.log(user);
+  const authToken = user.token;
+  const config = {
+    headers: {
+      authorization: `Bearer ${authToken}`,
+    },
+  };
+  const res = await axios.get(
+    `${API_URL}/running/user?roomID=${roomID}&agoraUID=${uid}`,
+    config
+  );
 
-    if (res.data) {
-      return res.data;
-    }
-  } catch (error) {
-    console.error(error);
-    return error;
-  }
+  return res;
 };
 
 export {

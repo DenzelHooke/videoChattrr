@@ -172,11 +172,7 @@ io.on("connection", (socket) => {
 
         return;
       }
-    } else {
-      return;
     }
-
-    // TODO create room with that room ID
 
     // TODO Auth client depending on whether they are the host or not of that room.
     console.log(data);
