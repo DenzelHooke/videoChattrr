@@ -22,13 +22,9 @@ import {
   resetRoomState,
 } from "../features/room/roomSlice";
 import { createRoomCookie, getRunningRoom } from "../helpers/RoomsFuncs";
-import io from "socket.io-client";
 import roomService from "../features/room/roomService";
-import LoadingRoomForm from "../components/LoadingRoomForm";
 import LoadingCircle from "../components/LoadingCircle";
-import uuid4 from "uuid4";
-import cookies from "js-cookie";
-import axios from "axios";
+import Friends from "./components/Friends";
 
 // The Rooms componenet requires the window object which isn't present  with SSR.
 //This loads the component once ssr is done which means this comp isn't loaded in the page source.

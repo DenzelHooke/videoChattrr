@@ -16,7 +16,7 @@ import { removeRoomCookie } from "../helpers/RoomsFuncs";
 /**
  * A room page for generating video call enviroments.
  * @param {object} Data
- * @returns HTML
+ * @returns
  */
 const room = ({ mode, rtcToken }) => {
   const { uid, user } = useSelector((state) => state.auth);
@@ -39,24 +39,25 @@ const room = ({ mode, rtcToken }) => {
   const { socketStateMessage, isSocketStateError } = socketState;
 
   const cleanUp = () => {
+    console.log("Room client: ", _roomClient);
     socketRef.current.disconnect();
     console.info("Cleaning up now..");
     _roomClient.removeLocalStream();
     _roomClient.reset();
 
-    location.reload();
     //Removes the user token on page dismount because the state persits unless page is refreshed.
     dispatch(removeToken());
     dispatch(resetRoomState());
     removeRoomCookie();
+    location.reload();
   };
 
   /**
    * Initializes my Agora room connection class wrapper
    */
-  const setUpClient = async (rtcToken, roomID) => {
+  const setUpClient = async (roomID) => {
     _roomClient = new RoomClient(roomID, uid, user.username);
-    await _roomClient.init(rtcToken);
+    _roomClient.init(rtcToken);
     dispatch(setLoading(false));
   };
 
@@ -129,7 +130,7 @@ const room = ({ mode, rtcToken }) => {
       socketRef.current.on("roomJoined", () => {
         console.log(rtcToken, roomID);
         //* Start Agora
-        setUpClient(rtcToken, roomID);
+        setUpClient(roomID);
         console.log("_______ROOM JOINED_______");
         //* INIT socket.io connection to server
       });
@@ -165,6 +166,11 @@ const room = ({ mode, rtcToken }) => {
     return () => cleanUp();
   }, []);
 
+  const leaveRoom = () => {
+    console.log("Room client before cleanup: ", _roomClient);
+    router.push("/dashboard");
+  };
+
   return (
     <div>
       {isServer ? (
@@ -172,7 +178,7 @@ const room = ({ mode, rtcToken }) => {
       ) : (
         <>
           <div id="room-container" className="grow">
-            {!isLoading && <Video roomName={roomName} />}
+            {!isLoading && <Video leaveRoom={leaveRoom} />}
           </div>
         </>
       )}

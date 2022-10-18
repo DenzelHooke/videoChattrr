@@ -8,6 +8,8 @@ class Rooms {
   #appID = process.env.NEXT_PUBLIC_AGORA_APP_ID;
 
   constructor(roomID, uid, username) {
+    console.log(`RoomID: ${roomID}\n uid: ${uid}\n username: ${username}`);
+    console.log("Initializing room client.");
     this.videoProfile = "1080p_5";
     this.roomID = roomID;
     this.username = username;
@@ -55,7 +57,7 @@ class Rooms {
     this.remoteStreams = {};
     this.cameraVideoProfile = this.videoProfile;
   }
-  async init(token) {
+  init(token) {
     this.#token = token;
     this.#client = AgoraRTC.createClient({ mode: "rtc", codec: "h264" });
     console.log("client: ", this.#client);

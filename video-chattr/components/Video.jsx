@@ -3,8 +3,10 @@ import { GoUnmute } from "react-icons/go";
 import { BsFillCameraVideoFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import LoadingCircle from "./LoadingCircle";
+import TestVideoElements from "./TestVideoElements";
+import { useRouter } from "next/router";
 
-const Video = () => {
+const Video = ({ leaveRoom }) => {
   const [isLoading, setIsLoading] = useState(true);
   let localStreamChildrenLength = 0;
 
@@ -17,7 +19,7 @@ const Video = () => {
       return;
     }
 
-    setIsLoading(false);
+    // setIsLoading(false);
   }, [localStreamChildrenLength]);
 
   const { roomName, roomID } = useSelector((state) => state.room);
@@ -45,63 +47,13 @@ const Video = () => {
           </div>
         </div>
         <div id="remote-streams" className="panel">
-          {/* <div className="streamContainer">
-            <p className="info">John Snow</p>
-            <div className="userControls">
-              <div className="btn true">
-                <GoUnmute color="white" size={30} />
-              </div>
-              <div className="btn true">
-                <BsFillCameraVideoFill color="white" size={30} />
-              </div>
-            </div>
-            <video
-              src="./test/test_selfie1.mp4"
-              className="video"
-              autoplay="true"
-              loop="true"
-            ></video>
-          </div>
-          <div className="streamContainer">
-            <p className="info">Cock Gobl3rr</p>
-            <div className="userControls">
-              <div className="btn true">
-                <GoUnmute color="white" size={30} />
-              </div>
-              <div className="btn true">
-                <BsFillCameraVideoFill color="white" size={30} />
-              </div>
-            </div>
-            <video
-              src="./test/test_selfie2.mp4"
-              className="video"
-              autoplay="true"
-              loop="true"
-            ></video>
-          </div>
-          <div className="streamContainer">
-            <p className="info">Goofy Goober</p>
-            <div className="userControls">
-              <div className="btn true">
-                <GoUnmute color="white" size={30} />
-              </div>
-              <div className="btn true">
-                <BsFillCameraVideoFill color="white" size={30} />
-              </div>
-            </div>
-            <video
-              src="./test/test_selfie3.mp4"
-              className="video"
-              autoplay="true"
-              loop="true"
-            ></video>
-          </div> */}
+          {/* <TestVideoElements /> */}
         </div>
         <div id="video-controls" className="panel">
           <div className="btn true">
             <GoUnmute color="white" size={30} />
           </div>
-          <button id="exit" className="btn false">
+          <button id="exit" className="btn false" onClick={leaveRoom}>
             LEAVE
           </button>
           <div className="btn true">

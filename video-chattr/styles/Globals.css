@@ -554,10 +554,10 @@ video {
 }
 
 #loading {
-  margin: 0 auto;
+  margin: 30px auto;
   position: relative;
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
 }
 #loading div {
   scale: 1.5;
