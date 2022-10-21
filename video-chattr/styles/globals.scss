@@ -9,6 +9,7 @@
   --callBG: rgba(190, 190, 190, 0.157);
   --errorRed: rgb(223, 38, 38);
   --happyGreen: rgb(95, 206, 95);
+  --input-bg: rgb(233, 233, 233);
 }
 $videoBG: rgb(255, 255, 255);
 $localBG: rgb(226, 73, 73);
@@ -226,16 +227,22 @@ button {
 
 //Dashboard
 
-.dashboard-container {
+.dashboard-outter-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.dashboard-inner-container {
   max-width: 800px;
   margin: 0 auto;
+  flex-grow: 10;
 
   .greeting {
     margin-bottom: 60px;
   }
 }
 
-.room-constrain {
+.panel-constrain {
   max-width: 485px;
   margin: 0 auto;
 
@@ -244,14 +251,37 @@ button {
   }
 }
 
-#room-form-container {
-  background: rgb(255, 255, 255);
-  // border: 1px solid var(--eerie-black);
-  // padding: 10px 0;
+.panel {
+  margin: 10px;
+  padding: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+
+  box-shadow: 1px 1px 10px 2px rgba(0, 0, 0, 0.226);
+
+  background: $panelBG;
+}
+
+.center {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  > div {
+    flex-grow: 100;
+  }
+}
+
+.panel-max-width {
   max-width: 600px;
-  padding: 10px;
+}
+
+.marginCenter {
   margin: 0 auto;
-  margin-top: 150px;
+}
+
+#room-form-container {
+  margin-top: 80px;
 
   h1 {
     margin-bottom: 60px;
@@ -412,11 +442,19 @@ button {
 }
 
 .success {
-  background-color: rgb(81, 211, 81);
+  background-color: var(--happyGreen);
+}
+
+.successBg {
+  color: white;
+  height: 35px;
+  background-color: var(--happyGreen);
 }
 
 .form__container {
   text-align: center;
+
+  margin: 0 auto;
 
   max-width: 450px;
   form {
@@ -483,16 +521,6 @@ button {
   // grid-auto-columns: 1fr 1fr;
   padding: 10px;
   min-height: 100vh;
-}
-
-.panel {
-  // margin: 10px;
-  padding: 20px;
-  border-radius: 10px;
-  overflow: hidden;
-  margin: 5px 0;
-
-  background: $panelBG;
 }
 
 .centerMe {
@@ -604,6 +632,34 @@ video {
   }
 }
 
+.input {
+  background: var(--input-bg);
+  border-radius: 4px;
+  position: relative;
+  padding: 5px;
+  margin: 0;
+  font-size: 15px;
+  height: 35px;
+  border: 0;
+}
+
+#friend-form-inner {
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 20px;
+
+  input {
+    flex-grow: 100;
+  }
+}
+
+.block-btn {
+  font-size: 15px;
+  max-width: 150px !important;
+  min-width: 100px !important;
+}
+
 .focus {
   // min-width: 400px;
   // justify-self: center;
@@ -634,6 +690,10 @@ video {
   &:hover {
     background-color: rgb(11, 103, 188);
   }
+}
+
+.flex {
+  display: flex;
 }
 
 #exit {

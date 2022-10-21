@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { setRoom } from "../features/room/roomSlice";
 import { AiFillDelete } from "react-icons/ai";
 import LoadingCircle from "./LoadingCircle";
+import Panel from "./Panel";
 
 const Rooms = ({ onClick }) => {
   const { isLoading } = useSelector((state) => state.room);
@@ -68,7 +69,7 @@ const Rooms = ({ onClick }) => {
   return (
     //? Have func that generates dotted boxes informing user of room space.
     <>
-      <div id="room-form-container">
+      <div id="room-form-container" className="panel">
         <div className="room-constrain">
           <h1
             className="center-text
@@ -104,7 +105,7 @@ const Rooms = ({ onClick }) => {
             </div>
           </div>
         </div> */}
-        <div className="room-constrain">
+        {
           <Form
             form={
               <RoomForm
@@ -118,7 +119,7 @@ const Rooms = ({ onClick }) => {
             message=""
             className="room-form"
           />
-        </div>
+        }
       </div>
     </>
   );

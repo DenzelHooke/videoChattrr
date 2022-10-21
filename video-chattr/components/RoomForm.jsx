@@ -99,7 +99,9 @@ const RoomForm = ({
           <input
             type="text"
             className={`${
-              formData.isError ? "error_input form-input" : "form-input"
+              formData.isError
+                ? "error_input form-input input"
+                : "form-input input"
             }`}
             id="roomID"
             value={roomID}
@@ -129,8 +131,10 @@ const RoomForm = ({
           <button
             id="create"
             type="button"
-            class={`${
-              modeState.buttonMode === "create" ? "btn_blue" : "btn_off"
+            className={`${
+              modeState.buttonMode === "create"
+                ? "btn_blue block-btn"
+                : "btn_off block-btn"
             }`}
             onClick={onFormClick}
           >
@@ -139,8 +143,10 @@ const RoomForm = ({
           <button
             id="join"
             type="button"
-            class={`${
-              modeState.buttonMode === "join" ? "btn_blue" : "btn_off"
+            className={`${
+              modeState.buttonMode === "join"
+                ? "btn_blue block-btn"
+                : "btn_off block-btn"
             }`}
             onClick={onFormClick}
           >

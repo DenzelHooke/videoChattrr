@@ -6,7 +6,7 @@ import LoadingCircle from "./LoadingCircle";
 import TestVideoElements from "./TestVideoElements";
 import { useRouter } from "next/router";
 
-const Video = ({ leaveRoom }) => {
+const Video = ({ leaveRoom, muteLocal, hideLocal }) => {
   const [isLoading, setIsLoading] = useState(true);
   let localStreamChildrenLength = 0;
 
@@ -35,7 +35,6 @@ const Video = ({ leaveRoom }) => {
           </div>
           <div className="roomID">Room ID: {roomID}</div>
           <div id="local-stream" className="focus">
-            {isLoading && <LoadingCircle />}
             {/* <div id="local-element">
               <video
                 src="./test/test_mountain.mp4"
@@ -48,15 +47,21 @@ const Video = ({ leaveRoom }) => {
         </div>
         <div id="remote-streams" className="panel">
           {/* <TestVideoElements /> */}
+          {/* {document.querySelector("#remote-streams").children.length < 1 && (
+            <>
+              <p>No users yet..</p>
+            </>
+          )} */}
+          <div className="info">Invite</div>
         </div>
         <div id="video-controls" className="panel">
-          <div className="btn true">
+          <div className="btn true" onClick={muteLocal}>
             <GoUnmute color="white" size={30} />
           </div>
           <button id="exit" className="btn false" onClick={leaveRoom}>
             LEAVE
           </button>
-          <div className="btn true">
+          <div className="btn true" onClick={hideLocal}>
             <BsFillCameraVideoFill color="white" size={30} />
           </div>
         </div>

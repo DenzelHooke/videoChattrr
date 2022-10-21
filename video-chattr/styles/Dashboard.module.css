@@ -8,12 +8,6 @@
 #mainContent {
   padding: 10px 0;
 }
-#mainContent input {
-  background: rgb(233, 233, 233);
-  border-radius: 4px;
-  position: relative;
-  padding: 5px;
-}
 
 #sidebar {
   background-color: var(--eerie-black);
