@@ -9,13 +9,22 @@
   --callBG: rgba(190, 190, 190, 0.157);
   --errorRed: rgb(223, 38, 38);
   --happyGreen: rgb(95, 206, 95);
+  --happyGreenHover: rgb(84, 180, 84);
+
   --input-bg: rgb(233, 233, 233);
+  --videoBG: rgb(255, 255, 255);
+  --localBG: rgb(226, 73, 73);
+  --leaveBG: rgb(223, 38, 38);
+  --panelBG: rgb(255, 255, 255);
+  --savedRmBG: white;
+  --ph-input-color: rgba(0, 0, 0, 0.519);
+  --outline-color: rgb(255, 84, 84);
+  --card-bg: rgb(255, 255, 255);
+  --border-color: rgba(0, 0, 0, 0.136);
+  --dashedBG: rgb(0, 0, 0);
+  --not-savedBG: rgba(255, 255, 255, 0.394);
+  --savedBG: rgb(37, 37, 37);
 }
-$videoBG: rgb(255, 255, 255);
-$localBG: rgb(226, 73, 73);
-$leaveBG: rgb(223, 38, 38);
-$panelBG: rgb(255, 255, 255);
-$savedRmBG: white;
 
 body {
   background-color: var(--white);
@@ -82,9 +91,7 @@ a {
 // }
 
 .form-control {
-  $ph-input-color: rgba(0, 0, 0, 0.519);
-  // $input-color: rgba(0, 0, 0, 0.519);
-  $outline-color: rgb(255, 84, 84);
+  // --input-color: rgba(0, 0, 0, 0.519);
 
   button {
     display: block;
@@ -97,11 +104,11 @@ a {
     min-height: 35px;
     border: 0;
     &::placeholder {
-      color: $ph-input-color;
+      color: var(--ph-input-color);
     }
 
     &:focus {
-      outline: $outline-color;
+      outline: var(--outline-color);
     }
   }
 }
@@ -113,13 +120,12 @@ a {
 }
 
 .input__wrapper {
-  $border-color: rgba(0, 0, 0, 0.136);
   background: white;
   svg {
     cursor: pointer;
   }
 
-  border: 2px solid $border-color;
+  border: 2px solid var(--border-color);
   border-radius: 5px;
   margin: 5px 0;
   display: flex;
@@ -174,29 +180,14 @@ button {
 }
 
 .card {
-  $card-bg: rgb(255, 255, 255);
   padding: 30px;
-  background-color: $card-bg;
+  background-color: var(--card-bg);
   box-shadow: rgba(100, 100, 111, 0.192) 0px 7px 29px 0px;
   border-radius: 10px;
 }
 
 .main {
   flex: 1 0 auto;
-}
-
-.space-text {
-  margin: 10px 0;
-}
-
-.center-text {
-  text-align: center;
-}
-
-.center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 #toast-container {
@@ -259,7 +250,7 @@ button {
 
   box-shadow: 1px 1px 10px 2px rgba(0, 0, 0, 0.226);
 
-  background: $panelBG;
+  background: var(--panelBG);
 }
 
 .center {
@@ -338,7 +329,7 @@ button {
       align-items: center;
       justify-content: center;
       color: white;
-      background: $leaveBG;
+      background: var(--leaveBG);
       width: 22px;
       text-align: center;
       height: 22px;
@@ -353,10 +344,6 @@ button {
   }
 
   .savedRooms {
-    $dashedBG: rgb(0, 0, 0);
-    $not-savedBG: rgba(255, 255, 255, 0.394);
-    $savedBG: rgb(37, 37, 37);
-
     padding: 5px;
 
     .wrapper {
@@ -370,7 +357,7 @@ button {
       width: 200px;
       // height: 110px;
       aspect-ratio: 2 / 1;
-      // border: solid 2px var(--eerie-black);
+      // border: solid 2px varvar((--eerie-black);
       box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.346);
       border-radius: 5px;
       padding: 5px;
@@ -386,12 +373,12 @@ button {
       }
 
       &.saved {
-        background: $savedBG;
+        background: var(--savedBG);
       }
 
       &.not-saved {
-        border: dashed 3px $dashedBG;
-        background: $not-savedBG;
+        border: dashed 3px var(--dashedBG);
+        background: var(--not-savedBG);
       }
     }
   }
@@ -449,6 +436,10 @@ button {
   color: white;
   height: 35px;
   background-color: var(--happyGreen);
+
+  &:hover {
+    background-color: var(--happyGreenHover);
+  }
 }
 
 .form__container {
@@ -496,7 +487,7 @@ button {
 
   #video-controls {
     display: flex;
-    background: $panelBG;
+    background: var(--panelBG);
     min-height: 100px;
     justify-content: space-evenly;
     grid-row: 3 / 4;
@@ -529,7 +520,7 @@ button {
 
 #local-element {
   border-radius: 10px;
-  border: 2px solid $localBG;
+  border: 2px solid var(--localBG);
   overflow: hidden;
   min-width: 300px;
   max-width: 700px;
@@ -555,7 +546,7 @@ video {
     position: relative !important;
   }
   > div {
-    border: 5px solid $leaveBG;
+    border: 5px solid var(--leaveBG);
     height: auto !important;
   }
 }
@@ -641,6 +632,7 @@ video {
   font-size: 15px;
   height: 35px;
   border: 0;
+  width: 100%;
 }
 
 #friend-form-inner {
@@ -651,119 +643,5 @@ video {
 
   input {
     flex-grow: 100;
-  }
-}
-
-.block-btn {
-  font-size: 15px;
-  max-width: 150px !important;
-  min-width: 100px !important;
-}
-
-.focus {
-  // min-width: 400px;
-  // justify-self: center;
-  // grid-column: 1 / -1;
-  // grid-row: 1 / 2;
-  // background-color: #ffe333;
-}
-
-.btn {
-  cursor: pointer;
-  padding: 20px;
-  border-radius: 50%;
-  display: block;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.false {
-  background: $leaveBG;
-  color: white;
-  border-radius: 5px;
-}
-
-.true {
-  background-color: var(--azure);
-  transition: all 200ms ease;
-  &:hover {
-    background-color: rgb(11, 103, 188);
-  }
-}
-
-.flex {
-  display: flex;
-}
-
-#exit {
-  font-weight: bold;
-}
-
-.focus-text {
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.error_input {
-  border: 2px solid var(--errorRed) !important;
-}
-
-.error_svg {
-  fill: var(--errorRed) !important;
-}
-
-.error_text {
-  color: var(--eerie-black) !important;
-  font-weight: 400;
-}
-
-.azureBg {
-  background: var(--azure);
-  color: white;
-}
-
-.checkbox {
-  width: auto !important;
-  display: inline !important;
-}
-
-#loading {
-  margin: 30px auto;
-
-  position: relative;
-  width: 150px;
-  height: 150px;
-
-  div {
-    scale: 1.5;
-
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    margin: 8px;
-    border: 8px solid #fff;
-    border-radius: 50%;
-    animation: loadingRing 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: var(--azure) transparent transparent transparent;
-
-    &:nth-child(1) {
-      animation-delay: -0.45s;
-    }
-    &:nth-child(2) {
-      animation-delay: -0.3s;
-    }
-    &:nth-child(3) {
-      animation-delay: -0.15s;
-    }
-  }
-}
-
-@keyframes loadingRing {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
   }
 }

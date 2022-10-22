@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 
-const FriendsForm = () => {
+const FriendsForm = ({ onSumbit, state }) => {
   const [formData, setFormData] = useState({
     username: "",
     message: "",
     isError: false,
-    friendsFound: [],
   });
 
   const { username, message, isErorr } = formData;
@@ -25,15 +24,18 @@ const FriendsForm = () => {
   return (
     <form action="" onSubmit={onSubmit} className="form-control">
       <div className="flex" id="friend-form-inner">
-        <input
-          type="text"
-          placeholder="Enter username"
-          className="form-control input"
-          id="username"
-          onChange={onChange}
-          value={username}
-          autoComplete="new-password"
-        />
+        <div className="input-wrap grow">
+          <label className="blockElement text-left">Username</label>
+          <input
+            type="text"
+            placeholder="Enter username"
+            className="form-control input"
+            id="username"
+            onChange={onChange}
+            value={username}
+            autoComplete="new-password"
+          />
+        </div>
         <button type="submit" className="successBg block-btn">
           Search
         </button>

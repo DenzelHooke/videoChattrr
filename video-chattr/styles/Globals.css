@@ -8,7 +8,20 @@
   --callBG: rgba(190, 190, 190, 0.157);
   --errorRed: rgb(223, 38, 38);
   --happyGreen: rgb(95, 206, 95);
+  --happyGreenHover: rgb(84, 180, 84);
   --input-bg: rgb(233, 233, 233);
+  --videoBG: rgb(255, 255, 255);
+  --localBG: rgb(226, 73, 73);
+  --leaveBG: rgb(223, 38, 38);
+  --panelBG: rgb(255, 255, 255);
+  --savedRmBG: white;
+  --ph-input-color: rgba(0, 0, 0, 0.519);
+  --outline-color: rgb(255, 84, 84);
+  --card-bg: rgb(255, 255, 255);
+  --border-color: rgba(0, 0, 0, 0.136);
+  --dashedBG: rgb(0, 0, 0);
+  --not-savedBG: rgba(255, 255, 255, 0.394);
+  --savedBG: rgb(37, 37, 37);
 }
 
 body {
@@ -78,16 +91,16 @@ a {
   border: 0;
 }
 .form-control .form-input::-moz-placeholder {
-  color: rgba(0, 0, 0, 0.519);
+  color: var(--ph-input-color);
 }
 .form-control .form-input:-ms-input-placeholder {
-  color: rgba(0, 0, 0, 0.519);
+  color: var(--ph-input-color);
 }
 .form-control .form-input::placeholder {
-  color: rgba(0, 0, 0, 0.519);
+  color: var(--ph-input-color);
 }
 .form-control .form-input:focus {
-  outline: rgb(255, 84, 84);
+  outline: var(--outline-color);
 }
 
 .constrain {
@@ -98,7 +111,7 @@ a {
 
 .input__wrapper {
   background: white;
-  border: 2px solid rgba(0, 0, 0, 0.136);
+  border: 2px solid var(--border-color);
   border-radius: 5px;
   margin: 5px 0;
   display: flex;
@@ -150,27 +163,13 @@ button {
 
 .card {
   padding: 30px;
-  background-color: rgb(255, 255, 255);
+  background-color: var(--card-bg);
   box-shadow: rgba(100, 100, 111, 0.192) 0px 7px 29px 0px;
   border-radius: 10px;
 }
 
 .main {
   flex: 1 0 auto;
-}
-
-.space-text {
-  margin: 10px 0;
-}
-
-.center-text {
-  text-align: center;
-}
-
-.center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 #toast-container {
@@ -222,7 +221,7 @@ button {
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 1px 1px 10px 2px rgba(0, 0, 0, 0.226);
-  background: rgb(255, 255, 255);
+  background: var(--panelBG);
 }
 
 .center {
@@ -289,7 +288,7 @@ button {
   align-items: center;
   justify-content: center;
   color: white;
-  background: rgb(223, 38, 38);
+  background: var(--leaveBG);
   width: 22px;
   text-align: center;
   height: 22px;
@@ -324,11 +323,11 @@ button {
   width: 100%;
 }
 #room-form-container .savedRooms .saved-room.saved {
-  background: rgb(37, 37, 37);
+  background: var(--savedBG);
 }
 #room-form-container .savedRooms .saved-room.not-saved {
-  border: dashed 3px rgb(0, 0, 0);
-  background: rgba(255, 255, 255, 0.394);
+  border: dashed 3px var(--dashedBG);
+  background: var(--not-savedBG);
 }
 
 #room-form-info {
@@ -379,6 +378,9 @@ button {
   height: 35px;
   background-color: var(--happyGreen);
 }
+.successBg:hover {
+  background-color: var(--happyGreenHover);
+}
 
 .form__container {
   text-align: center;
@@ -416,7 +418,7 @@ button {
 }
 #main-container #video-controls {
   display: flex;
-  background: rgb(255, 255, 255);
+  background: var(--panelBG);
   min-height: 100px;
   justify-content: space-evenly;
   grid-row: 3/4;
@@ -443,7 +445,7 @@ button {
 
 #local-element {
   border-radius: 10px;
-  border: 2px solid rgb(226, 73, 73);
+  border: 2px solid var(--localBG);
   overflow: hidden;
   min-width: 300px;
   max-width: 700px;
@@ -470,7 +472,7 @@ video {
   position: relative !important;
 }
 #local-stream > div {
-  border: 5px solid rgb(223, 38, 38);
+  border: 5px solid var(--leaveBG);
   height: auto !important;
 }
 
@@ -534,6 +536,7 @@ video {
   font-size: 15px;
   height: 35px;
   border: 0;
+  width: 100%;
 }
 
 #friend-form-inner {
@@ -543,119 +546,4 @@ video {
 }
 #friend-form-inner input {
   flex-grow: 100;
-}
-
-.block-btn {
-  font-size: 15px;
-  max-width: 150px !important;
-  min-width: 100px !important;
-}
-
-.btn {
-  cursor: pointer;
-  padding: 20px;
-  border-radius: 50%;
-  display: block;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.false {
-  background: rgb(223, 38, 38);
-  color: white;
-  border-radius: 5px;
-}
-
-.true {
-  background-color: var(--azure);
-  transition: all 200ms ease;
-}
-.true:hover {
-  background-color: rgb(11, 103, 188);
-}
-
-.flex {
-  display: flex;
-}
-
-#exit {
-  font-weight: bold;
-}
-
-.focus-text {
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.error_input {
-  border: 2px solid var(--errorRed) !important;
-}
-
-.error_svg {
-  fill: var(--errorRed) !important;
-}
-
-.error_text {
-  color: var(--eerie-black) !important;
-  font-weight: 400;
-}
-
-.azureBg {
-  background: var(--azure);
-  color: white;
-}
-
-.checkbox {
-  width: auto !important;
-  display: inline !important;
-}
-
-#loading {
-  margin: 30px auto;
-  position: relative;
-  width: 150px;
-  height: 150px;
-}
-#loading div {
-  scale: 1.5;
-  position: absolute;
-  width: 80px;
-  height: 80px;
-  margin: 8px;
-  border: 8px solid #fff;
-  border-radius: 50%;
-  -webkit-animation: loadingRing 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-          animation: loadingRing 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  border-color: var(--azure) transparent transparent transparent;
-}
-#loading div:nth-child(1) {
-  -webkit-animation-delay: -0.45s;
-          animation-delay: -0.45s;
-}
-#loading div:nth-child(2) {
-  -webkit-animation-delay: -0.3s;
-          animation-delay: -0.3s;
-}
-#loading div:nth-child(3) {
-  -webkit-animation-delay: -0.15s;
-          animation-delay: -0.15s;
-}
-
-@-webkit-keyframes loadingRing {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes loadingRing {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
 }/*# sourceMappingURL=globals.css.map */

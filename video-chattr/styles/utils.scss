@@ -1,0 +1,149 @@
+.block-btn {
+  font-size: 15px;
+  max-width: 150px !important;
+  min-width: 100px !important;
+}
+
+.focus {
+  // min-width: 400px;
+  // justify-self: center;
+  // grid-column: 1 / -1;
+  // grid-row: 1 / 2;
+  // background-color: #ffe333;
+}
+
+.btn {
+  cursor: pointer;
+  padding: 20px;
+  border-radius: 50%;
+  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.false {
+  background: var(--leaveBG);
+  color: white;
+  border-radius: 5px;
+}
+
+.true {
+  background-color: var(--azure);
+  transition: all 200ms ease;
+  &:hover {
+    background-color: rgb(11, 103, 188);
+  }
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-end {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.flex-start {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.text-left {
+  text-align: start;
+}
+
+.grow {
+  flex-grow: 100;
+}
+
+.space-text {
+  margin: 10px 0;
+}
+
+.center-text {
+  text-align: center;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#exit {
+  font-weight: bold;
+}
+
+.focus-text {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.error_input {
+  border: 2px solid var(--errorRed) !important;
+}
+
+.error_svg {
+  fill: var(--errorRed) !important;
+}
+
+.error_text {
+  color: var(--eerie-black) !important;
+  font-weight: 400;
+}
+
+.azureBg {
+  background: var(--azure);
+  color: white;
+}
+
+.checkbox {
+  width: auto !important;
+  display: inline !important;
+}
+
+.blockElement {
+  display: block;
+}
+
+#loading {
+  margin: 30px auto;
+
+  position: relative;
+  width: 150px;
+  height: 150px;
+
+  div {
+    scale: 1.5;
+
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    margin: 8px;
+    border: 8px solid #fff;
+    border-radius: 50%;
+    animation: loadingRing 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: var(--azure) transparent transparent transparent;
+
+    &:nth-child(1) {
+      animation-delay: -0.45s;
+    }
+    &:nth-child(2) {
+      animation-delay: -0.3s;
+    }
+    &:nth-child(3) {
+      animation-delay: -0.15s;
+    }
+  }
+}
+
+@keyframes loadingRing {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

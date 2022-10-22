@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 // import "../styles/Index.css";
 import "../styles/Forms.scss";
+import "../styles/utils.scss";
 import Layout from "../components/Layout";
 import { store } from "../app/store";
 import { Provider } from "react-redux";
