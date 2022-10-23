@@ -77,6 +77,33 @@ const retrieveUser = (req, res) => {
   res.json({ user: { name: "john" } });
 };
 
+const findUsers = async (req, res) => {
+  console.log(req.query);
+  const { username } = req.query;
+
+  const users = await User.find(
+    {
+      username: {
+        $regex: `${username}`,
+        $options: "i",
+      },
+    },
+    { username: 1, _id: 1 }
+  );
+
+  console.log(users);
+
+  if (users) {
+    res.status(200).json({
+      users,
+    });
+  } else {
+    res.status(200).json({
+      users: null,
+    });
+  }
+};
+
 //Gen JWT
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -88,4 +115,5 @@ module.exports = {
   registerUser,
   retrieveUser,
   loginUser,
+  findUsers,
 };

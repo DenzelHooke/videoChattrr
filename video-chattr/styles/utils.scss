@@ -108,6 +108,36 @@
   display: block;
 }
 
+.input {
+  background: var(--input-bg);
+  border-radius: 4px;
+  position: relative;
+  padding: 5px;
+  margin: 0;
+  font-size: 15px;
+  height: 35px;
+  border: 0;
+  width: 100%;
+}
+
+.square {
+  border-radius: 0;
+}
+
+.relative {
+  position: relative;
+}
+
+.offOverflow {
+  overflow: visible;
+}
+
+.small {
+  // margin: 0 !important;
+  height: 75px !important;
+  scale: 0.5 !important;
+}
+
 #loading {
   margin: 30px auto;
 

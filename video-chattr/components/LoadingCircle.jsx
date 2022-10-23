@@ -1,8 +1,8 @@
 import React from "react";
 
-const LoadingCircle = () => {
+const LoadingCircle = ({ classes }) => {
   return (
-    <div id="loading">
+    <div id="loading" className={`${classes}`}>
       <div></div>
       <div></div>
       <div></div>

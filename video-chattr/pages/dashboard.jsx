@@ -24,7 +24,7 @@ import {
 import { createRoomCookie, getRunningRoom } from "../helpers/RoomsFuncs";
 import roomService from "../features/room/roomService";
 import LoadingCircle from "../components/LoadingCircle";
-import Friends from "../components/Friends";
+import FriendAdder from "../components/FriendAdder";
 
 // The Rooms componenet requires the window object which isn't present  with SSR.
 //This loads the component once ssr is done which means this comp isn't loaded in the page source.
@@ -186,7 +186,7 @@ function dashboard({ user }) {
               <div className="greeting">
                 <h2 className="center-text focus-text">{`Welcome home, ${user.username}`}</h2>
               </div>
-              <Friends />
+              <FriendAdder />
               {<Rooms onClick={onClick} />}
             </div>
           </div>

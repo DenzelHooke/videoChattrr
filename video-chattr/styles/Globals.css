@@ -9,6 +9,8 @@
   --errorRed: rgb(223, 38, 38);
   --happyGreen: rgb(95, 206, 95);
   --happyGreenHover: rgb(84, 180, 84);
+  --light-text: rgb(77, 77, 77);
+  --result-hover: rgba(46, 46, 46, 0.089);
   --input-bg: rgb(233, 233, 233);
   --videoBG: rgb(255, 255, 255);
   --localBG: rgb(226, 73, 73);
@@ -199,6 +201,7 @@ button {
 }
 
 .dashboard-inner-container {
+  padding: 10px;
   max-width: 800px;
   margin: 0 auto;
   flex-grow: 10;
@@ -216,7 +219,6 @@ button {
 }
 
 .panel {
-  margin: 10px;
   padding: 20px;
   border-radius: 10px;
   overflow: hidden;
@@ -527,23 +529,51 @@ video {
   right: 0;
 }
 
-.input {
-  background: var(--input-bg);
-  border-radius: 4px;
-  position: relative;
-  padding: 5px;
-  margin: 0;
-  font-size: 15px;
-  height: 35px;
-  border: 0;
-  width: 100%;
-}
-
 #friend-form-inner {
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   gap: 20px;
+}
+#friend-form-inner button {
+  margin: 0;
 }
 #friend-form-inner input {
   flex-grow: 100;
+}
+
+#friend-results {
+  color: var(--light-text) !important;
+  transform: translate(-50%, 0);
+  left: 50%;
+  background: var(--card-bg);
+  position: absolute;
+  top: 95%;
+  width: 100%;
+  transition: all 1s ease-in-out;
+  padding: 0 !important;
+}
+#friend-results p {
+  padding: 5px 10px;
+  color: var(--light-text) !important;
+}
+#friend-results ul li {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.13);
+  font-size: 16px;
+  padding: 5px 10px;
+}
+#friend-results ul li button {
+  height: 35px;
+  background: var(--azure);
+  color: var(--white);
+  font-size: 16px;
+  padding: 5px 15px;
+}
+#friend-results ul li button:hover {
+  background: var(--azureHover);
+}
+#friend-results ul li:hover {
+  background: var(--result-hover);
 }/*# sourceMappingURL=globals.css.map */

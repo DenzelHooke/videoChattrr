@@ -1,25 +1,7 @@
 import { useState, useEffect } from "react";
 
-const FriendsForm = ({ onSumbit, state }) => {
-  const [formData, setFormData] = useState({
-    username: "",
-    message: "",
-    isError: false,
-  });
-
+const FriendsForm = ({ onSubmit, onChange, state, formData }) => {
   const { username, message, isErorr } = formData;
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    console.log("Friend Form Submitted!");
-  };
-
-  const onChange = (e) => {
-    setFormData((...prevState) => ({
-      ...prevState,
-      [e.target.id]: e.target.value,
-    }));
-  };
 
   return (
     <form action="" onSubmit={onSubmit} className="form-control">
