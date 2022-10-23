@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Panel from "./Panel";
 import Form from "./Form";
 import FriendsForm from "./FriendsForm";
+import { sendFriendRequest } from "../helpers/UsersFuncs";
 import { IoPeopleCircleSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers, setResultVisibility } from "../features/users/usersSlice";
@@ -87,8 +88,21 @@ const FriendAdder = () => {
     onSearch(formData.username);
   };
 
-  const onAddFriend = (data) => {
+  const onAddFriend = async (data) => {
     console.log(data);
+
+    const payload = {
+      data: {
+        to: data._id,
+        from: user._id,
+      },
+      config: config,
+    };
+    console.log(payload);
+    const res = await sendFriendRequest(payload);
+
+    console.log(res);
+    // Send request to other client
   };
 
   return (

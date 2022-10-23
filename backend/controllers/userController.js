@@ -104,6 +104,32 @@ const findUsers = async (req, res) => {
   }
 };
 
+const sendFriendRequest = async (req, res) => {
+  const { to, from } = req.body;
+
+  console.log(req.body);
+
+  const update = await User.updateOne(
+    { _id: to },
+    {
+      $push: {
+        friendRequests: {
+          _id: from,
+          sentAt: new Date().toUTCString(),
+        },
+      },
+    }
+  );
+
+  console.log(update);
+
+  if (update) {
+    res.status(201).json({
+      to,
+    });
+  }
+};
+
 //Gen JWT
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -116,4 +142,5 @@ module.exports = {
   retrieveUser,
   loginUser,
   findUsers,
+  sendFriendRequest,
 };

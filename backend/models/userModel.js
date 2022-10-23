@@ -12,8 +12,12 @@ const userSchema = mongoose.Schema(
     },
     friends: {
       type: Array,
-      required: [false]
-    }
+      required: [false],
+    },
+    friendRequests: {
+      type: Array,
+      required: [false],
+    },
   },
   {
     timestamps: true,
