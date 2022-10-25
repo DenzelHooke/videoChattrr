@@ -10,10 +10,6 @@ const sendFriendRequest = async (payload) => {
 
   const res = await axios.post(`${API_URL}/friends/`, data, config);
 
-  if (res.data) {
-    return res;
-  }
-
   return res;
 };
 

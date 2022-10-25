@@ -106,28 +106,50 @@ const findUsers = async (req, res) => {
 
 const sendFriendRequest = async (req, res) => {
   const { to, from } = req.body;
+  let duplicateFound;
 
-  console.log(req.body);
+  // console.log(req.body);
 
-  const update = await User.updateOne(
-    { _id: to },
-    {
-      $push: {
-        friendRequests: {
-          _id: from,
-          sentAt: new Date().toUTCString(),
-        },
-      },
+  const user = await User.findById(to);
+
+  user.friendRequests.forEach((item) => {
+    if (item._id === from) {
+      duplicateFound = true;
     }
-  );
+  });
 
-  console.log(update);
-
-  if (update) {
-    res.status(201).json({
-      to,
+  if (duplicateFound) {
+    console.log("Duplicate found!!!!");
+    res.status(200).json({
+      message: "Friend Request already sent.",
+      exists: true,
     });
+    return;
+  } else {
+    const update = await User.updateOne(
+      { _id: to },
+      {
+        $push: {
+          friendRequests: {
+            _id: from,
+            sentAt: new Date().toUTCString(),
+          },
+        },
+      }
+    );
+
+    console.log(update);
+
+    if (update) {
+      res.status(201).json({
+        message: "Friend Request sent.",
+        exists: false,
+        to,
+      });
+    }
   }
+
+  console.log(user);
 };
 
 //Gen JWT

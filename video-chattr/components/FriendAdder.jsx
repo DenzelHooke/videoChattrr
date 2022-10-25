@@ -6,7 +6,7 @@ import { sendFriendRequest } from "../helpers/UsersFuncs";
 import { IoPeopleCircleSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers, setResultVisibility } from "../features/users/usersSlice";
-
+import { toast } from "react-nextjs-toast";
 import UsersFound from "./UsersFound";
 
 const FriendAdder = () => {
@@ -26,6 +26,21 @@ const FriendAdder = () => {
     message: "",
     isError: false,
   });
+
+  useEffect(() => {
+    if (formData.isError) {
+      toast.notify(formData.message, {
+        title: "Error",
+        type: "error",
+      });
+      setFormData((prevState) => ({
+        ...prevState,
+        message: "",
+        isError: false,
+      }));
+      return;
+    }
+  }, [formData]);
 
   useEffect(() => {
     const handleClick = (e) => {
@@ -99,9 +114,29 @@ const FriendAdder = () => {
       config: config,
     };
     console.log(payload);
-    const res = await sendFriendRequest(payload);
+    try {
+      const res = await sendFriendRequest(payload);
+      if (res.data) {
+        console.log(res.data);
+        if (res.data.exists) {
+          // The recepient hasnt accepted friend req yet.
+          setFormData((prevState) => ({
+            ...prevState,
+            message: res.data.message,
+            isError: res.data.exists,
+          }));
+          return;
+        }
 
-    console.log(res);
+        toast.notify(res.data.message, {
+          title: "Success",
+          type: "success",
+        });
+      }
+
+      console.log(res);
+    } catch (error) {}
+
     // Send request to other client
   };
 
