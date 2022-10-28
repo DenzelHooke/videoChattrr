@@ -84,6 +84,22 @@ export const getRoomData = createAsyncThunk(
   }
 );
 
+export const getSavedRooms = createAsyncThunk(
+  "room/getSavedRooms",
+  async (userID, thunkAPI) => {
+    try {
+      return await roomService.getSavedRooms();
+    } catch (error) {
+      const message =
+        (error.message && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 //* ─── Slice Reducers And Extra Reducers ──────────────────────────────────────────
 
 export const roomSlice = createSlice({

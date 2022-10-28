@@ -58,6 +58,10 @@
   flex-grow: 100;
 }
 
+.shrink {
+  flex-shrink: 100;
+}
+
 .space-text {
   margin: 10px 0;
 }
@@ -92,6 +96,33 @@
 .error_text {
   color: var(--eerie-black) !important;
   font-weight: 400;
+}
+
+.success {
+  background-color: var(--happyGreen);
+}
+
+.successBg {
+  color: white;
+  height: 35px;
+  background-color: var(--happyGreen);
+
+  &:hover {
+    background-color: var(--happyGreenHover);
+  }
+}
+
+.danger {
+  background-color: var(--errorRed);
+}
+
+.dangerBg {
+  color: white;
+  background-color: var(--errorRed);
+
+  &:hover {
+    background-color: var(--errorRedHover);
+  }
 }
 
 .azureBg {
@@ -136,6 +167,12 @@
   // margin: 0 !important;
   height: 75px !important;
   scale: 0.5 !important;
+}
+
+.longBtn {
+  height: 35px;
+  font-size: 15px;
+  width: 100%;
 }
 
 #loading {

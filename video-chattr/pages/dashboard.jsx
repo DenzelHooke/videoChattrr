@@ -33,13 +33,10 @@ const Rooms = dynamic(async () => await import("../components/Rooms"), {
   ssr: false,
 });
 
-const DisplayRooms = dynamic(
-  async () => await import("../components/DisplayRooms"),
-  {
-    loading: () => <LoadingCircle />,
-    ssr: false,
-  }
-);
+const Sidebar = dynamic(async () => await import("../components/Sidebar"), {
+  loading: () => <LoadingCircle />,
+  ssr: false,
+});
 
 function dashboard({ user }) {
   const dispatch = useDispatch();
@@ -178,8 +175,8 @@ function dashboard({ user }) {
     <>
       <div className="growContainer grow">
         <div className={`${styles.mainWrapper}`}>
-          <div id={styles.sidebar}>
-            <DisplayRooms rooms={rooms} />
+          <div id="sidebar">
+            <Sidebar rooms={rooms} />
           </div>
           <div id={styles.mainContent} className="dashboard-outter-container">
             <div className="dashboard-inner-container">

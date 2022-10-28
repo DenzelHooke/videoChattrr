@@ -6,11 +6,13 @@
   --white: rgb(247, 247, 247);
   --yellowish: #ffe333;
   --callBG: rgba(190, 190, 190, 0.157);
-  --errorRed: rgb(223, 38, 38);
+  --errorRed: rgb(221, 50, 50);
+  --errorRedHover: rgb(202, 47, 47);
   --happyGreen: rgb(95, 206, 95);
   --happyGreenHover: rgb(84, 180, 84);
   --light-text: rgb(77, 77, 77);
-  --result-hover: rgba(46, 46, 46, 0.089);
+  --sidebar-li-bg: rgba(255, 255, 255, 0.137);
+  --result-hover: rgba(255, 0, 0, 0.089);
   --input-bg: rgb(233, 233, 233);
   --videoBG: rgb(255, 255, 255);
   --localBG: rgb(226, 73, 73);
@@ -35,16 +37,6 @@ body {
   padding: 0;
   margin: 0;
   font-family: "Lato", sans-serif, helvetica, arial;
-}
-
-p,
-span,
-h1,
-h2,
-h3,
-h4,
-h5 {
-  color: var(--eerie-black);
 }
 
 p,
@@ -181,10 +173,6 @@ button {
 
 .toaster {
   color: red;
-}
-
-.grow {
-  flex: 1 0 auto;
 }
 
 .growContainer {
@@ -369,19 +357,6 @@ button {
   width: 80%;
   height: 400px;
   background: rgb(240, 240, 240);
-}
-
-.success {
-  background-color: var(--happyGreen);
-}
-
-.successBg {
-  color: white;
-  height: 35px;
-  background-color: var(--happyGreen);
-}
-.successBg:hover {
-  background-color: var(--happyGreenHover);
 }
 
 .form__container {
@@ -576,4 +551,46 @@ video {
 }
 #friend-results ul li:hover {
   background: var(--result-hover);
+}
+
+#sidebar {
+  background: var(--eerie-black);
+  padding: 5px 10px;
+  color: white;
+}
+#sidebar p,
+#sidebar h1,
+#sidebar h2,
+#sidebar h3 {
+  color: white !important;
+}
+#sidebar .sidebar-section {
+  margin-bottom: 30px;
+}
+#sidebar .sidebar-ul {
+  padding: 10px 0;
+}
+#sidebar .sidebar-li {
+  font-size: 15px;
+  background: var(--sidebar-li-bg);
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+#sidebar .sidebar-li p {
+  margin-bottom: 13px;
+}
+#sidebar .sidebar-li .ui-wrapper {
+  margin: 2px 0;
+  display: grid;
+  grid-template-columns: 1fr 0.2fr;
+  gap: 15px;
+}
+#sidebar .sidebar-li .ui-wrapper button {
+  font-size: 14px;
+  height: 28px;
+  border-radius: 12px;
+}
+#sidebar .sidebar-li .ui-wrapper #badBtn {
+  padding: 0 10px;
 }/*# sourceMappingURL=globals.css.map */
