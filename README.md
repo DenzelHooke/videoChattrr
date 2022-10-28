@@ -1,3 +1,5 @@
+## 🛑 (This Project is still in active development so expect bugs)
+
 # VideoChattr
 
 A simple and lightweight video conferencing web app built on Next.js, Redux, Agora and Express.js.
