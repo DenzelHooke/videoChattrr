@@ -1,15 +1,10 @@
-
 # VideoChattr
 
 A simple and lightweight video conferencing web app built on Next.js, Redux, Agora and Express.js.
 
-
-
 ## Demo
-![](https://s4.gifyu.com/images/videoChattr-demo.md.gif)
 
-
-
+![](https://media.giphy.com/media/wS4piemMiOzyKdmkiz/giphy.gif)
 
 ## Run Locally
 
