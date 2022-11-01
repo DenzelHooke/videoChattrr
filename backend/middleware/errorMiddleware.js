@@ -1,5 +1,5 @@
 const errorHandler = (err, req, res, next) => {
-  // If status code was already set prior, uise that code, else set it to 500.
+  // If status code was already set prior, use that code, else set it to 500.
   const statusCode = res.statusCode ? res.statusCode : 500;
 
   console.log(

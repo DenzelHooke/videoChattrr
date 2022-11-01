@@ -99,7 +99,13 @@ const createUserInMemory = async (username, socket, userID, agoraUID) => {
   }
 };
 
-const addUserToRoomInMemory = (username, socket, userID, room, agoraUID) => {
+const addUserToRoomInMemory = ({
+  username,
+  socket,
+  userID,
+  room,
+  agoraUID,
+}) => {
   // console.log(`Room to add to memory: `, room);
   const user = {
     username,

@@ -8,7 +8,6 @@
   cursor: pointer;
   padding: 20px;
   border-radius: 50%;
-  display: block;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -118,6 +117,9 @@
 .azureBg {
   background: var(--azure);
   color: white;
+}
+.azureBg:hover {
+  background: var(--azureHover);
 }
 
 .checkbox {

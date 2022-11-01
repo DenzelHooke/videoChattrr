@@ -1,49 +1,51 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 
 import { MdCancel } from "react-icons/md";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import SidebarList from "./SidebarList";
+import { getSavedRooms, unsaveRoom } from "../features/users/usersSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Sidebar = () => {
-  const API_URL =
-    process.env.NODE_ENV === "production"
-      ? ""
-      : process.env.NEXT_PUBLIC_ROOM_API;
-
-  const [rooms, setRooms] = useState([
-    {
-      roomName: "Test Room 1",
-    },
-    {
-      roomName: "Study room",
-    },
-  ]);
-
-  const testData = {
+  const dispatch = useDispatch();
+  const { savedRooms } = useSelector((state) => state.users);
+  const { user } = useSelector((state) => state.auth);
+  const [sidebarData, setSidebarData] = useState({
     rooms: {
-      arr: [
-        {
-          value1: "TestRoom",
-        },
-        {
-          value1: "Daily Stand up",
-        },
-      ],
       options: {
         btn1: "Join",
         btn2: "Untrack",
       },
     },
-  };
-
-  const getRooms = async () => {
-    axios.get();
-  };
+  });
+  const [fetchData, setFetchData] = useState(false);
 
   useEffect(() => {
-    // TODO Fetch new rooms
-  }, []);
+    if (!user) {
+      return;
+    }
+    console.log("fetching saved rooms");
+    setFetchData(false);
+    dispatch(getSavedRooms({ user }));
+  }, [user, fetchData]);
+
+  // const [rooms, setRooms] = useState([
+  //   {
+  //     roomName: "Test Room 1",
+  //   },
+  //   {
+  //     roomName: "Study room",
+  //   },
+  // ]);
+
+  const onButtonClick = (e, roomID) => {
+    if (e.target.id.toLowerCase() === "badbtn".toLowerCase()) {
+      // DELETE ROOM FROM SAVED ROOMS
+      dispatch(unsaveRoom({ user, roomID: roomID }))
+        .unwrap()
+        .then(() => setFetchData(true));
+    }
+  };
 
   return (
     <>
@@ -51,7 +53,12 @@ const Sidebar = () => {
         <p>
           <h3>Saved Rooms</h3>
         </p>
-        <SidebarList data={testData["rooms"]} />
+        <SidebarList
+          data={sidebarData["rooms"]}
+          arr={savedRooms}
+          onClick={onButtonClick}
+          type="savedRooms"
+        />
       </div>
       {/* <div id="friends" className="sidebar-section">
         <p>

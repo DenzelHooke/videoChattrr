@@ -137,6 +137,7 @@ function dashboard({ user }) {
           throw err;
         }
 
+        //Checks if running room is over room capacity
         const { overcapacity } = await getRunningRoom(
           data.room.roomID,
           user.token
@@ -147,6 +148,7 @@ function dashboard({ user }) {
           return;
         }
 
+        // Otherwise, notify client room is connecting.
         toast.notify(`Connecting to room`, {
           title: "WooHoo!",
           type: "success",

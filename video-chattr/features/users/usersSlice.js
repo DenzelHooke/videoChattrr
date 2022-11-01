@@ -5,7 +5,9 @@ import usersService from "./usersService";
 
 const initialState = {
   friends: [],
+  savedRooms: [],
   usersFound: [],
+  isLoading: false,
   isFriendsLoading: false,
   isResultsVisible: false,
 };
@@ -27,6 +29,40 @@ export const getUsers = createAsyncThunk(
   }
 );
 
+export const getSavedRooms = createAsyncThunk(
+  "users/getSavedRooms",
+  async (data, thunkAPI) => {
+    try {
+      return await usersService.getSavedRooms(data);
+    } catch (error) {
+      console.error(error);
+      const message =
+        (error.message && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const unsaveRoom = createAsyncThunk(
+  "users/unsaveRoom",
+  async (data, thunkAPI) => {
+    try {
+      console.log(data);
+
+      return await usersService.unsaveRoom(data);
+    } catch (error) {
+      console.error(error);
+      const message =
+        (error.message && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 // ─── Slice Reducers And Extra Reducers ───────────────────────────────────────
 
 export const userSlice = createSlice({
@@ -47,6 +83,16 @@ export const userSlice = createSlice({
       .addCase(getUsers.pending, (state) => {
         state.isFriendsLoading = true;
         state.isResultsVisible = true;
+      })
+      .addCase(getSavedRooms.fulfilled, (state, action) => {
+        console.log("SAVED ROOMS: ", action.payload.savedRooms);
+        state.savedRooms = action.payload.savedRooms.map((item) => {
+          return {
+            value1: item.roomName,
+            roomID: item.roomID,
+          };
+        });
+        // state.savedRooms = [...state.savedRooms].push(action.payload);
       });
   },
 });

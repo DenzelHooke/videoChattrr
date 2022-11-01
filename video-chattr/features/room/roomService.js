@@ -52,9 +52,27 @@ const getRoomData = async (userInput) => {
   }
 };
 
+const saveRoom = async (data) => {
+  const { user } = data;
+
+  const config = {
+    headers: {
+      authorization: `Bearer ${user.token}`,
+    },
+  };
+
+  console.log("sending req");
+  const res = await axios.post(`${API_URL}/save`, data, config);
+  console.log("RES: ", res);
+  if (res.data) {
+    return res.data;
+  }
+};
+
 const roomService = {
   createRoom,
   getRoomData,
+  saveRoom,
 };
 
 export default roomService;

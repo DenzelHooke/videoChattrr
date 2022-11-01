@@ -95,7 +95,7 @@ io.on("connection", (socket) => {
     const { roomID } = data;
     socket.join(roomID);
     const room = createRoomInMemory(roomID, rooms);
-    addUserToRoomInMemory(username, socket, userID, room, agoraUID);
+    addUserToRoomInMemory({ username, socket, userID, room, agoraUID });
     console.log(rooms);
     socket.emit("roomJoined");
   });
@@ -145,8 +145,8 @@ io.on("connection", (socket) => {
         //TODO assign user to that room channel
         if (room.joinable) {
           console.log(" - Creating room - ");
-          const newRoom = createRoomInMemory(roomID, rooms);
-          addUserToRoomInMemory(user, newRoom);
+          const room = createRoomInMemory(roomID, rooms);
+          addUserToRoomInMemory({ user, room });
           console.log(" - User joined to room - ");
           socket.join(roomID);
           socket.emit("roomJoined");

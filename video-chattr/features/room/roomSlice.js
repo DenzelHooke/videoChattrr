@@ -2,8 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import roomService from "./roomService";
 
 const runningOnServer = typeof window === "undefined";
-
-let user = null;
 let rtcToken = null;
 
 //* only True if nextjs is completed doing SSR'ing.
@@ -24,11 +22,6 @@ const initialState = {
   isSuccess: null,
   isLoading: null,
   message: "",
-  rooms: [
-    { roomName: "Rooooooooooom One" },
-    { roomName: "Siege4TheBoyz" },
-    { roomName: "cool Room" },
-  ],
 };
 
 //* ─── Reducers ───────────────────────────────────────────────────────────────────
@@ -84,17 +77,19 @@ export const getRoomData = createAsyncThunk(
   }
 );
 
-export const getSavedRooms = createAsyncThunk(
-  "room/getSavedRooms",
-  async (userID, thunkAPI) => {
+export const saveRoom = createAsyncThunk(
+  "room/saveRoom",
+  async (userInput, thunkAPI) => {
     try {
-      return await roomService.getSavedRooms();
+      console.log(userInput);
+
+      return await roomService.saveRoom(userInput);
     } catch (error) {
+      console.error(error);
       const message =
         (error.message && error.response.data && error.response.data.message) ||
         error.message ||
         error.toString();
-
       return thunkAPI.rejectWithValue(message);
     }
   }

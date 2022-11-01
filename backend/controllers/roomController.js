@@ -80,7 +80,7 @@ const createRoom = asyncHandler(async (req, res) => {
 const getRoomData = asyncHandler(async (req, res) => {
   // console.log(`GET room hit.`, req);
   const roomID = req.query.roomID;
-  console.log("ROOMID", roomID);
+  // console.log("ROOMID", roomID);
   const room = await getRoomFromDB(roomID);
 
   if (room) {
@@ -106,7 +106,7 @@ const genRoomID = () => {
 const getRunningRooms = asyncHandler(async (req, res) => {
   const roomID = req.query.roomID;
 
-  console.log(module.exports);
+  // console.log(module.exports);
   console.log(runningRooms);
   const room = isRoomActive(roomID);
   if (!room) {
@@ -130,7 +130,7 @@ const getRunningRooms = asyncHandler(async (req, res) => {
 });
 
 const getUserRunning = asyncHandler(async (req, res) => {
-  console.log("REQ: ", req.query);
+  // console.log("REQ: ", req.query);
   const { roomID, agoraUID } = req.query;
   const user = await getUserFromRoomInMemory(agoraUID, roomID);
 
@@ -149,10 +149,70 @@ const getUserRunning = asyncHandler(async (req, res) => {
     },
   });
 });
+
+const saveRoom = asyncHandler(async (req, res) => {
+  // console.log("SAVE ROOM HIT");
+  let updated;
+
+  if (!req.body) {
+    throw new Error("No body data in request");
+  }
+
+  const { userID, roomID, bool } = req.body;
+  // console.log(userID, roomID, bool);
+  try {
+    //Find user
+    const user = await User.findById(userID);
+    // Find room with roomID
+    const room = await Room.findOne({ roomID });
+    // console.log("ROOM: ", room);
+    if (!user) {
+      // Throw err if user can't be found
+      res.status(400);
+      throw new Error("User not found");
+    }
+    if (bool) {
+      // User wants to save room
+
+      //Check if room is already saved by client
+
+      //Linear search through array for match
+      for (i in user.savedRooms) {
+        if (user.savedRooms[i].roomID.toLowerCase() === roomID.toLowerCase()) {
+          console.log("duplicate found");
+          res.status(400);
+          throw new Error("Room has already been saved");
+        }
+        i++;
+      }
+
+      // Push object to savedRooms array in database.
+      const updated = await User.updateOne(
+        { _id: userID },
+        {
+          $push: { savedRooms: { roomID, roomName: room.roomName } },
+        }
+      );
+      // console.log(updated);
+      res.status(201).json({ updated });
+    }
+
+    //False bool was sent
+    //TODO Unsave room
+
+    //* Send null res for now
+    res.status(200).json({ message: null });
+  } catch (error) {
+    console.error(error);
+    throw new Error(error);
+  }
+});
+
 module.exports = {
   roomExists,
   createRoom,
   getRoomData,
   getRunningRooms,
   getUserRunning,
+  saveRoom,
 };

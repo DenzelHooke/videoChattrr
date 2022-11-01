@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 
 const User = require("../models/userModel");
 const { trusted } = require("mongoose");
+const { json } = require("express");
 
 // @desc Register User
 // @route POST /api/users
@@ -159,10 +160,58 @@ const generateToken = (id) => {
   });
 };
 
+const getSavedRooms = asyncHandler(async (req, res) => {
+  console.log("REQ: ", req);
+  const { userID } = req.query;
+
+  if (!userID) {
+    res.status(401).json({
+      message: "Request to this endpoint must contain a userID query",
+    });
+  }
+
+  const user = await User.findById(userID);
+
+  if (!user) {
+    res.status(404);
+    throw new Error("User not found");
+  }
+
+  res.status(200).json({
+    savedRooms: user.savedRooms,
+  });
+});
+
+const unsaveRoom = asyncHandler(async (req, res) => {
+  const { userID, roomID } = req.query;
+  console.log("DELETE: ", req.query);
+
+  const user = await User.findById(userID);
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const newSavedRooms = user.savedRooms.filter((item) => {
+    return item.roomID.toLowerCase() !== roomID.toLowerCase();
+  });
+
+  console.log(newSavedRooms);
+  const updated = await User.updateOne(
+    { _id: userID },
+    {
+      $set: { savedRooms: newSavedRooms },
+    }
+  );
+  res.status(200).json({ data: updated });
+});
+
 module.exports = {
   registerUser,
   retrieveUser,
   loginUser,
   findUsers,
   sendFriendRequest,
+  getSavedRooms,
+  unsaveRoom,
 };

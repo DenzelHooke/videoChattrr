@@ -18,6 +18,10 @@ const userSchema = mongoose.Schema(
       type: Array,
       required: [false],
     },
+    savedRooms: {
+      type: Array,
+      required: [false],
+    },
   },
   {
     timestamps: true,

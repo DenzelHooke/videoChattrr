@@ -12,6 +12,7 @@ import Video from "../components/Video";
 import io from "socket.io-client";
 import { wrapper } from "../app/store";
 import { removeRoomCookie } from "../helpers/RoomsFuncs";
+import { saveRoom } from "../features/room/roomSlice";
 
 /**
  * A room page for generating video call enviroments.
@@ -35,6 +36,9 @@ const room = ({ mode, rtcToken }) => {
     socketStateMessage: "",
     isSocketStateError: false,
   });
+  const [roomState, setRoomState] = useState({
+    saveVideo: false,
+  });
 
   const { socketStateMessage, isSocketStateError } = socketState;
 
@@ -52,6 +56,12 @@ const room = ({ mode, rtcToken }) => {
     location.reload();
   };
 
+  // useEffect(() => {
+  //   if(roomState === false) {
+
+  //   }
+  // }, [roomState])
+
   /**
    * Initializes my Agora room connection class wrapper
    */
@@ -59,6 +69,27 @@ const room = ({ mode, rtcToken }) => {
     _roomClient = new RoomClient(roomID, uid, user.username);
     _roomClient.init(rtcToken);
     dispatch(setLoading(false));
+  };
+
+  const onIconClick = (e) => {
+    console.log(roomState.saveVideo);
+    console.log(e.target.id);
+    if (e.target.id === "saveVideo") {
+      console.log("Pinning on server");
+      dispatch(
+        saveRoom({
+          roomID,
+          userID: user._id,
+          bool: !roomState.saveVideo,
+          user,
+        })
+      );
+
+      setRoomState((prevState) => ({
+        ...prevState,
+        [e.target.id]: !roomState.saveVideo,
+      }));
+    }
   };
 
   useEffect(() => {
@@ -178,7 +209,13 @@ const room = ({ mode, rtcToken }) => {
       ) : (
         <>
           <div id="room-container" className="grow">
-            {!isLoading && <Video leaveRoom={leaveRoom} />}
+            {!isLoading && (
+              <Video
+                leaveRoom={leaveRoom}
+                onIconClick={onIconClick}
+                roomState={roomState}
+              />
+            )}
           </div>
         </>
       )}
