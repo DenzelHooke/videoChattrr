@@ -1,6 +1,19 @@
 import axios from "axios";
-
-import { useSelector } from "react-redux";
+import {
+  genRTC,
+  reset,
+  removeToken,
+  resetPush,
+  setPush,
+} from "../features/auth/authSlice";
+import {
+  createRoom,
+  setRoomName,
+  setRoomID,
+  setMode,
+  setError,
+  resetRoomState,
+} from "../features/room/roomSlice";
 
 const API_URL =
   process.env.NODE_ENV === "production" ? "" : "http://localhost:8080/api/room";
@@ -87,10 +100,62 @@ const getUserFromRunningRoom = async (roomID, uid) => {
   return res;
 };
 
+/**
+ * Pre-sets and double checks data required before joining room. Pushes client to room once checks are all validated.
+ * @param {Function} roomService module.exports object
+ * @param {object} userInput User inputted data
+ * @param {Class} userInput User inputted data
+ */
+const joinUserToRoom = async ({
+  roomService,
+  userInput,
+  toast,
+  dispatch,
+  user,
+}) => {
+  dispatch(setMode("join"));
+  console.log(`%c Requesting to join room ${userInput}`, "color: #4ce353");
+
+  const data = await roomService.getRoomData(userInput);
+  console.log(data);
+
+  if (!data.exists) {
+    dispatch(setError({ message: "This room could not be found." }));
+    return;
+    // throw new Error("That room couldn't be found.");
+  }
+
+  //Checks if running room is over room capacity
+  const { overcapacity } = await getRunningRoom(data.room.roomID, user.token);
+
+  if (overcapacity) {
+    dispatch(setError({ message: "This room is full." }));
+    return;
+  }
+
+  // Otherwise, notify client room is connecting.
+  toast.notify(`Connecting to room`, {
+    title: "WooHoo!",
+    type: "success",
+  });
+
+  // Generate RTC then set a few perdinent states
+
+  //The page will automatically push client to room page once setPush has been set to "room"
+  dispatch(genRTC({ roomID: data.room.roomID }))
+    .unwrap()
+    .then(() => {
+      dispatch(setRoomName(data.room.roomName));
+      dispatch(setRoomID(data.room.roomID));
+      dispatch(setPush("room"));
+    });
+};
+
 export {
   roomExists,
   createRoomCookie,
   removeRoomCookie,
   getRunningRoom,
   getUserFromRunningRoom,
+  joinUserToRoom,
 };

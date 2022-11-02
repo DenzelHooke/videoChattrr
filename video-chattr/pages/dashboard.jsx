@@ -21,7 +21,11 @@ import {
   setError,
   resetRoomState,
 } from "../features/room/roomSlice";
-import { createRoomCookie, getRunningRoom } from "../helpers/RoomsFuncs";
+import {
+  createRoomCookie,
+  getRunningRoom,
+  joinUserToRoom,
+} from "../helpers/RoomsFuncs";
 import roomService from "../features/room/roomService";
 import LoadingCircle from "../components/LoadingCircle";
 import FriendAdder from "../components/FriendAdder";
@@ -48,7 +52,8 @@ function dashboard({ user }) {
     useSelector((state) => state.room);
 
   useEffect(() => {
-    // return;
+    // Once setPush as been set to "room" and a roomName has been set,
+    // Create cookie and push client to room page.
     if (push === "room" && roomName) {
       createRoomCookie(mode, rtcToken);
       router.push({
@@ -57,23 +62,10 @@ function dashboard({ user }) {
     }
   }, [push, roomName]);
 
-  // useEffect(() => {
-  //   if (exists === null) {
-  //     return;
-  //   }
-
-  //   if (exists === true) {
-  //     toast.notify(`Room found!`, {
-  //       title: "Success",
-  //       type: "success",
-  //     });
-  //   }
-  // }, exists);
-
   useEffect(() => {
-    console.log("USSR: ", user);
+    console.log("USER: ", user);
     if (!isServer) {
-      console.log(authState.user.token);
+      // console.log(authState.user.token);
       if (!user) {
         toast.notify("Must be logged in to view this page.", {
           title: "Error",
@@ -82,8 +74,6 @@ function dashboard({ user }) {
         router.push("/");
         return;
       }
-
-      toast.notify(`Hello, ${user.username}`);
     }
 
     return () => {
@@ -96,7 +86,7 @@ function dashboard({ user }) {
       console.error(message);
 
       toast.notify(message, {
-        title: "An error has occured.",
+        title: "An error has occured",
         type: "error",
         duration: 5,
       });
@@ -108,6 +98,7 @@ function dashboard({ user }) {
 
   const onClick = async ({ userInput, buttonMode }) => {
     dispatch(setMode(buttonMode));
+    console.log(buttonMode);
     if (buttonMode === "create") {
       console.log("%c Creating room...", "color: #4ce353");
 
@@ -120,49 +111,10 @@ function dashboard({ user }) {
         console.error(error);
       }
     } else if (buttonMode === "join") {
-      console.log(
-        `%c Requesting to join room ${userInput}..`,
-        "color: #4ce353"
-      );
-
-      //Check whether room exists on db.
-      //Proceed if true, return if false.
-
       try {
-        const data = await roomService.getRoomData(userInput);
-        console.log(data);
+        await joinUserToRoom({ roomService, userInput, toast, dispatch, user });
 
-        if (!data.exists) {
-          const err = new Error("That room couldn't be found.");
-          throw err;
-        }
-
-        //Checks if running room is over room capacity
-        const { overcapacity } = await getRunningRoom(
-          data.room.roomID,
-          user.token
-        );
-
-        if (overcapacity) {
-          dispatch(setError({ message: "This room is full." }));
-          return;
-        }
-
-        // Otherwise, notify client room is connecting.
-        toast.notify(`Connecting to room`, {
-          title: "WooHoo!",
-          type: "success",
-        });
-
-        // Generate RTC then set a few perdinent states
-
-        dispatch(genRTC({ roomID: data.room.roomID }))
-          .unwrap()
-          .then(() => {
-            dispatch(setRoomName(data.room.roomName));
-            dispatch(setRoomID(data.room.roomID));
-            dispatch(setPush("room"));
-          });
+        // Connect user to other room
       } catch (error) {
         if (`${error}` === "AxiosError: Network Error") {
           dispatch(setError({ message: "Failed to connect to server." }));
@@ -178,7 +130,11 @@ function dashboard({ user }) {
       <div className="growContainer grow">
         <div className={`${styles.mainWrapper}`}>
           <div id="sidebar">
-            <Sidebar rooms={rooms} />
+            <Sidebar
+              dispatch={dispatch}
+              roomService={roomService}
+              toast={toast}
+            />
           </div>
           <div id={styles.mainContent} className="dashboard-outter-container">
             <div className="dashboard-inner-container">

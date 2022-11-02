@@ -5,9 +5,21 @@ import { IoCheckmarkCircle } from "react-icons/io5";
 import SidebarList from "./SidebarList";
 import { getSavedRooms, unsaveRoom } from "../features/users/usersSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { joinUserToRoom } from "../helpers/RoomsFuncs";
+import roomService from "../features/room/roomService";
+import { toast } from "react-nextjs-toast";
+import {
+  createRoom,
+  setRoomName,
+  setRoomID,
+  setMode,
+  setError,
+  resetRoomState,
+} from "../features/room/roomSlice";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
+
   const { savedRooms } = useSelector((state) => state.users);
   const { user } = useSelector((state) => state.auth);
   const [sidebarData, setSidebarData] = useState({
@@ -38,12 +50,40 @@ const Sidebar = () => {
   //   },
   // ]);
 
-  const onButtonClick = (e, roomID) => {
-    if (e.target.id.toLowerCase() === "badbtn".toLowerCase()) {
-      // DELETE ROOM FROM SAVED ROOMS
-      dispatch(unsaveRoom({ user, roomID: roomID }))
-        .unwrap()
-        .then(() => setFetchData(true));
+  const onButtonClick = async ({ e, roomID, type }) => {
+    // If delete, decline or untrack is pressed:
+    if (e.target.id.toLowerCase() === "badbtn") {
+      //Check if button was related for rooms
+      if (type.toLowerCase() === "room") {
+        // DELETE ROOM FROM SAVED ROOMS
+        dispatch(unsaveRoom({ user, roomID: roomID }))
+          .unwrap()
+          .then(() => setFetchData(true));
+      }
+    }
+
+    // Triggers if Join, save, accept are clicked on the sidebar
+    if (e.target.id.toLowerCase() === "goodbtn") {
+      if (type.toLowerCase() === "room") {
+        // Join user to other room
+        try {
+          await joinUserToRoom({
+            roomService: roomService,
+            userInput: roomID,
+            toast: toast,
+            dispatch: dispatch,
+            user: user,
+          });
+          console.log(roomID, roomService, toast, dispatch, user);
+        } catch (error) {
+          console.error(error);
+          if (`${error}` === "AxiosError: Network Error") {
+            dispatch(setError({ message: "Failed to connect to server." }));
+          }
+          dispatch(setError({ message: `${error}` }));
+          return;
+        }
+      }
     }
   };
 

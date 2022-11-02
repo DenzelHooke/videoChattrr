@@ -194,11 +194,11 @@ const saveRoom = asyncHandler(async (req, res) => {
         }
       );
       // console.log(updated);
-      res.status(201).json({ updated });
-    }
 
-    //False bool was sent
-    //TODO Unsave room
+      // Send updated array
+      res.status(201).json({ updated });
+      return;
+    }
 
     //* Send null res for now
     res.status(200).json({ message: null });

@@ -10,7 +10,7 @@ const SidebarLi = ({ item, btn1, btn2, onClick, type }) => {
           id="goodBtn"
           onClick={(e) => {
             if (type.toLowerCase() === "savedrooms") {
-              onClick(e, item.roomID);
+              onClick({ e: e, roomID: item.roomID, type: "room" });
             }
           }}
         >
@@ -21,7 +21,7 @@ const SidebarLi = ({ item, btn1, btn2, onClick, type }) => {
           id="badBtn"
           onClick={(e) => {
             if (type.toLowerCase() === "savedrooms") {
-              onClick(e, item.roomID);
+              onClick({ e: e, roomID: item.roomID, type: "room" });
             }
           }}
         >

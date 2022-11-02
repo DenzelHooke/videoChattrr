@@ -109,7 +109,7 @@ const room = ({ mode, rtcToken }) => {
       toast.notify(socketStateMessage, {
         title: "An error has occured.",
         type: "error",
-        duration: 3,
+        duration: 5,
       });
       console.trace("socketError: ", socketStateMessage);
       cleanUp();
@@ -121,9 +121,11 @@ const room = ({ mode, rtcToken }) => {
 
   useEffect(() => {
     if (!rtcToken) {
+      // No RTC found, push client to dashboard
       toast.notify("You do not have permission to view this page.", {
-        title: "Error",
+        title: "An error has occured.",
         type: "error",
+        duration: 5,
       });
       router.push("/dashboard");
       console.error("No RTC token found! Sending back to dashboard.");
@@ -150,6 +152,7 @@ const room = ({ mode, rtcToken }) => {
         },
       });
 
+      // On error trigger from server
       socketRef.current.on("errorTriggered", (data) => {
         setSocketState((prevState) => ({
           ...prevState,
@@ -158,6 +161,7 @@ const room = ({ mode, rtcToken }) => {
         }));
       });
 
+      // On client room join
       socketRef.current.on("roomJoined", () => {
         console.log(rtcToken, roomID);
         //* Start Agora
@@ -166,6 +170,7 @@ const room = ({ mode, rtcToken }) => {
         //* INIT socket.io connection to server
       });
 
+      // On remote user leaving
       socketRef.current.on("userLeft", (user) => {
         try {
           _roomClient.removeRemoteStream(user.agoraUID);
@@ -179,14 +184,18 @@ const room = ({ mode, rtcToken }) => {
       });
 
       if (mode === "create" && roomID) {
+        // If room is set to create:
         console.log("roomID: ", roomID);
         socketRef.current.emit("createRoom", {
           roomID: roomID,
         });
       } else if (mode === "join" && roomID) {
+        // If room is set to join:
         socketRef.current.emit("joinRoom", {
           roomID: roomID,
         });
+      } else {
+        console.error("No mode was set during transfer room page.");
       }
     }
   }, [rtcToken, isServer, roomID]);
