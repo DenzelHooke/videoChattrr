@@ -13,6 +13,8 @@ import io from "socket.io-client";
 import { wrapper } from "../app/store";
 import { removeRoomCookie } from "../helpers/RoomsFuncs";
 import { saveRoom } from "../features/room/roomSlice";
+import { setError } from "../features/utils/utilsSlice";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 /**
  * A room page for generating video call enviroments.
@@ -56,12 +58,6 @@ const room = ({ mode, rtcToken }) => {
     location.reload();
   };
 
-  // useEffect(() => {
-  //   if(roomState === false) {
-
-  //   }
-  // }, [roomState])
-
   /**
    * Initializes my Agora room connection class wrapper
    */
@@ -72,23 +68,31 @@ const room = ({ mode, rtcToken }) => {
   };
 
   const onIconClick = (e) => {
-    console.log(roomState.saveVideo);
-    console.log(e.target.id);
+    //Runs when icons are clicked on the video call page
     if (e.target.id === "saveVideo") {
-      console.log("Pinning on server");
-      dispatch(
-        saveRoom({
-          roomID,
-          userID: user._id,
-          bool: !roomState.saveVideo,
-          user,
-        })
-      );
+      // If saveVideo button was pressed
+      try {
+        //Call dispatch action to send request to backend
+        dispatch(
+          saveRoom({
+            roomID,
+            userID: user._id,
+            bool: !roomState.saveVideo,
+            user,
+          })
+        )
+          .then(unwrapResult)
+          .catch((error) => dispatch(setError({ message: `${error}` })));
 
-      setRoomState((prevState) => ({
-        ...prevState,
-        [e.target.id]: !roomState.saveVideo,
-      }));
+        // Set room to true or false depending on prior result.
+        setRoomState((prevState) => ({
+          ...prevState,
+          [e.target.id]: !roomState.saveVideo,
+        }));
+      } catch (error) {
+        console.log("ERROR");
+        dispatch(setError({ message: `${error}` }));
+      }
     }
   };
 
@@ -122,12 +126,12 @@ const room = ({ mode, rtcToken }) => {
   useEffect(() => {
     if (!rtcToken) {
       // No RTC found, push client to dashboard
-      toast.notify("You do not have permission to view this page.", {
-        title: "An error has occured.",
-        type: "error",
-        duration: 5,
-      });
-      router.push("/dashboard");
+      dispatch(
+        setError({
+          message: "Please log in before viewing this page.",
+          push: "/dashboard",
+        })
+      );
       console.error("No RTC token found! Sending back to dashboard.");
       return;
     }
@@ -179,7 +183,7 @@ const room = ({ mode, rtcToken }) => {
 
           //* Execute unsubscribing user on Agora.
         } catch (error) {
-          console.error(error);
+          dispatch(setError({ message: `${error}` }));
         }
       });
 

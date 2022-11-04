@@ -11,9 +11,10 @@ import {
   setRoomName,
   setRoomID,
   setMode,
-  setError,
   resetRoomState,
 } from "../features/room/roomSlice";
+
+import { setError } from "../features/utils/utilsSlice";
 
 const API_URL =
   process.env.NODE_ENV === "production" ? "" : "http://localhost:8080/api/room";
@@ -122,7 +123,6 @@ const joinUserToRoom = async ({
   if (!data.exists) {
     dispatch(setError({ message: "This room could not be found." }));
     return;
-    // throw new Error("That room couldn't be found.");
   }
 
   //Checks if running room is over room capacity
@@ -135,7 +135,7 @@ const joinUserToRoom = async ({
 
   // Otherwise, notify client room is connecting.
   toast.notify(`Connecting to room`, {
-    title: "WooHoo!",
+    title: "Success",
     type: "success",
   });
 
@@ -145,9 +145,15 @@ const joinUserToRoom = async ({
   dispatch(genRTC({ roomID: data.room.roomID }))
     .unwrap()
     .then(() => {
+      console.log("ROOM NAME ", data.room.roomName);
       dispatch(setRoomName(data.room.roomName));
       dispatch(setRoomID(data.room.roomID));
       dispatch(setPush("room"));
+    })
+    .catch((error) => {
+      dispatch(removeToken());
+      dispatch(resetRoomState());
+      dispatch(setError({ message: `${error}`, push: "/dashboard" }));
     });
 };
 

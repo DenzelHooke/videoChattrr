@@ -5,6 +5,8 @@ import { toast } from "react-nextjs-toast";
 import { useRouter } from "next/router";
 import { wrapper } from "../app/store";
 import styles from "../styles/Dashboard.module.scss";
+import { unwrapResult } from "@reduxjs/toolkit";
+
 // import RtcUser from "./video/videoFuncs";
 import {
   genRTC,
@@ -15,17 +17,12 @@ import {
 } from "../features/auth/authSlice";
 import {
   createRoom,
-  setRoomName,
-  setRoomID,
   setMode,
-  setError,
   resetRoomState,
 } from "../features/room/roomSlice";
-import {
-  createRoomCookie,
-  getRunningRoom,
-  joinUserToRoom,
-} from "../helpers/RoomsFuncs";
+import { createRoomCookie, joinUserToRoom } from "../helpers/RoomsFuncs";
+
+import { setError } from "../features/utils/utilsSlice";
 import roomService from "../features/room/roomService";
 import LoadingCircle from "../components/LoadingCircle";
 import FriendAdder from "../components/FriendAdder";
@@ -52,6 +49,7 @@ function dashboard({ user }) {
     useSelector((state) => state.room);
 
   useEffect(() => {
+    console.log(push, roomName);
     // Once setPush as been set to "room" and a roomName has been set,
     // Create cookie and push client to room page.
     if (push === "room" && roomName) {
@@ -71,30 +69,20 @@ function dashboard({ user }) {
           title: "Error",
           type: "error",
         });
-        router.push("/");
+        dispatch(
+          setError({
+            message: "Must be logged in to view this page.",
+            push: "/",
+          })
+        );
         return;
       }
     }
 
     return () => {
-      dispatch(resetPush("room"));
+      dispatch(resetPush());
     };
   }, []);
-
-  useEffect(() => {
-    if (message && isError) {
-      console.error(message);
-
-      toast.notify(message, {
-        title: "An error has occured",
-        type: "error",
-        duration: 5,
-      });
-      dispatch(removeToken());
-      dispatch(resetRoomState());
-      // dispatch(resetPush());
-    }
-  }, [message, isError]);
 
   const onClick = async ({ userInput, buttonMode }) => {
     dispatch(setMode(buttonMode));
@@ -102,26 +90,34 @@ function dashboard({ user }) {
     if (buttonMode === "create") {
       console.log("%c Creating room...", "color: #4ce353");
 
-      try {
-        dispatch(createRoom({ userInput, user }))
-          .unwrap()
-          .then((state) => dispatch(genRTC({ roomID: state.roomID })));
-      } catch (error) {
-        //TODO catch common errors
-        console.error(error);
-      }
+      dispatch(createRoom({ userInput, user }))
+        .unwrap(unwrapResult)
+        .then((state) => {
+          dispatch(genRTC({ roomID: state.roomID }));
+        })
+        .catch((error) => {
+          console.log("ERR");
+          // Remove RTC token, doesn't remove JWT token.
+          dispatch(removeToken());
+          // Reset the room state so user doesn't get pushed to other rooms.
+          dispatch(resetRoomState());
+          dispatch(setError({ message: `${error}`, push: "/dashboard" }));
+        });
     } else if (buttonMode === "join") {
-      try {
-        await joinUserToRoom({ roomService, userInput, toast, dispatch, user });
-
-        // Connect user to other room
-      } catch (error) {
-        if (`${error}` === "AxiosError: Network Error") {
-          dispatch(setError({ message: "Failed to connect to server." }));
-        }
-        // dispatch(setError({ message: `${error}` }));
-        return;
-      }
+      // Connect user to room
+      await joinUserToRoom({
+        roomService,
+        userInput,
+        toast,
+        dispatch,
+        user,
+      }).catch((error) => {
+        // Remove RTC token, doesn't remove JWT token.
+        dispatch(removeToken());
+        // Reset the room state so user doesn't get pushed to other rooms.
+        dispatch(resetRoomState());
+        dispatch(setError({ message: `${error}` }));
+      });
     }
   };
 

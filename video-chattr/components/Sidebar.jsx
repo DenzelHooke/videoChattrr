@@ -8,14 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { joinUserToRoom } from "../helpers/RoomsFuncs";
 import roomService from "../features/room/roomService";
 import { toast } from "react-nextjs-toast";
-import {
-  createRoom,
-  setRoomName,
-  setRoomID,
-  setMode,
-  setError,
-  resetRoomState,
-} from "../features/room/roomSlice";
+
+import { setError } from "../features/utils/utilsSlice";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
@@ -41,15 +35,6 @@ const Sidebar = () => {
     dispatch(getSavedRooms({ user }));
   }, [user, fetchData]);
 
-  // const [rooms, setRooms] = useState([
-  //   {
-  //     roomName: "Test Room 1",
-  //   },
-  //   {
-  //     roomName: "Study room",
-  //   },
-  // ]);
-
   const onButtonClick = async ({ e, roomID, type }) => {
     // If delete, decline or untrack is pressed:
     if (e.target.id.toLowerCase() === "badbtn") {
@@ -67,6 +52,7 @@ const Sidebar = () => {
       if (type.toLowerCase() === "room") {
         // Join user to other room
         try {
+          // Joins user to other room
           await joinUserToRoom({
             roomService: roomService,
             userInput: roomID,
@@ -74,7 +60,6 @@ const Sidebar = () => {
             dispatch: dispatch,
             user: user,
           });
-          console.log(roomID, roomService, toast, dispatch, user);
         } catch (error) {
           console.error(error);
           if (`${error}` === "AxiosError: Network Error") {
@@ -100,19 +85,13 @@ const Sidebar = () => {
           type="savedRooms"
         />
       </div>
-      {/* <div id="friends" className="sidebar-section">
+      <div id="friends" className="sidebar-section">
         <p>
           <h3>Friends</h3>
         </p>
-        <ul>
-          <li className="friend-li">
-            <div>
-              <p>Coolguy76</p>
-            </div>
-          </li>
-        </ul>
+        {/* <SidebarList data={sidebarData["friends"]} arr={friends} /> */}
       </div>
-      <div id="friend-requests" className="sidebar-section">
+      {/* <div id="friend-requests" className="sidebar-section">
         <p>
           <h3>Friend Requests</h3>
         </p>
