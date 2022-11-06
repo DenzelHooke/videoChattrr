@@ -9,18 +9,19 @@ const SidebarList = ({ data, arr, onClick, type }) => {
   };
   return (
     <ul className="sidebar-ul">
-      {arr.map((item) => {
-        return (
-          <SidebarLi
-            onClick={onClick}
-            key={generateUID()}
-            item={item}
-            btn1={options.btn1}
-            btn2={options.btn2}
-            type={type}
-          />
-        );
-      })}
+      {arr.length > 0 &&
+        arr.map((item) => {
+          return (
+            <SidebarLi
+              onClick={onClick}
+              key={generateUID()}
+              item={item}
+              btn1={options.btn1}
+              btn2={options.btn2}
+              type={type}
+            />
+          );
+        })}
     </ul>
   );
 };

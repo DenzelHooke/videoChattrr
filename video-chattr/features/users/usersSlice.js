@@ -6,6 +6,7 @@ import usersService from "./usersService";
 const initialState = {
   friends: [],
   savedRooms: [],
+  friendRequests: [],
   usersFound: [],
   isLoading: false,
   isFriendsLoading: false,
@@ -46,6 +47,23 @@ export const getSavedRooms = createAsyncThunk(
   }
 );
 
+export const getIncomingFriendRequests = createAsyncThunk(
+  "users/getIncomingFriendRequests",
+  async (data, thunkAPI) => {
+    try {
+      return await usersService.getIncomingFriendRequests(data);
+    } catch (error) {
+      console.error(error);
+      const message =
+        (error.message && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const unsaveRoom = createAsyncThunk(
   "users/unsaveRoom",
   async (data, thunkAPI) => {
@@ -63,6 +81,79 @@ export const unsaveRoom = createAsyncThunk(
     }
   }
 );
+
+export const deleteFriendRequest = createAsyncThunk(
+  "users/deleteFriendRequest",
+  async (data, thunkAPI) => {
+    try {
+      console.log(data);
+
+      return await usersService.deleteFriendRequest(data);
+    } catch (error) {
+      console.error(error);
+      const message =
+        (error.message && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const createFriend = createAsyncThunk(
+  "users/createFriend",
+  async (data, thunkAPI) => {
+    try {
+      console.log(data);
+
+      return await usersService.createFriend(data);
+    } catch (error) {
+      console.error(error);
+      const message =
+        (error.message && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const getFriends = createAsyncThunk(
+  "users/getFriends",
+  async (data, thunkAPI) => {
+    try {
+      console.log(data);
+
+      return await usersService.getFriends(data);
+    } catch (error) {
+      console.error(error);
+      const message =
+        (error.message && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const deleteFriend = createAsyncThunk(
+  "users/deleteFriend",
+  async (data, thunkAPI) => {
+    try {
+      console.log(data);
+
+      return await usersService.deleteFriend(data);
+    } catch (error) {
+      console.error(error);
+      const message =
+        (error.message && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 // ─── Slice Reducers And Extra Reducers ───────────────────────────────────────
 
 export const userSlice = createSlice({
@@ -76,6 +167,7 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getUsers.fulfilled, (state, action) => {
+        state.isLoading = false;
         console.log("action: ", action);
         state.isFriendsLoading = false;
         state.usersFound = action.payload.users;
@@ -85,14 +177,44 @@ export const userSlice = createSlice({
         state.isResultsVisible = true;
       })
       .addCase(getSavedRooms.fulfilled, (state, action) => {
+        state.isLoading = false;
         console.log("SAVED ROOMS: ", action.payload.savedRooms);
         state.savedRooms = action.payload.savedRooms.map((item) => {
           return {
-            value1: item.roomName,
+            roomName: item.roomName,
             roomID: item.roomID,
           };
         });
+
         // state.savedRooms = [...state.savedRooms].push(action.payload);
+      })
+      .addCase(getIncomingFriendRequests.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.friendRequests = action.payload.friendRequests;
+      })
+      .addCase(deleteFriendRequest.fulfilled, (state, action) => {
+        state.friendRequests = action.payload.friendRequests;
+        state.isLoading = false;
+      })
+      .addCase(createFriend.fulfilled, (state, action) => {
+        console.log("PLOAD: ", action.payload);
+        state.friends = action.payload.friends;
+        state.isLoading = false;
+        console.log("ddd ", state.friendRequests);
+        // Removes the old friend request
+        state.friendRequests = state.friendRequests.filter((item) => {
+          return item._id !== action.payload.friend;
+        });
+      })
+      .addCase(getFriends.fulfilled, (state, action) => {
+        console.log("friends: ", action.payload);
+        state.friends = action.payload.friends;
+        state.isLoading = false;
+      })
+      .addCase(deleteFriend.fulfilled, (state, action) => {
+        console.log("friends: ", action.payload);
+        state.friends = action.payload.friends;
+        state.isLoading = false;
       });
   },
 });

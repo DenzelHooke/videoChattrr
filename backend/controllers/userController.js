@@ -105,13 +105,24 @@ const findUsers = async (req, res) => {
   }
 };
 
-const sendFriendRequest = async (req, res) => {
+const sendFriendRequest = asyncHandler(async (req, res) => {
   const { to, from } = req.body;
   let duplicateFound;
-
   // console.log(req.body);
 
   const user = await User.findById(to);
+  const userFrom = await User.findById(from);
+
+  // Check if sender is already friends with client
+  const friendsAlready = user.friends.filter((item) => {
+    // console.log("itemID: ", item._id, userFrom._id);
+    return item._id.toString() === userFrom._id.toString();
+  });
+
+  if (friendsAlready.length > 0) {
+    throw new Error("You are already friends with this user.");
+  }
+  // console.log(friendsAlready);
 
   user.friendRequests.forEach((item) => {
     if (item._id === from) {
@@ -133,6 +144,7 @@ const sendFriendRequest = async (req, res) => {
         $push: {
           friendRequests: {
             _id: from,
+            username: userFrom.username,
             sentAt: new Date().toUTCString(),
           },
         },
@@ -151,7 +163,7 @@ const sendFriendRequest = async (req, res) => {
   }
 
   console.log(user);
-};
+});
 
 //Gen JWT
 const generateToken = (id) => {
@@ -161,7 +173,7 @@ const generateToken = (id) => {
 };
 
 const getSavedRooms = asyncHandler(async (req, res) => {
-  console.log("REQ: ", req);
+  // console.log("REQ: ", req);
   const { userID } = req.query;
 
   if (!userID) {
@@ -183,27 +195,155 @@ const getSavedRooms = asyncHandler(async (req, res) => {
 });
 
 const unsaveRoom = asyncHandler(async (req, res) => {
-  const { userID, roomID } = req.query;
-  console.log("DELETE: ", req.query);
+  try {
+    const { userID, roomID } = req.query;
+    console.log("DELETE: ", req.query);
+
+    const user = await User.findById(userID);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const newSavedRooms = user.savedRooms.filter((item) => {
+      return item.roomID.toLowerCase() !== roomID.toLowerCase();
+    });
+
+    console.log(newSavedRooms);
+    const updated = await User.updateOne(
+      { _id: userID },
+      {
+        $set: { savedRooms: newSavedRooms },
+      }
+    );
+    res.status(201).json({ data: updated });
+  } catch (error) {
+    throw new Error(error.message);
+  }
+});
+
+const getUserRequests = asyncHandler(async (req, res) => {
+  console.log("HIT");
+  const userID = req.query.userID;
 
   const user = await User.findById(userID);
+  const fRequests = user.friendRequests;
 
+  console.log(fRequests);
   if (!user) {
-    throw new Error("User not found");
+    res.status(404);
+    return;
   }
-
-  const newSavedRooms = user.savedRooms.filter((item) => {
-    return item.roomID.toLowerCase() !== roomID.toLowerCase();
+  res.status(200).json({
+    friendRequests: fRequests,
   });
+});
 
-  console.log(newSavedRooms);
-  const updated = await User.updateOne(
-    { _id: userID },
-    {
-      $set: { savedRooms: newSavedRooms },
+const deleteUserRequests = asyncHandler(async (req, res) => {
+  try {
+    const { requestSenderID, clientID, type } = req.query;
+    const client = await User.findById(clientID);
+    const sender = await User.findById(requestSenderID);
+
+    if (type.toLowerCase() === "friendRequest".toLowerCase()) {
+      console.log(req.query);
+
+      // Remove the senders friend request from client
+      const newFriendRequests = client.friendRequests.filter((item) => {
+        return item._id.toLowerCase() !== requestSenderID.toLowerCase();
+      });
+      const updated = await User.updateOne(
+        { _id: client._id },
+        {
+          $set: { friendRequests: newFriendRequests },
+        }
+      );
+      console.log(updated);
+      res.status(201).json({ friendRequests: newFriendRequests });
     }
-  );
-  res.status(200).json({ data: updated });
+  } catch (error) {
+    throw new Error(error.message);
+  }
+});
+
+const createFriend = asyncHandler(async (req, res) => {
+  try {
+    const { requestSenderID, clientID } = req.body;
+    const client = await User.findById(clientID);
+    const sender = await User.findById(requestSenderID);
+
+    // Remove the senders friend request from client if exists
+    const newFriendRequests = client.friendRequests.filter((item) => {
+      return item._id.toLowerCase() !== requestSenderID.toLowerCase();
+    });
+
+    // Remove friend request
+    const updatedReq = await User.updateOne(
+      { _id: client._id },
+      {
+        $set: { friendRequests: newFriendRequests },
+      }
+    );
+    console.log(updatedReq);
+
+    //Set requestSenderID as a friend for client
+
+    const updatedFriends = await User.updateOne(
+      { _id: client._id },
+      {
+        $push: {
+          friends: {
+            _id: sender._id,
+            username: sender.username,
+          },
+        },
+      }
+    );
+
+    const updatedClient = await User.findById(clientID);
+
+    console.log("updated friends: ", updatedFriends);
+    console.log("current friends: ", client.friends);
+    res
+      .status(201)
+      .json({ friends: updatedClient.friends, friend: sender._id });
+  } catch (error) {
+    throw new Error(error.message);
+  }
+});
+
+const getFriends = asyncHandler(async (req, res) => {
+  try {
+    const { userID } = req.query;
+
+    const user = await User.findById(userID);
+
+    res.status(200).json({ friends: user.friends });
+  } catch (error) {
+    throw new Error(error.message);
+  }
+});
+
+const deleteFriend = asyncHandler(async (req, res) => {
+  try {
+    const { userID, friendID } = req.query;
+
+    const user = await User.findById(userID);
+    const newFriends = user.friends.filter((item) => {
+      return item._id.toString() !== friendID;
+    });
+    console.log(newFriends);
+    const updatedFriends = await User.updateOne(
+      { _id: userID },
+      {
+        $set: { friends: newFriends },
+      }
+    );
+    console.log(updatedFriends);
+    res.status(200).json({ friends: newFriends });
+  } catch (error) {
+    throw new Error(error.message);
+  }
 });
 
 module.exports = {
@@ -214,4 +354,9 @@ module.exports = {
   sendFriendRequest,
   getSavedRooms,
   unsaveRoom,
+  getUserRequests,
+  deleteUserRequests,
+  createFriend,
+  getFriends,
+  deleteFriend,
 };

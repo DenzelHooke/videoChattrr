@@ -8,7 +8,7 @@ const API_URL =
 const sendFriendRequest = async (payload) => {
   const { data, config } = payload;
 
-  const res = await axios.post(`${API_URL}/friends/`, data, config);
+  const res = await axios.post(`${API_URL}/friendRequests/`, data, config);
 
   return res;
 };

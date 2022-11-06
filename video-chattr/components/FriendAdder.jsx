@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUsers, setResultVisibility } from "../features/users/usersSlice";
 import { toast } from "react-nextjs-toast";
 import UsersFound from "./UsersFound";
+import { setError } from "../features/utils/utilsSlice";
 
 const FriendAdder = () => {
   const dispatch = useDispatch();
@@ -56,6 +57,7 @@ const FriendAdder = () => {
     try {
       document.addEventListener("click", handleClick);
     } catch (error) {
+      dispatch(setError({ message: error.message }));
       console.log(error);
     }
 

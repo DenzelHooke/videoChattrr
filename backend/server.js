@@ -94,8 +94,6 @@ io.on("connection", (socket) => {
     console.log("Create room in mem called", data);
     const { roomID } = data;
     socket.join(roomID);
-    const room = createRoomInMemory(roomID, rooms);
-    addUserToRoomInMemory({ username, socket, userID, room, agoraUID });
     console.log(rooms);
     socket.emit("roomJoined");
   });
@@ -105,7 +103,6 @@ io.on("connection", (socket) => {
     console.log("JOIN room HIT", data);
     const { roomID } = socket.handshake.auth.room;
 
-    //TODO Check db for a room with that roomID
     const room = await getRoomFromDB(roomID);
 
     // Room exists, proceed further.

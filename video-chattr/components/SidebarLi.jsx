@@ -1,29 +1,28 @@
 import React from "react";
 
 const SidebarLi = ({ item, btn1, btn2, onClick, type }) => {
+  console.log(item);
   return (
     <li className="sidebar-li">
-      <p>{item.value1}</p>
+      <p>
+        {type === "savedRooms"
+          ? item.roomName
+          : type === "friendRequests"
+          ? item.username
+          : type === "friends" && item.username}
+      </p>
       <div className="btns ui-wrapper">
         <button
           className="btnBlock longBtn successBg"
           id="goodBtn"
-          onClick={(e) => {
-            if (type.toLowerCase() === "savedrooms") {
-              onClick({ e: e, roomID: item.roomID, type: "room" });
-            }
-          }}
+          onClick={(e) => onClick({ e: e, value: item, type })}
         >
           {btn1}
         </button>
         <button
           className="btnBlock longBtn dangerBg"
           id="badBtn"
-          onClick={(e) => {
-            if (type.toLowerCase() === "savedrooms") {
-              onClick({ e: e, roomID: item.roomID, type: "room" });
-            }
-          }}
+          onClick={(e) => onClick({ e: e, value: item, type })}
         >
           {btn2}
         </button>
