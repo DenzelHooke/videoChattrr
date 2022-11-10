@@ -80,8 +80,8 @@ const createRoom = asyncHandler(async (req, res) => {
 const getRoomData = asyncHandler(async (req, res) => {
   // console.log(`GET room hit.`, req);
   const roomID = req.query.roomID;
-  // console.log("ROOMID", roomID);
   const room = await getRoomFromDB(roomID);
+  console.log("ROOMID", roomID);
 
   if (room) {
     res.status(200).json({

@@ -17,7 +17,7 @@ const SidebarLi = ({ item, btn1, btn2, onClick, type }) => {
           id="goodBtn"
           onClick={(e) => onClick({ e: e, value: item, type })}
         >
-          {btn1}
+          {type === "friends" && item.currentRoom ? "Join room" : btn1}
         </button>
         <button
           className="btnBlock longBtn dangerBg"

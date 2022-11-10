@@ -22,6 +22,10 @@ const userSchema = mongoose.Schema(
       type: Array,
       required: [false],
     },
+    currentRoom: {
+      type: String,
+      required: [false],
+    },
   },
   {
     timestamps: true,

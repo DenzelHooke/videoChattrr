@@ -160,6 +160,30 @@ const getUserFromRoomInMemory = (agoraUID, roomID) => {
   return user;
 };
 
+const setJoinedRoom = async ({ removeRoom, roomID, userID }) => {
+  const user = await User.findById(userID);
+
+  if (!user) {
+    throw new Error("No user was included.");
+  }
+
+  if (removeRoom) {
+    // Update user model with false roomID
+    return await User.updateOne(
+      { _id: userID },
+      { $set: { currentRoom: null } }
+    );
+  }
+
+  // Update user model with roomID
+  const updated = await User.updateOne(
+    { _id: userID },
+    { $set: { currentRoom: roomID } }
+  );
+
+  return updated;
+};
+
 module.exports = {
   verifyRoomExistsInDB,
   isRoomActive,
@@ -173,4 +197,5 @@ module.exports = {
   isHost,
   getUserFromRoomInMemory,
   rooms,
+  setJoinedRoom,
 };

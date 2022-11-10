@@ -183,7 +183,7 @@ const getSavedRooms = asyncHandler(async (req, res) => {
   }
 
   const user = await User.findById(userID);
-
+  // console.log(user)
   if (!user) {
     res.status(404);
     throw new Error("User not found");
@@ -300,6 +300,19 @@ const createFriend = asyncHandler(async (req, res) => {
       }
     );
 
+    // Set user who accepted request as a friend for the user who sent request.
+    await User.updateOne(
+      { _id: requestSenderID },
+      {
+        $push: {
+          friends: {
+            _id: client._id,
+            username: client.username,
+          },
+        },
+      }
+    );
+    // Refetch user
     const updatedClient = await User.findById(clientID);
 
     console.log("updated friends: ", updatedFriends);
@@ -318,7 +331,21 @@ const getFriends = asyncHandler(async (req, res) => {
 
     const user = await User.findById(userID);
 
-    res.status(200).json({ friends: user.friends });
+    const allFriends = await Promise.all(
+      user.friends.map(async (item) => {
+        console.log(item);
+        const friend = await User.findById(item._id);
+        return {
+          _id: friend._id,
+          username: friend.username,
+          currentRoom: friend.currentRoom,
+        };
+      })
+    );
+
+    console.log("all: ", allFriends);
+
+    res.status(200).json({ friends: allFriends });
   } catch (error) {
     throw new Error(error.message);
   }
@@ -329,18 +356,38 @@ const deleteFriend = asyncHandler(async (req, res) => {
     const { userID, friendID } = req.query;
 
     const user = await User.findById(userID);
-    const newFriends = user.friends.filter((item) => {
+    const friend = await User.findById(friendID);
+
+    //Client's new friends
+    const newClientFriends = user.friends.filter((item) => {
       return item._id.toString() !== friendID;
     });
-    console.log(newFriends);
-    const updatedFriends = await User.updateOne(
+
+    //FriendID's new friends
+    const newFriendFriends = friend.friends.filter((item) => {
+      return item._id.toString() !== userID;
+    });
+
+    console.log(newClientFriends);
+
+    // Update friends on client model
+    const updated_client = await User.updateOne(
       { _id: userID },
       {
-        $set: { friends: newFriends },
+        $set: { friends: newClientFriends },
       }
     );
-    console.log(updatedFriends);
-    res.status(200).json({ friends: newFriends });
+
+    //Update friends on friend model
+    const updated_friend = await User.updateOne(
+      { _id: friendID },
+      {
+        $set: { friends: newFriendFriends },
+      }
+    );
+
+    // console.log(updated_1);
+    res.status(200).json({ friends: newClientFriends });
   } catch (error) {
     throw new Error(error.message);
   }

@@ -47,13 +47,7 @@ const Sidebar = () => {
     },
   });
 
-  useEffect(() => {
-    if (!user) {
-      return;
-    }
-    console.log(friendRequests);
-    console.log("fetching saved rooms");
-    // Set/get saved rooms
+  const updateData = async () => {
     dispatch(getSavedRooms({ user }))
       .unwrap()
       .catch((error) => {
@@ -73,8 +67,25 @@ const Sidebar = () => {
       .catch((error) => {
         dispatch(setError({ message: `${error}` }));
       });
+  };
 
-    setFetchData(false);
+  useEffect(() => {
+    setInterval(() => {
+      updateData();
+    }, 5000);
+  }, []);
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    updateData();
+    console.log(friendRequests);
+    console.log("fetching saved rooms");
+    // Set/get saved rooms
+
+    // setFetchData(false);
   }, [user, fetchData]);
 
   const onButtonClick = async ({ e, value, type }) => {
@@ -114,6 +125,7 @@ const Sidebar = () => {
     // Triggers if Join, save, accept are clicked on the sidebar
     if (e.target.id.toLowerCase() === "goodbtn") {
       console.log("good btn clocked");
+      console.log("VAL: ", value);
       //* Rooms
       if (type.toLowerCase() === "savedrooms") {
         // Join user to other room
@@ -121,7 +133,7 @@ const Sidebar = () => {
           // Joins user to other room
           await joinUserToRoom({
             roomService: roomService,
-            userInput: value,
+            userInput: value.roomID,
             toast: toast,
             dispatch: dispatch,
             user: user,
@@ -145,6 +157,32 @@ const Sidebar = () => {
           .catch((error) => {
             dispatch(setError({ message: `${error}` }));
           });
+      }
+
+      //* Friends
+      //Join friend
+      if (type.toLowerCase() === "friends") {
+        if (!value.currentRoom) {
+          return;
+        }
+
+        try {
+          // Joins user to other room
+          await joinUserToRoom({
+            roomService: roomService,
+            userInput: value.currentRoom,
+            toast: toast,
+            dispatch: dispatch,
+            user: user,
+          });
+        } catch (error) {
+          console.error(error);
+          if (`${error}` === "AxiosError: Network Error") {
+            dispatch(setError({ message: "Failed to connect to server." }));
+          }
+          dispatch(setError({ message: `${error}` }));
+          return;
+        }
       }
     }
   };
