@@ -2,10 +2,6 @@ import { useEffect, useState } from "react";
 import { GoUnmute } from "react-icons/go";
 import { BsFillCameraVideoFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
-import LoadingCircle from "./LoadingCircle";
-import TestVideoElements from "./TestVideoElements";
-import { useRouter } from "next/router";
-import { BsBookmarkCheck, BsBookmarkCheckFill } from "react-icons/bs";
 
 const Video = ({ leaveRoom, onIconClick, roomState, buttonState }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -75,12 +71,6 @@ const Video = ({ leaveRoom, onIconClick, roomState, buttonState }) => {
           </div>
         </div>
         <div id="remote-streams" className="panel">
-          {/* <TestVideoElements /> */}
-          {/* {document.querySelector("#remote-streams").children.length < 1 && (
-            <>
-              <p>No users yet..</p>
-            </>
-          )} */}
           <div className="info">Invite</div>
         </div>
         <div id="video-controls" className="panel">
