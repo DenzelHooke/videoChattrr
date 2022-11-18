@@ -7,7 +7,7 @@ import TestVideoElements from "./TestVideoElements";
 import { useRouter } from "next/router";
 import { BsBookmarkCheck, BsBookmarkCheckFill } from "react-icons/bs";
 
-const Video = ({ leaveRoom, muteLocal, hideLocal, onIconClick, roomState }) => {
+const Video = ({ leaveRoom, onIconClick, roomState, buttonState }) => {
   const [isLoading, setIsLoading] = useState(true);
   let localStreamChildrenLength = 0;
 
@@ -25,9 +25,12 @@ const Video = ({ leaveRoom, muteLocal, hideLocal, onIconClick, roomState }) => {
 
   const { roomName, roomID } = useSelector((state) => state.room);
 
-  const onClick = (e) => {
-    console.log(e);
-  };
+  const muteAudioClass = buttonState.muteAudio
+    ? "falseVideoBtn"
+    : "validVideoBtn";
+  const hideVideoClass = buttonState.hideVideo
+    ? "falseVideoBtn"
+    : "validVideoBtn";
 
   return (
     <div>
@@ -81,15 +84,23 @@ const Video = ({ leaveRoom, muteLocal, hideLocal, onIconClick, roomState }) => {
           <div className="info">Invite</div>
         </div>
         <div id="video-controls" className="panel">
-          <div className="btn true" onClick={muteLocal}>
+          <button
+            className={`btn ${muteAudioClass} uniformRound`}
+            onClick={onIconClick}
+            id="muteAudio"
+          >
             <GoUnmute color="white" size={30} />
-          </div>
-          <button id="exit" className="btn false" onClick={leaveRoom}>
+          </button>
+          <button id="exit" className="btn falseVideoBtn" onClick={leaveRoom}>
             LEAVE
           </button>
-          <div className="btn true" onClick={hideLocal}>
+          <button
+            className={`btn ${hideVideoClass} uniformRound`}
+            onClick={onIconClick}
+            id="hideVideo"
+          >
             <BsFillCameraVideoFill color="white" size={30} />
-          </div>
+          </button>
         </div>
       </div>
     </div>

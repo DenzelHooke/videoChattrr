@@ -231,6 +231,10 @@ button {
   margin: 0 auto;
 }
 
+.uniformRound {
+  height: auto !important;
+}
+
 #room-form-container {
   margin-top: 80px;
 }
@@ -262,6 +266,9 @@ button {
   margin: 0;
   display: block;
   padding: 0;
+}
+#room-form-container .circleBtn {
+  border-radius: 50%;
 }
 #room-form-container .utils {
   display: flex;

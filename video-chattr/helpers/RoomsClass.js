@@ -6,6 +6,8 @@ class Rooms {
   #token = null;
   #client = null;
   #appID = process.env.NEXT_PUBLIC_AGORA_APP_ID;
+  #hasAudio = true;
+  #hasVideo = true;
 
   constructor(roomID, uid, username) {
     console.log(`RoomID: ${roomID}\n uid: ${uid}\n username: ${username}`);
@@ -14,6 +16,8 @@ class Rooms {
     this.roomID = roomID;
     this.username = username;
     this.uid = uid;
+    this.isMuted = false;
+    this.hideCamera = false;
     this.localStreams = {
       camera: {
         id: null,
@@ -37,7 +41,9 @@ class Rooms {
   //   this.#token = token;
   //   console.log(this.#token);
   // }
-
+  getStream() {
+    return this.localStream;
+  }
   reset() {
     this.roomID = null;
     this.username = null;
@@ -73,10 +79,22 @@ class Rooms {
     );
   }
 
+  muteLocal() {
+    // Mute/unmute client's local audio for other users.
+
+    // Runs if client is already muted
+    if (this.isMuted) {
+      this.isMuted = false;
+      this.localStreams.camera.stream.unmuteAudio();
+      return;
+    }
+    this.isMuted = true;
+    this.localStreams.camera.stream.muteAudio();
+  }
+
   async joinChannel() {
     // joins channel and creates camera stream object.
 
-    //! Attach hooks.
     this.setUpHooks();
 
     this.#client.join(this.#token, this.roomID, this.uid, () => {
@@ -88,8 +106,8 @@ class Rooms {
   async createCameraStream() {
     const localStream = AgoraRTC.createStream({
       streamID: this.uid,
-      audio: false,
-      video: true,
+      audio: this.#hasAudio,
+      video: this.#hasVideo,
       screen: false,
     });
     localStream.setVideoProfile(this.cameraVideoProfile);

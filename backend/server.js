@@ -190,9 +190,6 @@ io.on("connection", (socket) => {
         return;
       }
     }
-
-    // TODO Auth client depending on whether they are the host or not of that room.
-    console.log(data);
   });
 
   socket.on("init", async (data) => {});

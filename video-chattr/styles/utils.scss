@@ -21,13 +21,13 @@
   align-items: center;
 }
 
-.false {
+.falseVideoBtn {
   background: var(--leaveBG);
   color: white;
   border-radius: 5px;
 }
 
-.true {
+.validVideoBtn {
   background-color: var(--azure);
   transition: all 200ms ease;
   &:hover {
@@ -63,6 +63,10 @@
 
 .space-text {
   margin: 10px 0;
+}
+
+svg {
+  pointer-events: none;
 }
 
 .center-text {

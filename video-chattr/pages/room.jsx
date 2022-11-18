@@ -27,19 +27,23 @@ const room = ({ mode, rtcToken }) => {
     (state) => state.room
   );
 
-  let _roomClient;
+  const [_roomClient, set_roomClient] = useState(null);
 
   const socketRef = useRef();
   const router = useRouter();
   const dispatch = useDispatch();
   const isServer = typeof window === "undefined";
-
   const [socketState, setSocketState] = useState({
     socketStateMessage: "",
     isSocketStateError: false,
   });
   const [roomState, setRoomState] = useState({
     saveVideo: false,
+  });
+
+  const [buttonState, setButtonState] = useState({
+    muteAudio: false,
+    hideVideo: false,
   });
 
   const { socketStateMessage, isSocketStateError } = socketState;
@@ -62,14 +66,14 @@ const room = ({ mode, rtcToken }) => {
    * Initializes my Agora room connection class wrapper
    */
   const setUpClient = async (roomID) => {
-    _roomClient = new RoomClient(roomID, uid, user.username);
-    _roomClient.init(rtcToken);
-    dispatch(setLoading(false));
+    set_roomClient(new RoomClient(roomID, uid, user.username));
   };
 
   const onIconClick = (e) => {
+    const targetName = e.target.id;
+
     //Runs when icons are clicked on the video call page
-    if (e.target.id === "saveVideo") {
+    if (targetName === "saveVideo") {
       // If saveVideo button was pressed
       try {
         //Call dispatch action to send request to backend
@@ -87,14 +91,41 @@ const room = ({ mode, rtcToken }) => {
         // Set room to true or false depending on prior result.
         setRoomState((prevState) => ({
           ...prevState,
-          [e.target.id]: !roomState.saveVideo,
+          [targetName]: !roomState.saveVideo,
         }));
       } catch (error) {
         console.log("ERROR");
         dispatch(setError({ message: `${error}` }));
       }
     }
+
+    if (targetName === "muteAudio") {
+      console.log(!buttonState.muteAudio);
+      setButtonState((prevState) => ({
+        ...prevState,
+        muteAudio: !prevState.muteAudio,
+      }));
+      _roomClient.muteLocal();
+    }
+
+    if (targetName === "hideVideo") {
+      console.log(!buttonState.hideVideo);
+      setButtonState((prevState) => ({
+        ...prevState,
+        hideVideo: !prevState.hideVideo,
+      }));
+    }
   };
+
+  useEffect(() => {
+    if (!_roomClient) {
+      return;
+    }
+    console.log("CLIENT LIVE", _roomClient);
+
+    _roomClient.init(rtcToken);
+    dispatch(setLoading(false));
+  }, [_roomClient]);
 
   useEffect(() => {
     if (isError && message) {
@@ -227,6 +258,7 @@ const room = ({ mode, rtcToken }) => {
                 leaveRoom={leaveRoom}
                 onIconClick={onIconClick}
                 roomState={roomState}
+                buttonState={buttonState}
               />
             )}
           </div>

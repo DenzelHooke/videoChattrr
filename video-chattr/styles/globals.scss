@@ -272,6 +272,10 @@ button {
   margin: 0 auto;
 }
 
+.uniformRound {
+  height: auto !important;
+}
+
 #room-form-container {
   margin-top: 80px;
 
@@ -311,6 +315,10 @@ button {
     margin: 0;
     display: block;
     padding: 0;
+  }
+
+  .circleBtn {
+    border-radius: 50%;
   }
 
   .utils {
