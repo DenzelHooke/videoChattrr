@@ -11,10 +11,8 @@ const RoomForm = ({
   setRoomState,
   onRoomCheck,
 }) => {
-  const dispatch = useDispatch();
-
   const [formData, setFormData] = useState({
-    roomID: "21b1ea4f-9c5b-400b-9ac4-17f645682cfc",
+    roomID: "",
     isPublisher: true,
     isError: false,
     message: "",
@@ -92,8 +90,8 @@ const RoomForm = ({
   return (
     <>
       <form onSubmit={onSubmit} className="form-control">
-        <div>
-          <p className="space-text">
+        <div className="item">
+          <p className="space-text focus-text">
             {modeState.buttonMode === "create" ? "Room Name" : "Room ID"}
           </p>
           <input
@@ -115,8 +113,8 @@ const RoomForm = ({
           />
           <small>{formData.message}</small>
         </div>
-        <div className="options">
-          <div>
+        <div className="options item">
+          {/* <div>
             {modeState.buttonMode === "create" ? (
               <>
                 <label htmlFor="">Make this room joinable: </label>
@@ -125,9 +123,9 @@ const RoomForm = ({
             ) : (
               modeState.buttonMode === "join" && <></>
             )}
-          </div>
+          </div> */}
         </div>
-        <div className="btn-wrapper">
+        <div className="btn-wrapper item">
           <button
             id="create"
             type="button"
@@ -153,7 +151,7 @@ const RoomForm = ({
             Join Mode
           </button>
         </div>
-        <div className="long-btn">
+        <div className="long-btn item">
           <button id="execute" type="submit" className="btn_blue">
             {modeState.buttonMode === null
               ? "Please select a mode"

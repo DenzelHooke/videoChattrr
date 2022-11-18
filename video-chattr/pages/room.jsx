@@ -23,7 +23,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
  */
 const room = ({ mode, rtcToken }) => {
   const { uid, user } = useSelector((state) => state.auth);
-  const { roomName, roomID, isLoading, message, isError } = useSelector(
+  const { roomID, isLoading, message, isError } = useSelector(
     (state) => state.room
   );
 
@@ -49,17 +49,21 @@ const room = ({ mode, rtcToken }) => {
   const { socketStateMessage, isSocketStateError } = socketState;
 
   const cleanUp = () => {
-    console.log("Room client: ", _roomClient);
-    socketRef.current.disconnect();
-    console.info("Cleaning up now..");
-    _roomClient.removeLocalStream();
-    _roomClient.reset();
+    try {
+      console.log("Room client: ", _roomClient);
+      socketRef.current.disconnect();
+      console.info("Cleaning up now..");
+      _roomClient.removeLocalStream();
+      _roomClient.reset();
 
-    //Removes the user token on page dismount because the state persits unless page is refreshed.
-    dispatch(removeToken());
-    dispatch(resetRoomState());
-    removeRoomCookie();
-    location.reload();
+      //Removes the user token on page dismount because the state persits unless page is refreshed.
+      dispatch(removeToken());
+      dispatch(resetRoomState());
+      removeRoomCookie();
+      location.reload();
+    } catch (error) {
+      setError({ message: `${error}` });
+    }
   };
 
   /**

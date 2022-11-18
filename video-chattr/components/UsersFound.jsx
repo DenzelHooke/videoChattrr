@@ -37,13 +37,15 @@ const UsersFound = ({ onAddFriend }) => {
                 {usersFound.map((item) => {
                   console.log(item);
                   if (
+                    item.username.toLowerCase() ===
+                      user.username.toLowerCase() &&
+                    usersFound.length === 1
+                  ) {
+                    return <p>No users found.</p>;
+                  } else if (
                     item.username.toLowerCase() === user.username.toLowerCase()
                   ) {
-                    return (
-                      <>
-                        <p>No users found..</p>
-                      </>
-                    );
+                    return <></>;
                   }
 
                   return (

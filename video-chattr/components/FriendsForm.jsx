@@ -7,7 +7,9 @@ const FriendsForm = ({ onSubmit, onChange, state, formData }) => {
     <form action="" onSubmit={onSubmit} className="form-control">
       <div className="flex" id="friend-form-inner">
         <div className="input-wrap grow">
-          <label className="blockElement text-left">Username</label>
+          <label className="blockElement text-left space-text focus-text">
+            Username
+          </label>
           <input
             type="text"
             placeholder="Enter username"

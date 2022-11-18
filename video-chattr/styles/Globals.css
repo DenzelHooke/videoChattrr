@@ -78,20 +78,14 @@ a {
   display: block;
   min-width: 250px;
 }
+.form-control .item {
+  margin: 20px 0;
+}
 .form-control .form-input {
   margin: 0;
   font-size: 15px;
   min-height: 35px;
   border: 0;
-}
-.form-control .form-input::-moz-placeholder {
-  color: var(--ph-input-color);
-}
-.form-control .form-input:-ms-input-placeholder {
-  color: var(--ph-input-color);
-}
-.form-control .form-input::placeholder {
-  color: var(--ph-input-color);
 }
 .form-control .form-input:focus {
   outline: var(--outline-color);
@@ -179,10 +173,6 @@ button {
   display: flex;
 }
 
-.bold {
-  font-weight: 600;
-}
-
 .dashboard-outter-container {
   display: flex;
   flex-wrap: wrap;
@@ -235,6 +225,10 @@ button {
   height: auto !important;
 }
 
+.bold {
+  font-weight: 800;
+}
+
 #room-form-container {
   margin-top: 80px;
 }
@@ -248,7 +242,6 @@ button {
 #room-form-container .btn-wrapper {
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
 }
 #room-form-container .btn-wrapper button {
   font-size: 15px;
@@ -258,9 +251,6 @@ button {
 #room-form-container .room-form .form-control {
   margin: 30px 0;
   text-align: start !important;
-}
-#room-form-container .room-form p {
-  font-size: 18px;
 }
 #room-form-container .btn {
   margin: 0;
@@ -373,7 +363,6 @@ button {
 }
 .form__container form button {
   width: 100%;
-  margin: 20px 0;
 }
 
 .yellowish {

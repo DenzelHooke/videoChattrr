@@ -58,7 +58,6 @@ const FriendAdder = () => {
       document.addEventListener("click", handleClick);
     } catch (error) {
       dispatch(setError({ message: error.message }));
-      console.log(error);
     }
 
     return () => document.removeEventListener("click", handleClick);
@@ -80,8 +79,6 @@ const FriendAdder = () => {
       });
     }
   }, [authToken, config]);
-
-  const [friends, setFriends] = useState();
 
   const onSearch = async (userData) => {
     const payload = {
