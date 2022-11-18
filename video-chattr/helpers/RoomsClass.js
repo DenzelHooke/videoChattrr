@@ -92,6 +92,19 @@ class Rooms {
     this.localStreams.camera.stream.muteAudio();
   }
 
+  hideCameraLocal() {
+    // Mute/unmute client's local audio for other users.
+
+    // Runs if client is already muted
+    if (this.hideCamera) {
+      this.hideCamera = false;
+      this.localStreams.camera.stream.unmuteVideo();
+      return;
+    }
+    this.hideCamera = true;
+    this.localStreams.camera.stream.muteVideo();
+  }
+
   async joinChannel() {
     // joins channel and creates camera stream object.
 

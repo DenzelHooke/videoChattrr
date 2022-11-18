@@ -114,6 +114,7 @@ const room = ({ mode, rtcToken }) => {
         ...prevState,
         hideVideo: !prevState.hideVideo,
       }));
+      _roomClient.hideCameraLocal();
     }
   };
 
