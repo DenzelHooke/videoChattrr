@@ -8,9 +8,9 @@ const RegisterForm = () => {
   const { isLoading } = useSelector((state) => state.auth);
   const [valid, setValid] = useState(true);
   const [formData, setFormData] = useState({
-    username: "abcbr111",
-    password1: "123456",
-    password2: "123456",
+    username: "",
+    password1: "",
+    password2: "",
   });
 
   useEffect(() => {
