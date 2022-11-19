@@ -198,7 +198,7 @@ io.on("connection", (socket) => {
 app.use("/api/users/", require("./routes/userRoutes"));
 app.use("/api/auth/", require("./routes/authRoutes"));
 app.use("/api/room/", require("./routes/roomRoutes"));
-
+app.use("/api/tests/", require("./routes/testRoutes"));
 // server.get("*", (req, res) => {
 //   return handle(req, res);
 // });
