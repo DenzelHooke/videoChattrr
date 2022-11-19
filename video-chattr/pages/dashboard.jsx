@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { wrapper } from "../app/store";
 import styles from "../styles/Dashboard.module.scss";
 import { unwrapResult } from "@reduxjs/toolkit";
-
+import { removeRoomCookie } from "../helpers/RoomsFuncs";
 // import RtcUser from "./video/videoFuncs";
 import {
   genRTC,
@@ -63,7 +63,6 @@ function dashboard({ user }) {
   useEffect(() => {
     console.log("USER: ", user);
     if (!isServer) {
-      // console.log(authState.user.token);
       if (!user) {
         toast.notify("Must be logged in to view this page.", {
           title: "Error",

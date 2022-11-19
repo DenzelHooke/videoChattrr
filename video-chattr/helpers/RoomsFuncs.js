@@ -62,7 +62,11 @@ const createRoomCookie = (mode, rtcToken) => {
 };
 
 const removeRoomCookie = () => {
-  document.cookie = `roomData=; expires=${new Date().toUTCString()}`;
+  console.log("Removing room data cookie.");
+  const cookie =
+    (document.cookie = `roomData=; expires=${new Date().toUTCString()}`);
+  console.log(cookie);
+  return true;
 };
 
 const getRunningRoom = async (roomID, authToken) => {

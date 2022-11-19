@@ -48,22 +48,36 @@ const room = ({ mode, rtcToken }) => {
 
   const { socketStateMessage, isSocketStateError } = socketState;
 
+  useEffect(() => {
+    dispatch(setLoading(true));
+    console.log("Listener set");
+    window.addEventListener("beforeunload", cleanUp);
+
+    return () => removeListeners();
+  }, []);
+
   const cleanUp = () => {
+    console.info("Cleaning up now..");
     try {
+      location.reload();
+      removeRoomCookie();
       console.log("Room client: ", _roomClient);
       socketRef.current.disconnect();
-      console.info("Cleaning up now..");
       _roomClient.removeLocalStream();
       _roomClient.reset();
 
       //Removes the user token on page dismount because the state persits unless page is refreshed.
       dispatch(removeToken());
       dispatch(resetRoomState());
-      removeRoomCookie();
-      location.reload();
     } catch (error) {
-      setError({ message: `${error}` });
+      console.log(error);
+      setError({ message: `${error.message}` });
     }
+  };
+
+  const removeListeners = () => {
+    cleanUp();
+    window.removeEventListener("beforeunload", cleanUp);
   };
 
   /**
@@ -240,12 +254,6 @@ const room = ({ mode, rtcToken }) => {
     }
   }, [rtcToken, isServer, roomID]);
 
-  useEffect(() => {
-    dispatch(setLoading(true));
-
-    return () => cleanUp();
-  }, []);
-
   const leaveRoom = () => {
     console.log("Room client before cleanup: ", _roomClient);
     router.push("/dashboard");
@@ -258,13 +266,15 @@ const room = ({ mode, rtcToken }) => {
       ) : (
         <>
           <div id="room-container" className="grow">
-            {!isLoading && (
+            {!isLoading ? (
               <Video
                 leaveRoom={leaveRoom}
                 onIconClick={onIconClick}
                 roomState={roomState}
                 buttonState={buttonState}
               />
+            ) : (
+              ""
             )}
           </div>
         </>
@@ -289,6 +299,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
           },
         };
       } catch (error) {
+        console.log("ERRPRRRR");
         return {
           redirect: {
             destination: "/dashboard",
