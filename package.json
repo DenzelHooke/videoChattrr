@@ -7,6 +7,7 @@
   "scripts": {
     "server": "nodemon ./backend/server.js",
     "client": "cd ./video-chattr/ && npm run next-dev",
+    "build": "Cd ./video-chattr/ && npm run build",
     "dev": "concurrently \"npm next-dev\" \" npm server\""
   },
   "author": "denzelhooke",

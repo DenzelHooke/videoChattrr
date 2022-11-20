@@ -4,6 +4,8 @@ const API_URL =
     ? process.env.NEXT_PUBLIC_BACKEND_URL + "/room"
     : "http://localhost:8080/api/room";
 
+console.log(process.env);
+
 const createRoom = async (userData) => {
   console.log("create room func called");
   //Calls backend with rtcToken as param to create
