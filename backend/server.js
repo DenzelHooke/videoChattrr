@@ -31,7 +31,7 @@ const app = express();
 
 const server = http.createServer(app);
 
-connectDB();
+await connectDB();
 
 const io = socketio(server, {
   cors: {
