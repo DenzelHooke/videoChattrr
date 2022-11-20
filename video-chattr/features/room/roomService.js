@@ -4,7 +4,7 @@ const API_URL =
     ? process.env.NEXT_PUBLIC_BACKEND_URL + "/room"
     : process.env.NEXT_PUBLIC_DEVELOPMENT_BACKEND_URL + "/room";
 
-console.log(process.env);
+// console.log(process.env);
 
 const createRoom = async (userData) => {
   console.log("create room func called");
