@@ -38,7 +38,7 @@ const corsOptions = {
   allowedHeaders: ["Content-Type"],
 };
 
-await connectDB();
+connectDB();
 
 const io = socketio(server, {
   cors: {
