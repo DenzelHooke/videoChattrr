@@ -71,7 +71,7 @@ const loginUser = asyncHandler(async (req, res) => {
       throw new Error("Invalid username or password.");
     }
   } catch (error) {
-    json.status(401);
+    res.status(401);
     throw new Error(error.message);
   }
 });
