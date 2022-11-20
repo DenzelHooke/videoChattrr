@@ -3,12 +3,12 @@ import axios from "axios";
 const API_URL =
   process.env.NODE_ENV === "production"
     ? process.env.NEXT_PUBLIC_BACKEND_URL + "/users"
-    : "http://localhost:8080/api/users";
+    : process.env.NEXT_PUBLIC_DEVELOPMENT_BACKEND_URL + "/users";
 
 const RAW_API_URL =
   process.env.NODE_ENV === "production"
     ? process.env.NEXT_PUBLIC_BACKEND_URL
-    : "http://localhost:8080/api/";
+    : process.env.NEXT_PUBLIC_DEVELOPMENT_BACKEND_URL;
 
 const register = async (userData) => {
   const res = await axios.post(API_URL, userData);
@@ -35,9 +35,8 @@ const login = async (userData) => {
       0,
       1
     ).toUTCString()}`;
+    return res.data;
   }
-
-  return res.data;
 };
 
 const logout = () => {

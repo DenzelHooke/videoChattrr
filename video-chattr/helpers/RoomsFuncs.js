@@ -11,7 +11,7 @@ import { setError } from "../features/utils/utilsSlice";
 const API_URL =
   process.env.NODE_ENV === "production"
     ? process.env.NEXT_PUBLIC_BACKEND_URL + "/room"
-    : "http://localhost:8080/api/room";
+    : process.env.NEXT_PUBLIC_DEVELOPMENT_BACKEND_URL + "/room";
 
 const roomExists = async (roomName, authToken) => {
   const config = {

@@ -46,28 +46,33 @@ const registerUser = asyncHandler(async (req, res) => {
 // @route POST /api/users/login
 // @access Public
 const loginUser = asyncHandler(async (req, res) => {
-  const { username, password } = req.body;
+  try {
+    const { username, password } = req.body;
 
-  if (!username || !password) {
-    res.status(400);
-    throw new Error("Must add username or password!");
-  }
+    if (!username || !password) {
+      res.status(400);
+      throw new Error("Must add username or password!");
+    }
 
-  //Regex that tells mongodb to look for usernames that match the
-  // username in the request regardless of case sensitivity.
-  const user = await User.findOne({
-    username: { $regex: `${username}`, $options: "i" },
-  });
-
-  if (user && (await bcrypt.compare(password, user.password))) {
-    res.status(200).json({
-      _id: user.id,
-      username: user.username,
-      token: generateToken(user.id),
+    //Regex that tells mongodb to look for usernames that match the
+    // username in the request regardless of case sensitivity.
+    const user = await User.findOne({
+      username: { $regex: `${username}`, $options: "i" },
     });
-  } else {
-    res.status(401);
-    throw new Error("Invalid username or password.");
+
+    if (user && (await bcrypt.compare(password, user.password))) {
+      res.status(200).json({
+        _id: user.id,
+        username: user.username,
+        token: generateToken(user.id),
+      });
+    } else {
+      res.status(401);
+      throw new Error("Invalid username or password.");
+    }
+  } catch (error) {
+    json.status(401);
+    throw new Error(error.message);
   }
 });
 

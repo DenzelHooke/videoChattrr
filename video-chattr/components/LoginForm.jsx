@@ -6,14 +6,13 @@ import { toast } from "react-nextjs-toast";
 
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
+import { setError } from "../features/utils/utilsSlice";
 
 const LoginForm = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const { user, isLoading, isError, success } = useSelector(
-    (state) => state.auth
-  );
+  const { isError, success } = useSelector((state) => state.auth);
 
   const [showPassState, setShowPassState] = useState("hide");
   const [formData, setFormData] = useState({
@@ -47,10 +46,7 @@ const LoginForm = () => {
     // }
 
     if (!username || !password) {
-      toast.notify("Please fill out all fields", {
-        type: "error",
-        title: "Uh oh!",
-      });
+      setError({ message: "Please fill out all fields" });
       return;
     }
 
@@ -97,7 +93,7 @@ const LoginForm = () => {
           {showPass[showPassState]}
         </div>
         <button type="submit" className="button btn_blue">
-          Log into your Account
+          Sign in
         </button>
       </form>
     </div>

@@ -1,15 +1,6 @@
 const asyncHandler = require("express-async-handler");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-const User = require("../models/userModel");
 
-const {
-  RtcTokenBuilder,
-  RtmTokenBuilder,
-  RtcRole,
-  RtmRole,
-} = require("agora-access-token");
-const { now } = require("mongoose");
+const { RtcTokenBuilder, RtcRole } = require("agora-access-token");
 
 // @desc Create RTC token
 // @route POST /api/auth/rtctoken

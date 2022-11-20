@@ -151,9 +151,12 @@ export const getServerSideProps = wrapper.getServerSideProps(
     async ({ res, req }) => {
       // console.log(auth);
       // console.log(req.cookies);
-      let { user } = req.cookies;
       try {
+        let { user } = req.cookies;
         user = JSON.parse(user);
+        if (!user._id) {
+          throw new Error("Can't get user data.");
+        }
         console.log(user);
       } catch (error) {
         return {
