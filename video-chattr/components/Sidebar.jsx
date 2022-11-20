@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 
-import { MdCancel } from "react-icons/md";
-import { IoCheckmarkCircle } from "react-icons/io5";
 import SidebarList from "./SidebarList";
 import {
   getSavedRooms,
@@ -48,6 +46,7 @@ const Sidebar = () => {
   });
 
   const updateData = async () => {
+    // Get saved rooms
     dispatch(getSavedRooms({ user }))
       .unwrap()
       .catch((error) => {
@@ -95,7 +94,8 @@ const Sidebar = () => {
       //* Rooms
       if (type.toLowerCase() === "savedrooms") {
         // DELETE ROOM FROM SAVED ROOMS
-        dispatch(unsaveRoom({ user, roomID: value }))
+        console.log("VALUE: ", user);
+        dispatch(unsaveRoom({ user, roomData: value }))
           .unwrap()
           .then(() => setFetchData(true))
           .catch((error) => {
@@ -190,9 +190,7 @@ const Sidebar = () => {
   return (
     <>
       <div id="saved-rooms-wrapper" className="sidebar-section">
-        <p>
-          <h3>Saved Rooms</h3>
-        </p>
+        <h3>Saved Rooms</h3>
         <SidebarList
           data={sidebarData["rooms"]}
           arr={savedRooms}
@@ -201,9 +199,7 @@ const Sidebar = () => {
         />
       </div>
       <div id="friend-requests" className="sidebar-section">
-        <p>
-          <h3>Friend Requests</h3>
-        </p>
+        <h3>Friend Requests</h3>
         <SidebarList
           data={sidebarData["friendRequests"]}
           arr={friendRequests}
@@ -212,9 +208,7 @@ const Sidebar = () => {
         />
       </div>
       <div id="friends" className="sidebar-section">
-        <p>
-          <h3>Friends</h3>
-        </p>
+        <h3>Friends</h3>
         <SidebarList
           data={sidebarData["friends"]}
           arr={friends}

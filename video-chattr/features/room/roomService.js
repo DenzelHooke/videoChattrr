@@ -1,7 +1,8 @@
-const API_URL =
-  process.env.NODE_ENV === "production" ? "" : "http://localhost:8080/api/room";
 import axios from "axios";
-import { useSelector } from "react-redux";
+const API_URL =
+  process.env.NODE_ENV === "production"
+    ? process.env.NEXT_PUBLIC_BACKEND_URL + "/room"
+    : "http://localhost:8080/api/room";
 
 const createRoom = async (userData) => {
   console.log("create room func called");

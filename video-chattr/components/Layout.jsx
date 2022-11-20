@@ -4,12 +4,12 @@ import Footer from "./Footer";
 import { ToastContainer } from "react-nextjs-toast";
 import Head from "next/head";
 import ErrorWatcher from "./ErrorWatcher";
+import Script from "next/script";
+
 const Layout = ({ children }) => {
   return (
     <>
-      <Head>
-        <script src="/js/AgoraRTCSDK-3.6.10.js"></script>
-      </Head>
+      <Script src="/js/AgoraRTCSDK-3.6.10.js"></Script>
       <ErrorWatcher />
       <ToastContainer id="toast-container" />
       <Navbar />

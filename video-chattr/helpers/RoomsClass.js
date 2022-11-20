@@ -1,5 +1,3 @@
-import React from "react";
-import axios from "axios";
 import { getUserFromRunningRoom } from "../helpers/RoomsFuncs";
 
 class Rooms {

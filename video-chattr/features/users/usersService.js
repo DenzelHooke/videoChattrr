@@ -1,9 +1,10 @@
-const API_URL =
-  process.env.NODE_ENV === "production"
-    ? ""
-    : "http://localhost:8080/api/users";
 import axios from "axios";
 
+const API_URL =
+  process.env.NODE_ENV === "production"
+    ? process.env.NEXT_PUBLIC_BACKEND_URL + "/users"
+    : "http://localhost:8080/api/users";
+console.log(process.env.NODE_ENV);
 const getUsers = async (payload) => {
   const { userData, config } = payload;
   if (userData.length < 1) {
@@ -65,7 +66,9 @@ const getIncomingFriendRequests = async (data) => {
  * @returns {object} Object response data.
  */
 const unsaveRoom = async (data) => {
-  const { user, roomID } = data;
+  const { user, roomData } = data;
+  const { roomID } = roomData;
+  console.log("DATA: ", roomID);
 
   const config = {
     headers: {

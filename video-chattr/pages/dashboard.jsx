@@ -39,7 +39,7 @@ const Sidebar = dynamic(async () => await import("../components/Sidebar"), {
   ssr: false,
 });
 
-function dashboard({ user }) {
+export default function Dashboard({ user }) {
   const dispatch = useDispatch();
   const isServer = typeof window === "undefined";
   const router = useRouter();
@@ -169,18 +169,3 @@ export const getServerSideProps = wrapper.getServerSideProps(
       };
     }
 );
-
-// if (!user) {
-//   return {
-//     redirect: {
-//       destination: "/",
-//       permanent: false,
-//     },
-//   };
-// }
-
-// return {
-//   props: { user },
-// };
-
-export default dashboard;

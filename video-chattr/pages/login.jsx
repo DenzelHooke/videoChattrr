@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { reset } from "../features/auth/authSlice";
 import { useRouter } from "next/router";
 
-export default function () {
+export default function Login() {
   const Router = useRouter();
   const dispatch = useDispatch();
 

@@ -1,10 +1,8 @@
-import { useEffect, useState } from "react";
 import Form from "../components/Form";
 import { BsFillPersonPlusFill } from "react-icons/bs";
 import RegisterForm from "../components/RegisterForm";
-import { toast } from "react-nextjs-toast";
 
-function Register() {
+export default function Register() {
   return (
     <div className="main center">
       {
@@ -17,5 +15,3 @@ function Register() {
     </div>
   );
 }
-
-export default Register;

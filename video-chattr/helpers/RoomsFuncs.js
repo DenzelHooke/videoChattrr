@@ -1,13 +1,6 @@
 import axios from "axios";
+import { genRTC, removeToken, setPush } from "../features/auth/authSlice";
 import {
-  genRTC,
-  reset,
-  removeToken,
-  resetPush,
-  setPush,
-} from "../features/auth/authSlice";
-import {
-  createRoom,
   setRoomName,
   setRoomID,
   setMode,
@@ -15,9 +8,10 @@ import {
 } from "../features/room/roomSlice";
 
 import { setError } from "../features/utils/utilsSlice";
-
 const API_URL =
-  process.env.NODE_ENV === "production" ? "" : "http://localhost:8080/api/room";
+  process.env.NODE_ENV === "production"
+    ? process.env.NEXT_PUBLIC_BACKEND_URL + "/room"
+    : "http://localhost:8080/api/room";
 
 const roomExists = async (roomName, authToken) => {
   const config = {

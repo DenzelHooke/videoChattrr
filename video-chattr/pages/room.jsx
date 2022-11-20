@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
-import { setLoading, stopLoading } from "../features/room/roomSlice";
+import { setLoading } from "../features/room/roomSlice";
 import { removeToken } from "../features/auth/authSlice";
 import { resetRoomState } from "../features/room/roomSlice";
 import { toast } from "react-nextjs-toast";
@@ -21,7 +21,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
  * @param {object} Data
  * @returns
  */
-const room = ({ mode, rtcToken }) => {
+export default function Room({ mode, rtcToken }) {
   const { uid, user } = useSelector((state) => state.auth);
   const { roomID, isLoading, message, isError } = useSelector(
     (state) => state.room
@@ -281,7 +281,7 @@ const room = ({ mode, rtcToken }) => {
       )}
     </div>
   );
-};
+}
 
 //! Make this page private
 
@@ -309,5 +309,3 @@ export const getServerSideProps = wrapper.getServerSideProps(
       }
     }
 );
-
-export default room;

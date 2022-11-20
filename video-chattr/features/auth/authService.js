@@ -1,9 +1,17 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/api";
+const API_URL =
+  process.env.NODE_ENV === "production"
+    ? process.env.NEXT_PUBLIC_BACKEND_URL + "/users"
+    : "http://localhost:8080/api/users";
+
+const RAW_API_URL =
+  process.env.NODE_ENV === "production"
+    ? process.env.NEXT_PUBLIC_BACKEND_URL
+    : "http://localhost:8080/api/";
 
 const register = async (userData) => {
-  const res = await axios.post(API_URL + "/users", userData);
+  const res = await axios.post(API_URL, userData);
 
   if (res.data) {
     localStorage.setItem("user", JSON.stringify(res.data));
@@ -18,7 +26,7 @@ const register = async (userData) => {
 };
 
 const login = async (userData) => {
-  const res = await axios.post(API_URL + "/users/login", userData);
+  const res = await axios.post(API_URL + "/login", userData);
   console.log(res.data);
   if (res.data) {
     localStorage.setItem("user", JSON.stringify(res.data));
@@ -48,7 +56,11 @@ const genRTC = async (userData) => {
     },
   };
 
-  const res = await axios.post(API_URL + "/auth/rtcToken", userData, config);
+  const res = await axios.post(
+    RAW_API_URL + "/auth/rtcToken",
+    userData,
+    config
+  );
 
   if (res.data) {
     localStorage.setItem("uid", res.data.uid);
