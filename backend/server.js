@@ -30,13 +30,6 @@ const app = express();
 // const handle = app.getRequestHandler();
 
 const server = http.createServer(app);
-const corsOptions = {
-  origin: "*",
-
-  methods: ["GET", "POST"],
-
-  allowedHeaders: ["Content-Type"],
-};
 
 connectDB();
 
@@ -47,7 +40,7 @@ const io = socketio(server, {
   },
 });
 
-app.use(cors(corsOptions));
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
