@@ -10,35 +10,40 @@ const { json } = require("express");
 // @route POST /api/users
 // @access Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { username, password } = req.body;
+  try {
+    const { username, password } = req.body;
 
-  if (!username || !password) {
-    res.status(400);
-    throw new Error("Must add username or password!");
-  }
+    if (!username || !password) {
+      res.status(400);
+      throw new Error("Must add username or password!");
+    }
 
-  const exists = await User.findOne({ username });
+    const exists = await User.findOne({ username });
 
-  if (exists) {
-    // console.log(exists);
-    res.status(401);
-    throw new Error("A user with that username already exists");
-  }
+    if (exists) {
+      // console.log(exists);
+      res.status(401);
+      throw new Error("A user with that username already exists");
+    }
 
-  const salt = await bcrypt.genSalt(10);
-  const hashedPass = await bcrypt.hash(password, salt);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPass = await bcrypt.hash(password, salt);
 
-  const newUser = await User.create({
-    username,
-    password: hashedPass,
-  });
-
-  if (newUser) {
-    res.status(201).json({
-      _id: newUser.id,
-      username: username,
-      token: generateToken(newUser.id),
+    const newUser = await User.create({
+      username,
+      password: hashedPass,
     });
+
+    if (newUser) {
+      res.status(201).json({
+        _id: newUser.id,
+        username: username,
+        token: generateToken(newUser.id),
+      });
+    }
+  } catch (error) {
+    res.status(401);
+    throw new Error(error.message);
   }
 });
 
