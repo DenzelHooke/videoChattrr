@@ -1,6 +1,26 @@
-version: "3"
+version: "3.3"
+
 services:
-  web:
+  api:
     build: .
-    port:
-      - "5000:8080"
+    container_name: backend-api
+    restart: unless-stopped
+    networks:
+      - backend-api-network
+
+  reverseProxy:
+    image: nginx:alpine
+    container_name: web-proxy
+    restart: unless-stopped
+    volumes:
+      - ./proxy.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 8080:80
+    depends_on:
+      - api
+    networks:
+      - backend-api-network
+
+networks:
+  app-network:
+    driver: bridge
