@@ -6,7 +6,7 @@ services:
     container_name: backend-api
     restart: unless-stopped
     networks:
-      - c
+      - backend-api-network
 
   reverseProxy:
     image: nginx:alpine
