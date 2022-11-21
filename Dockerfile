@@ -1,6 +1,7 @@
 FROM node:19-alpine
 
-WORKDIR /~/videoChattrr/
+WORKDIR /home/denzel/videoChattrr
+
 
 COPY package*.json ./
 
