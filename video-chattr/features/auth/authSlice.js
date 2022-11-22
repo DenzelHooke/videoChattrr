@@ -101,6 +101,10 @@ export const authSlice = createSlice({
     setPush: (state, action) => {
       state.push = action.payload;
     },
+    setError: (state, action) => {
+      state.isError = true;
+      state.message = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -126,7 +130,7 @@ export const authSlice = createSlice({
         console.log("LOGIN SUCCESS");
         state.isLoading = false;
         state.isSuccess = true;
-        // state.user = action.payload;
+        state.user = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
         console.log("LOGIN FAILED");
@@ -156,5 +160,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const { reset, removeToken, resetPush, setPush } = authSlice.actions;
+export const { reset, removeToken, resetPush, setPush, setError } =
+  authSlice.actions;
 export default authSlice.reducer;

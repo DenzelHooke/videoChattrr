@@ -64,10 +64,6 @@ export default function Dashboard({ user }) {
     console.log("USER: ", user);
     if (!isServer) {
       if (!user) {
-        toast.notify("Must be logged in to view this page.", {
-          title: "Error",
-          type: "error",
-        });
         dispatch(
           setError({
             message: "Must be logged in to view this page.",

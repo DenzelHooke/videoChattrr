@@ -16,11 +16,17 @@ import { saveRoom } from "../features/room/roomSlice";
 import { setError } from "../features/utils/utilsSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 
+// const SOCKET_URI =
+//   process.env.NODE_ENV === "production"
+//     ? process.env.NEXT_PUBLIC_SOCKET_URL
+//     : process.env.NEXT_PUBLIC_DEVELOPMENT_SOCKET_URL;
+
 /**
  * A room page for generating video call enviroments.
  * @param {object} Data
  * @returns
  */
+
 export default function Room({ mode, rtcToken }) {
   const { uid, user } = useSelector((state) => state.auth);
   const { roomID, isLoading, message, isError } = useSelector(
@@ -71,7 +77,7 @@ export default function Room({ mode, rtcToken }) {
       dispatch(resetRoomState());
     } catch (error) {
       console.log(error);
-      setError({ message: `${error.message}` });
+      dispatch(setError({ message: `${error.message}` }));
     }
   };
 
@@ -192,7 +198,7 @@ export default function Room({ mode, rtcToken }) {
       // TODO Connect to socket channel
 
       //Connect to socket server
-      socketRef.current = io.connect(process.env.NEXT_PUBLIC_BACKEND_URL, {
+      socketRef.current = io.connect("http://198.199.72.239:8080/", {
         auth: {
           token: user.token,
           room: {
@@ -205,6 +211,8 @@ export default function Room({ mode, rtcToken }) {
           agoraUID: uid,
         },
       });
+
+      console.log(socketRef.current);
 
       // On error trigger from server
       socketRef.current.on("errorTriggered", (data) => {
@@ -233,7 +241,7 @@ export default function Room({ mode, rtcToken }) {
 
           //* Execute unsubscribing user on Agora.
         } catch (error) {
-          dispatch(setError({ message: `${error}` }));
+          dispatch(setError({ message: `${error.messae}` }));
         }
       });
 

@@ -2,17 +2,35 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { login, reset } from "../features/auth/authSlice";
-import { toast } from "react-nextjs-toast";
 
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { setError } from "../features/utils/utilsSlice";
+import { setError as setLoginError } from "../features/auth/authSlice";
 
 const LoginForm = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const { isError, success } = useSelector((state) => state.auth);
+  const { isError, success, message } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (isError) {
+      dispatch(
+        setError({
+          message: message,
+        })
+      );
+    }
+    dispatch(reset());
+  }, [isError]);
+
+  useEffect(() => {
+    if (success) {
+      router.push("/dashboard");
+    }
+    dispatch(reset());
+  }, [success, isError]);
 
   const [showPassState, setShowPassState] = useState("hide");
   const [formData, setFormData] = useState({
@@ -40,13 +58,8 @@ const LoginForm = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-
-    // if ((username.length && password.length) < 1) {
-    //   return;
-    // }
-
     if (!username || !password) {
-      setError({ message: "Please fill out all fields" });
+      dispatch(setLoginError("Please fill out all fields"));
       return;
     }
 

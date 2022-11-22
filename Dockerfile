@@ -11,4 +11,4 @@ COPY . .
 
 EXPOSE 8080
 
-RUN npm run server
+CMD ["npm", "run", "server"]

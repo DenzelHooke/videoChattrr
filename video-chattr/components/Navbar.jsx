@@ -11,6 +11,7 @@ import {
 import store from "../app/store";
 import { toast } from "react-nextjs-toast";
 import { useRouter } from "next/router";
+import { setError } from "../features/utils/utilsSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -36,24 +37,22 @@ const Navbar = () => {
   useEffect(() => {
     if (isError || message) {
       console.log(message);
-      toast.notify(message, {
-        type: "error",
-        title: "Oops!",
-      });
+      dispatch(setError({ message: message }));
       dispatch(reset());
     }
   }, [isError, message]);
 
   const onLogout = () => {
     dispatch(logout());
+    location.reload();
   };
 
-  const onClick = (e) => {
-    if (e.target.id === "logout") {
-      dispatch(removeToken());
-      router.push("/dashboard");
-    }
-  };
+  // const onClick = (e) => {
+  //   if (e.target.id === "logout") {
+  //     dispatch(removeToken());
+  //     router.push("/dashboard");
+  //   }
+  // };
 
   // console.log(user);
 
@@ -87,7 +86,7 @@ const Navbar = () => {
             <>
               <li>
                 <Link href="/login">
-                  <a onClick={onLogout}>Login</a>
+                  <a>Login</a>
                 </Link>
               </li>
               <li>
