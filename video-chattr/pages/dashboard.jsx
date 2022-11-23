@@ -1,20 +1,13 @@
 import dynamic from "next/dynamic";
-import { useState, useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { toast } from "react-nextjs-toast";
+import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { wrapper } from "../app/store";
 import styles from "../styles/Dashboard.module.scss";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { removeRoomCookie } from "../helpers/RoomsFuncs";
-// import RtcUser from "./video/videoFuncs";
-import {
-  genRTC,
-  reset,
-  removeToken,
-  resetPush,
-  setPush,
-} from "../features/auth/authSlice";
+
+import { genRTC, removeToken, resetPush } from "../features/auth/authSlice";
 import {
   createRoom,
   setMode,
@@ -22,7 +15,7 @@ import {
 } from "../features/room/roomSlice";
 import { createRoomCookie, joinUserToRoom } from "../helpers/RoomsFuncs";
 
-import { setError } from "../features/utils/utilsSlice";
+import { setError, setSuccess } from "../features/utils/utilsSlice";
 import roomService from "../features/room/roomService";
 import LoadingCircle from "../components/LoadingCircle";
 import FriendAdder from "../components/FriendAdder";

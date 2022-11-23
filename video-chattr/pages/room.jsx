@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import { setLoading } from "../features/room/roomSlice";
 import { removeToken } from "../features/auth/authSlice";
 import { resetRoomState } from "../features/room/roomSlice";
-import { toast } from "react-nextjs-toast";
 
 import RoomClient from "../helpers/RoomsClass";
 import LoadingCircle from "../components/LoadingCircle";
@@ -154,11 +153,7 @@ export default function Room({ mode, rtcToken }) {
 
   useEffect(() => {
     if (isError && message) {
-      toast.notify(message, {
-        title: "An error has occured.",
-        type: "error",
-        duration: 5,
-      });
+      dispatch(setError({ message: message }));
       console.trace("isError: ", message);
       cleanUp();
       router.push("/dashboard");
@@ -166,11 +161,7 @@ export default function Room({ mode, rtcToken }) {
     }
 
     if (isSocketStateError && socketStateMessage) {
-      toast.notify(socketStateMessage, {
-        title: "An error has occured.",
-        type: "error",
-        duration: 5,
-      });
+      dispatch(setError({ message: socketStateMessage }));
       console.trace("socketError: ", socketStateMessage);
       cleanUp();
       router.push("/dashboard");

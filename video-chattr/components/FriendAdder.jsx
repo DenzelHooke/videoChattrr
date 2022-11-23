@@ -6,9 +6,8 @@ import { sendFriendRequest } from "../helpers/UsersFuncs";
 import { IoPeopleCircleSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers, setResultVisibility } from "../features/users/usersSlice";
-import { toast } from "react-nextjs-toast";
 import UsersFound from "./UsersFound";
-import { setError } from "../features/utils/utilsSlice";
+import { setError, setSuccess } from "../features/utils/utilsSlice";
 
 const FriendAdder = () => {
   const dispatch = useDispatch();
@@ -30,10 +29,7 @@ const FriendAdder = () => {
 
   useEffect(() => {
     if (formData.isError) {
-      toast.notify(formData.message, {
-        title: "Error",
-        type: "error",
-      });
+      dispatch(setError({ message: formData.message }));
       setFormData((prevState) => ({
         ...prevState,
         message: "",
@@ -127,10 +123,7 @@ const FriendAdder = () => {
           return;
         }
 
-        toast.notify(res.data.message, {
-          title: "Success",
-          type: "success",
-        });
+        setSuccess({ message: res.data.message });
       }
 
       console.log(res);

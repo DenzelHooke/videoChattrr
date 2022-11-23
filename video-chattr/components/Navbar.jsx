@@ -2,24 +2,15 @@ import { useState, useEffect, useContec } from "react";
 import Link from "next/link";
 import styles from "../styles/Navbar.module.scss";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  register,
-  logout,
-  reset,
-  removeToken,
-} from "../features/auth/authSlice";
-import store from "../app/store";
-import { toast } from "react-nextjs-toast";
+import { logout, reset } from "../features/auth/authSlice";
 import { useRouter } from "next/router";
 import { setError } from "../features/utils/utilsSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const { user, isError, message, isSuccess, isLoading } = useSelector(
+  const { user, isError, message, isSuccess } = useSelector(
     (state) => state.auth
   );
-
-  const router = useRouter();
 
   const [signedIn, setSignedIn] = useState(false);
 
@@ -33,14 +24,6 @@ const Navbar = () => {
       dispatch(reset());
     }
   }, [user]);
-
-  useEffect(() => {
-    if (isError || message) {
-      console.log(message);
-      dispatch(setError({ message: message }));
-      dispatch(reset());
-    }
-  }, [isError, message]);
 
   const onLogout = () => {
     dispatch(logout());

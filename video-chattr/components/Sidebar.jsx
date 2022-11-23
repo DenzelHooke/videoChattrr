@@ -13,8 +13,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { joinUserToRoom } from "../helpers/RoomsFuncs";
 import roomService from "../features/room/roomService";
-import { toast } from "react-nextjs-toast";
-import { setError } from "../features/utils/utilsSlice";
+import { toast } from "react-toastify";
+import { setError, setSuccess } from "../features/utils/utilsSlice";
 
 const Sidebar = () => {
   const dispatch = useDispatch();

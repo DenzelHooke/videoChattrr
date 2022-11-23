@@ -10,18 +10,17 @@ import { MdHome } from "react-icons/md";
 import { AiFillThunderbolt } from "react-icons/ai";
 import { BsShieldLockFill } from "react-icons/bs";
 import { MdDraw } from "react-icons/md";
-import { toast } from "react-nextjs-toast";
 
 export default function Home() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (user) {
-      toast.notify(`Welcome, ${user.username}`, {
-        type: "success",
-      });
-    }
+    // if (user) {
+    //   toast.notify(`Welcome, ${user.username}`, {
+    //     type: "success",
+    //   });
+    // }
     dispatch(reset());
   }, [user]);
 

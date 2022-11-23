@@ -7,7 +7,7 @@ import {
   resetRoomState,
 } from "../features/room/roomSlice";
 
-import { setError } from "../features/utils/utilsSlice";
+import { setError, setSuccess } from "../features/utils/utilsSlice";
 const API_URL =
   process.env.NODE_ENV === "production"
     ? process.env.NEXT_PUBLIC_BACKEND_URL + "/room"
@@ -105,13 +105,7 @@ const getUserFromRunningRoom = async (roomID, uid) => {
  * @param {object} userInput User inputted data
  * @param {Class} userInput User inputted data
  */
-const joinUserToRoom = async ({
-  roomService,
-  userInput,
-  toast,
-  dispatch,
-  user,
-}) => {
+const joinUserToRoom = async ({ roomService, userInput, dispatch, user }) => {
   dispatch(setMode("join"));
   console.log(`%c Requesting to join room ${userInput}`, "color: #4ce353");
 
@@ -132,10 +126,7 @@ const joinUserToRoom = async ({
   }
 
   // Otherwise, notify client room is connecting.
-  toast.notify(`Connecting to room`, {
-    title: "Success",
-    type: "success",
-  });
+  dispatch(setSuccess({ message: "Connecting to room" }));
 
   // Generate RTC then set a few perdinent states
 
