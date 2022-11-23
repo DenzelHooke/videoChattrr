@@ -31,7 +31,8 @@
     "redux": "^4.2.0",
     "sass": "^1.51.0",
     "socket.io": "^4.5.0",
-    "socket.io-client": "^4.5.2"
+    "socket.io-client": "^4.5.2",
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "eslint": "8.15.0",
