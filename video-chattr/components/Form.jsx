@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "../styles/Index.module.scss";
 
 const Form = ({ form, svg, message, className }) => {
   return (

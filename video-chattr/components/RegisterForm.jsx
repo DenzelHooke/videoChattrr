@@ -5,7 +5,6 @@ import { register } from "../features/auth/authSlice";
 import NewUserForm from "./NewUserForm";
 
 const RegisterForm = () => {
-  const { isLoading } = useSelector((state) => state.auth);
   const [valid, setValid] = useState(true);
   const [formData, setFormData] = useState({
     username: "",

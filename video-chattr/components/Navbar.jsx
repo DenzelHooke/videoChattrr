@@ -1,10 +1,8 @@
-import { useState, useEffect, useContec } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "../styles/Navbar.module.scss";
 import { useSelector, useDispatch } from "react-redux";
 import { logout, reset } from "../features/auth/authSlice";
-import { useRouter } from "next/router";
-import { setError } from "../features/utils/utilsSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();

@@ -1,17 +1,8 @@
-import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { reset, genRTC } from "../features/auth/authSlice";
-import RtcUser from "./video/videoFuncs";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import Form from "./Form";
 import RoomForm from "./RoomForm";
-import { GrGroup } from "react-icons/gr";
-import AgoraRTC from "agora-rtc-sdk-ng";
-import axios from "axios";
-import { useRouter } from "next/router";
-import { setRoom } from "../features/room/roomSlice";
-import { AiFillDelete } from "react-icons/ai";
 import LoadingCircle from "./LoadingCircle";
-import Panel from "./Panel";
 
 const Rooms = ({ onClick }) => {
   const { isLoading } = useSelector((state) => state.room);
