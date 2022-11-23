@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../features/auth/authSlice";
 import styles from "../styles/Forms.module.scss";
-import NewUserForm from "./newUserForm";
+import NewUserForm from "./NewUserForm";
 
 const SignupForm = () => {
   const { isLoading } = useSelector((state) => state.auth);

@@ -43,10 +43,9 @@ export default function Dashboard({ user }) {
   const dispatch = useDispatch();
   const isServer = typeof window === "undefined";
   const router = useRouter();
-  const authState = useSelector((state) => state.auth);
+
   const { rtcToken, push } = useSelector((state) => state.auth);
-  const { rooms, roomName, roomID, isSuccess, mode, exists, isError, message } =
-    useSelector((state) => state.room);
+  const { roomName, mode } = useSelector((state) => state.room);
 
   useEffect(() => {
     console.log(push, roomName);
