@@ -65,8 +65,11 @@
   margin: 10px 0;
 }
 
-svg {
+.no-click-svg {
   pointer-events: none;
+  * > {
+    pointer-events: none;
+  }
 }
 
 .center-text {

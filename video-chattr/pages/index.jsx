@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { reset } from "../features/auth/authSlice";
-import Head from "next/head";
-import Image from "next/image";
 import Form from "../components/Form";
 import SignupForm from "../components/SignupForm";
 import styles from "../styles/Index.module.scss";
@@ -46,6 +44,7 @@ export default function Home() {
               svg={<MdHome size={55} />}
               message="Get Started"
               className="card"
+              id={`${styles.create_user_cta}`}
             />
           </div>
         </div>

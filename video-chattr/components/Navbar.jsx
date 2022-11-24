@@ -72,7 +72,7 @@ const Navbar = () => {
               </li>
               <li>
                 <Link href="/register">
-                  <a onClick={onLogout}>Register</a>
+                  <a>Register</a>
                 </Link>
               </li>
             </>

@@ -45,6 +45,11 @@ const Sidebar = () => {
     },
   });
 
+  const cleanUp = ({ interval }) => {
+    console.log("Cleaning up sidebar");
+    clearInterval(interval);
+  };
+
   const updateData = async () => {
     // Get saved rooms
     dispatch(getSavedRooms({ user }))
@@ -69,9 +74,14 @@ const Sidebar = () => {
   };
 
   useEffect(() => {
-    setInterval(() => {
+    const getDataInterval = setInterval(() => {
       updateData();
     }, 5000);
+
+    return () => {
+      console.log("dismounted sidebar");
+      cleanUp({ interval: getDataInterval });
+    };
   }, []);
 
   useEffect(() => {

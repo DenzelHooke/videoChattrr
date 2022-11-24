@@ -189,6 +189,7 @@ button {
   background-color: var(--card-bg);
   box-shadow: rgba(100, 100, 111, 0.192) 0px 7px 29px 0px;
   border-radius: 10px;
+  color: var(--eerie-black);
 }
 
 .main {
@@ -435,6 +436,20 @@ button {
   width: 80%;
   height: 400px;
   background: rgb(240, 240, 240);
+}
+
+.heading {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    color: var(--eerie-black);
+  }
+
+  svg {
+    fill: var(--eerie-black);
+  }
 }
 
 .form__container {

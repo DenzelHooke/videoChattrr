@@ -13,7 +13,7 @@
     margin-bottom: 40px;
     margin-top: 10px;
     position: relative;
-    
+
     h1 {
       color: white;
       font-weight: 400;
@@ -71,6 +71,10 @@
   position: relative;
 }
 
+#create_user_cta {
+  margin: 0;
+}
+
 .cta__form {
   padding: 5px;
   // background-color: rgb(255, 255, 255);
@@ -121,7 +125,6 @@
 }
 
 .override {
-  
 }
 
 @media screen and (min-width: 660px) {
@@ -161,7 +164,7 @@
       // display: none;
       overflow: hidden;
       color: var(--azure);
-      content: 'C';
+      content: "C";
       z-index: -900;
       font-weight: 400;
       // height: 500px;

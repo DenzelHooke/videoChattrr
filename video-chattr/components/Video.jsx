@@ -79,7 +79,7 @@ const Video = ({ leaveRoom, onIconClick, roomState, buttonState }) => {
           onClick={onIconClick}
           id="muteAudio"
         >
-          <GoUnmute color="white" size={30} />
+          <GoUnmute color="white" size={30} className="no-click-svg" />
         </button>
         <button id="exit" className="btn falseVideoBtn" onClick={leaveRoom}>
           LEAVE
@@ -89,7 +89,11 @@ const Video = ({ leaveRoom, onIconClick, roomState, buttonState }) => {
           onClick={onIconClick}
           id="hideVideo"
         >
-          <BsFillCameraVideoFill color="white" size={30} />
+          <BsFillCameraVideoFill
+            color="white"
+            size={30}
+            className="no-click-svg"
+          />
         </button>
       </div>
     </div>

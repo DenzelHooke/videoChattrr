@@ -75,6 +75,10 @@
   position: relative;
 }
 
+#create_user_cta {
+  margin: 0;
+}
+
 .cta__form {
   padding: 5px;
   background: none;

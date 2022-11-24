@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import LoadingCircle from "./LoadingCircle";
 import { uuid } from "uuidv4";
@@ -9,18 +8,6 @@ const UsersFound = ({ onAddFriend }) => {
   );
 
   const { user } = useSelector((state) => state.auth);
-
-  //   {isFriendsLoading ? (
-  //     <LoadingCircle />
-  //   ) : (
-  //     usersFound.map((item) => {
-  //       return (
-  //         <>
-  //           <div>{item.username}</div>
-  //         </>
-  //       );
-  //     })
-  //   )}
   return (
     <>
       {isResultsVisible && (
