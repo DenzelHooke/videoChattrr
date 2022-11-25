@@ -21,7 +21,6 @@ const registerUser = asyncHandler(async (req, res) => {
     const exists = await User.findOne({ username });
 
     if (exists) {
-      // console.log(exists);
       res.status(401);
       throw new Error("A user with that username already exists");
     }
@@ -89,7 +88,6 @@ const retrieveUser = (req, res) => {
 };
 
 const findUsers = async (req, res) => {
-  console.log(req.query);
   const { username } = req.query;
 
   const users = await User.find(
@@ -101,8 +99,6 @@ const findUsers = async (req, res) => {
     },
     { username: 1, _id: 1 }
   );
-
-  console.log(users);
 
   if (users) {
     res.status(200).json({
@@ -118,21 +114,18 @@ const findUsers = async (req, res) => {
 const sendFriendRequest = asyncHandler(async (req, res) => {
   const { to, from } = req.body;
   let duplicateFound;
-  // console.log(req.body);
 
   const user = await User.findById(to);
   const userFrom = await User.findById(from);
 
   // Check if sender is already friends with client
   const friendsAlready = user.friends.filter((item) => {
-    // console.log("itemID: ", item._id, userFrom._id);
     return item._id.toString() === userFrom._id.toString();
   });
 
   if (friendsAlready.length > 0) {
     throw new Error("You are already friends with this user.");
   }
-  // console.log(friendsAlready);
 
   user.friendRequests.forEach((item) => {
     if (item._id === from) {
@@ -141,7 +134,6 @@ const sendFriendRequest = asyncHandler(async (req, res) => {
   });
 
   if (duplicateFound) {
-    console.log("Duplicate found!!!!");
     res.status(200).json({
       message: "Friend Request already sent.",
       exists: true,
@@ -161,8 +153,6 @@ const sendFriendRequest = asyncHandler(async (req, res) => {
       }
     );
 
-    console.log(update);
-
     if (update) {
       res.status(201).json({
         message: "Friend Request sent.",
@@ -171,8 +161,6 @@ const sendFriendRequest = asyncHandler(async (req, res) => {
       });
     }
   }
-
-  console.log(user);
 });
 
 //Gen JWT
@@ -183,7 +171,6 @@ const generateToken = (id) => {
 };
 
 const getSavedRooms = asyncHandler(async (req, res) => {
-  // console.log("REQ: ", req);
   const { userID } = req.query;
 
   if (!userID) {
@@ -193,7 +180,7 @@ const getSavedRooms = asyncHandler(async (req, res) => {
   }
 
   const user = await User.findById(userID);
-  // console.log(user)
+
   if (!user) {
     res.status(404);
     throw new Error("User not found");
@@ -207,7 +194,6 @@ const getSavedRooms = asyncHandler(async (req, res) => {
 const unsaveRoom = asyncHandler(async (req, res) => {
   try {
     const { userID, roomID } = req.query;
-    console.log("DELETE: ", req.query);
 
     const user = await User.findById(userID);
 
@@ -219,7 +205,6 @@ const unsaveRoom = asyncHandler(async (req, res) => {
       return item.roomID.toLowerCase() !== roomID.toLowerCase();
     });
 
-    console.log(newSavedRooms);
     const updated = await User.updateOne(
       { _id: userID },
       {
@@ -233,13 +218,11 @@ const unsaveRoom = asyncHandler(async (req, res) => {
 });
 
 const getUserRequests = asyncHandler(async (req, res) => {
-  console.log("HIT");
   const userID = req.query.userID;
 
   const user = await User.findById(userID);
   const fRequests = user.friendRequests;
 
-  console.log(fRequests);
   if (!user) {
     res.status(404);
     return;
@@ -256,8 +239,6 @@ const deleteUserRequests = asyncHandler(async (req, res) => {
     const sender = await User.findById(requestSenderID);
 
     if (type.toLowerCase() === "friendRequest".toLowerCase()) {
-      console.log(req.query);
-
       // Remove the senders friend request from client
       const newFriendRequests = client.friendRequests.filter((item) => {
         return item._id.toLowerCase() !== requestSenderID.toLowerCase();
@@ -268,7 +249,7 @@ const deleteUserRequests = asyncHandler(async (req, res) => {
           $set: { friendRequests: newFriendRequests },
         }
       );
-      console.log(updated);
+
       res.status(201).json({ friendRequests: newFriendRequests });
     }
   } catch (error) {
@@ -294,7 +275,6 @@ const createFriend = asyncHandler(async (req, res) => {
         $set: { friendRequests: newFriendRequests },
       }
     );
-    console.log(updatedReq);
 
     //Set requestSenderID as a friend for client
 
@@ -325,8 +305,6 @@ const createFriend = asyncHandler(async (req, res) => {
     // Refetch user
     const updatedClient = await User.findById(clientID);
 
-    console.log("updated friends: ", updatedFriends);
-    console.log("current friends: ", client.friends);
     res
       .status(201)
       .json({ friends: updatedClient.friends, friend: sender._id });
@@ -343,7 +321,6 @@ const getFriends = asyncHandler(async (req, res) => {
 
     const allFriends = await Promise.all(
       user.friends.map(async (item) => {
-        console.log(item);
         const friend = await User.findById(item._id);
         return {
           _id: friend._id,
@@ -352,8 +329,6 @@ const getFriends = asyncHandler(async (req, res) => {
         };
       })
     );
-
-    console.log("all: ", allFriends);
 
     res.status(200).json({ friends: allFriends });
   } catch (error) {
@@ -378,8 +353,6 @@ const deleteFriend = asyncHandler(async (req, res) => {
       return item._id.toString() !== userID;
     });
 
-    console.log(newClientFriends);
-
     // Update friends on client model
     const updated_client = await User.updateOne(
       { _id: userID },
@@ -396,7 +369,6 @@ const deleteFriend = asyncHandler(async (req, res) => {
       }
     );
 
-    // console.log(updated_1);
     res.status(200).json({ friends: newClientFriends });
   } catch (error) {
     throw new Error(error.message);

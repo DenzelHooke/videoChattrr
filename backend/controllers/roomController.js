@@ -29,7 +29,7 @@ const roomExists = asyncHandler(async (req, res) => {
     exists: false,
   };
 
-  console.log("exists: ", existingRoom);
+  // console.log("exists: ", existingRoom);
 
   if (!req.body) {
     res.status(401);
@@ -81,7 +81,7 @@ const getRoomData = asyncHandler(async (req, res) => {
   // console.log(`GET room hit.`, req);
   const roomID = req.query.roomID;
   const room = await getRoomFromDB(roomID);
-  console.log("ROOMID", roomID);
+  // console.log("ROOMID", roomID);
 
   if (room) {
     res.status(200).json({
@@ -105,9 +105,9 @@ const genRoomID = () => {
 // @access Private
 const getRunningRooms = asyncHandler(async (req, res) => {
   const roomID = req.query.roomID;
-
+  // console.log("req ", req);
   // console.log(module.exports);
-  console.log(runningRooms);
+  // console.log(runningRooms);
   const room = isRoomActive(roomID);
   if (!room) {
     res.status(404).json({
@@ -115,7 +115,7 @@ const getRunningRooms = asyncHandler(async (req, res) => {
     });
     return;
   }
-  console.log(room);
+  // console.log(room);
   const overcapacity = isRoomOverCapacity(room);
 
   if (overcapacity) {
@@ -132,15 +132,15 @@ const getRunningRooms = asyncHandler(async (req, res) => {
 const getUserRunning = asyncHandler(async (req, res) => {
   // console.log("REQ: ", req.query);
   const { roomID, agoraUID } = req.query;
-  const user = await getUserFromRoomInMemory(agoraUID, roomID);
+  const user = getUserFromRoomInMemory(agoraUID, roomID);
 
   if (!user) {
-    console.error("[getUserRunning] : No user found!");
+    // console.error("[getUserRunning] : No user found!");
     res.status(404);
-    return;
+    throw new Error("No user found.");
   }
 
-  console.error("[getUserRunning] : User found!");
+  // console.error("[getUserRunning] : User found!");
   res.status(200).json({
     exists: true,
     user: {
@@ -179,7 +179,7 @@ const saveRoom = asyncHandler(async (req, res) => {
       //Linear search through array for match
       for (i in user.savedRooms) {
         if (user.savedRooms[i].roomID.toLowerCase() === roomID.toLowerCase()) {
-          console.log("duplicate found");
+          // console.log("duplicate found");
           res.status(400);
           throw new Error("Room has already been saved");
         }
@@ -203,7 +203,7 @@ const saveRoom = asyncHandler(async (req, res) => {
     //* Send null res for now
     res.status(200).json({ message: null });
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     throw new Error(error);
   }
 });

@@ -71,7 +71,7 @@ const getRunningRoom = async (roomID, authToken) => {
   };
 
   try {
-    const res = await axios.get(`${API_URL}/running/?roomID=${roomID}`, config);
+    const res = await axios.get(`${API_URL}/running?roomID=${roomID}`, config);
 
     if (res.data) {
       return res.data;
@@ -118,12 +118,12 @@ const joinUserToRoom = async ({ roomService, userInput, dispatch, user }) => {
   }
 
   //Checks if running room is over room capacity
-  const { overcapacity } = await getRunningRoom(data.room.roomID, user.token);
+  // const { overcapacity } = await getRunningRoom(data.room.roomID, user.token);
 
-  if (overcapacity) {
-    dispatch(setError({ message: "This room is full." }));
-    return;
-  }
+  // if (overcapacity) {
+  //   dispatch(setError({ message: "This room is full." }));
+  //   return;
+  // }
 
   // Otherwise, notify client room is connecting.
   dispatch(setSuccess({ message: "Connecting to room" }));

@@ -1,7 +1,7 @@
 import React from "react";
 
 const SidebarLi = ({ item, btn1, btn2, onClick, type }) => {
-  console.log(item);
+  // console.log(item);
   return (
     <li className="sidebar-li">
       <p>

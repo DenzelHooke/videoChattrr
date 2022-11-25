@@ -16,11 +16,11 @@ const rooms = [
 ];
 
 //! CHANGE TO ENV VAR
-const roomCapacityLimit = 2;
+const roomCapacityLimit = process.env.ROOM_CAPACITY_LIMIT;
 
 const getRoomFromDB = async (roomID) => {
   const room = await Room.findOne({ roomID });
-
+  console.log("room from db: , ", room);
   if (!room) {
     return false;
   }
@@ -37,8 +37,9 @@ const isRoomJoinable = async (roomID) => {
   }
 };
 
-const isRoomActive = (roomID) => {
-  if (verifyRoomExistsInDB(roomID)) {
+const isRoomActive = async (roomID) => {
+  console.log(rooms);
+  if (await verifyRoomExistsInDB(roomID)) {
     for (let i = 0; i < rooms.length; i++) {
       const room = rooms[i];
       // console.log(room, rooms);
@@ -46,9 +47,8 @@ const isRoomActive = (roomID) => {
         return room;
       }
     }
-
-    return false;
   }
+  return false;
 };
 
 const isHost = async (roomID, userID) => {
@@ -99,22 +99,12 @@ const createUserInMemory = async (username, socket, userID, agoraUID) => {
   }
 };
 
-const addUserToRoomInMemory = ({
-  username,
-  socket,
-  userID,
-  room,
-  agoraUID,
-}) => {
+const addUserToRoomInMemory = ({ user, room }) => {
   // console.log(`Room to add to memory: `, room);
-  const user = {
-    username,
-    socket,
-    userID,
-    agoraUID,
-  };
+
   // console.log(room.users);
   room.users.push(user);
+  return room;
   // console.log(`User ${user.username} added to room ${room.roomID}`);
 };
 
@@ -149,15 +139,25 @@ const removeUserFromRoomInMemory = (userID, roomID, rooms) => {
   }
 };
 
-const getUserFromRoomInMemory = (agoraUID, roomID) => {
-  const room = isRoomActive(roomID);
+const getUserFromRoomInMemory = async (agoraUID, roomID) => {
+  try {
+    const room = await isRoomActive(roomID);
+    let user;
+    console.log("ROOM: ", room);
+    if (room) {
+      // console.log("room: ", room);
+      user = room.users.find((item) => item.agoraUID === agoraUID);
+      // console.log("user ", user);
+    }
 
-  const user = room.users.find((item) => item.agoraUID === agoraUID);
-
-  if (!user) {
+    if (!user) {
+      return false;
+    }
+    return user;
+  } catch (error) {
+    console.log(error);
     return false;
   }
-  return user;
 };
 
 const setJoinedRoom = async ({ removeRoom, roomID, userID }) => {

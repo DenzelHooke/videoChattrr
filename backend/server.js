@@ -93,22 +93,17 @@ io.on("connection", (socket) => {
       userID: userID,
       agoraUID: agoraUID,
     });
-    // console.log(roomID);
-    // console.log(data);
   });
 
   socket.on("createRoom", async (data) => {
-    console.log("Create room in mem called", data);
     const { roomID } = data;
     socket.join(roomID);
-    console.log(rooms);
+
     socket.emit("roomJoined");
     await setJoinedRoom({ roomID, userID });
   });
 
   socket.on("joinRoom", async (data) => {
-    // const { username, userID } = data;
-    console.log("JOIN room HIT", data);
     const { roomID } = socket.handshake.auth.room;
 
     const room = await getRoomFromDB(roomID);
@@ -119,11 +114,10 @@ io.on("connection", (socket) => {
       let user;
 
       try {
-        console.info("- Room exists! -");
-        console.trace(room);
-
         // Check if room is running currently with users in it.
-        activeRoom = isRoomActive(roomID);
+        console.log("Scanning for active room");
+        activeRoom = await isRoomActive(roomID);
+        console.log(console.log("Active room: ", activeRoom));
 
         // if (isRoomOverCapacity) {
         //   socket.emit("errorTriggered", {
@@ -132,60 +126,58 @@ io.on("connection", (socket) => {
         //   console.log("ROOM FULL".bgRed);
         //   return;
         // }
-        console.info(" - Checking if room is active - ");
-        console.info(activeRoom);
+
         // Create user in memory
         user = await createUserInMemory(username, socket, userID, agoraUID);
-
+        console.log("Created user in memory: ", user.username);
         // Set current room to roomID
-        console.info(" - Generating user in memory - ");
-        console.info(rooms);
       } catch (error) {
         throw new Error(error);
       }
 
       if (!activeRoom) {
-        console.info("- Room not running - ");
+        console.log("No active room found. Creating one now..");
         //Room isn't running currently but check if it's 'joinable'.
         // If it is then add client to socket channel and to the room in memory
 
         if (room.joinable) {
-          console.log(" - Creating room - ");
-
           // Create room in memory
           const room = createRoomInMemory(roomID, rooms);
+          console.log("Created room in memory: ", room);
           // Add user to room in memory
-          addUserToRoomInMemory({ user, room });
-          console.log(" - User joined to room - ");
+          const roomInMemory = addUserToRoomInMemory({ user, room });
+          console.log("Added user to room in memory: ", roomInMemory);
 
           // Set roomID in currentRoom field on user model.
 
           // Join user to roomID channel
           socket.join(roomID);
+          console.log("Joined socket to roomID: ", roomID);
           // Emit roomJoined signal for client
           socket.emit("roomJoined");
+          console.log("Emitted room joined event");
 
-          await setJoinedRoom({ roomID, userID });
-          console.log("ALL ROOMS: ", rooms);
+          const updated = await setJoinedRoom({ roomID, userID });
+          console.log("Set updated user: ", updated);
           return;
         }
       } else if (activeRoom) {
+        console.log("active room found: ", activeRoom);
         // Room is currently running.
-
-        console.log("____Room already running____");
-        console.log(activeRoom);
-        console.log(" - Joining user to active room -");
 
         // Push user to active room
         activeRoom.users.push(user);
-
+        console.log("Added user to active room: ", activeRoom);
         // Join socket to channel
         socket.join(roomID);
+        console.log("Joined socket to roomID: ", roomID);
 
         //Emit event
         socket.emit("roomJoined");
-        await setJoinedRoom({ roomID, userID });
-        console.log(rooms);
+        console.log("Emitted room joined event");
+
+        const updated = await setJoinedRoom({ roomID, userID });
+        console.log("Set updated user: ", updated);
 
         return;
       }

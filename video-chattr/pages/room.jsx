@@ -20,6 +20,8 @@ import { unwrapResult } from "@reduxjs/toolkit";
 //     ? process.env.NEXT_PUBLIC_SOCKET_URL
 //     : process.env.NEXT_PUBLIC_DEVELOPMENT_SOCKET_URL;
 
+const SOCKET_URI = process.env.NEXT_PUBLIC_DEVELOPMENT_SOCKET_URL;
+
 /**
  * A room page for generating video call enviroments.
  * @param {object} Data
@@ -186,10 +188,9 @@ export default function Room({ mode, rtcToken }) {
     if (!isServer) {
       //Can't run on server side so we have to run this only when the page completes SSR.
       console.log("MODE: ", mode);
-      // TODO Connect to socket channel
 
       //Connect to socket server
-      socketRef.current = io.connect("http://198.199.72.239:8080/", {
+      socketRef.current = io.connect(SOCKET_URI, {
         auth: {
           token: user.token,
           room: {
@@ -235,7 +236,11 @@ export default function Room({ mode, rtcToken }) {
           dispatch(setError({ message: `${error.messae}` }));
         }
       });
+    }
+  }, [rtcToken, isServer, roomID]);
 
+  useEffect(() => {
+    if (rtcToken) {
       if (mode === "create" && roomID) {
         // If room is set to create:
         console.log("roomID: ", roomID);
@@ -251,7 +256,7 @@ export default function Room({ mode, rtcToken }) {
         console.error("No mode was set during transfer room page.");
       }
     }
-  }, [rtcToken, isServer, roomID]);
+  }, [rtcToken]);
 
   const leaveRoom = () => {
     console.log("Room client before cleanup: ", _roomClient);

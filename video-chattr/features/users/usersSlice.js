@@ -68,7 +68,7 @@ export const unsaveRoom = createAsyncThunk(
   "users/unsaveRoom",
   async (data, thunkAPI) => {
     try {
-      console.log(data);
+      // console.log(data);
 
       return await usersService.unsaveRoom(data);
     } catch (error) {
@@ -86,7 +86,7 @@ export const deleteFriendRequest = createAsyncThunk(
   "users/deleteFriendRequest",
   async (data, thunkAPI) => {
     try {
-      console.log(data);
+      // console.log(data);
 
       return await usersService.deleteFriendRequest(data);
     } catch (error) {
@@ -104,7 +104,7 @@ export const createFriend = createAsyncThunk(
   "users/createFriend",
   async (data, thunkAPI) => {
     try {
-      console.log(data);
+      // console.log(data);
 
       return await usersService.createFriend(data);
     } catch (error) {
@@ -122,7 +122,7 @@ export const getFriends = createAsyncThunk(
   "users/getFriends",
   async (data, thunkAPI) => {
     try {
-      console.log(data);
+      // console.log(data);
 
       return await usersService.getFriends(data);
     } catch (error) {
@@ -140,7 +140,7 @@ export const deleteFriend = createAsyncThunk(
   "users/deleteFriend",
   async (data, thunkAPI) => {
     try {
-      console.log(data);
+      // console.log(data);
 
       return await usersService.deleteFriend(data);
     } catch (error) {
@@ -168,7 +168,7 @@ export const userSlice = createSlice({
     builder
       .addCase(getUsers.fulfilled, (state, action) => {
         state.isLoading = false;
-        console.log("action: ", action);
+        // console.log("action: ", action);
         state.isFriendsLoading = false;
         state.usersFound = action.payload.users;
       })
@@ -178,7 +178,7 @@ export const userSlice = createSlice({
       })
       .addCase(getSavedRooms.fulfilled, (state, action) => {
         state.isLoading = false;
-        console.log("SAVED ROOMS: ", action.payload.savedRooms);
+        // console.log("SAVED ROOMS: ", action.payload.savedRooms);
         state.savedRooms = action.payload.savedRooms.map((item) => {
           return {
             roomName: item.roomName,
@@ -197,22 +197,18 @@ export const userSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(createFriend.fulfilled, (state, action) => {
-        console.log("PLOAD: ", action.payload);
         state.friends = action.payload.friends;
         state.isLoading = false;
-        console.log("ddd ", state.friendRequests);
         // Removes the old friend request
         state.friendRequests = state.friendRequests.filter((item) => {
           return item._id !== action.payload.friend;
         });
       })
       .addCase(getFriends.fulfilled, (state, action) => {
-        console.log("friends: ", action.payload);
         state.friends = action.payload.friends;
         state.isLoading = false;
       })
       .addCase(deleteFriend.fulfilled, (state, action) => {
-        console.log("friends: ", action.payload);
         state.friends = action.payload.friends;
         state.isLoading = false;
       });

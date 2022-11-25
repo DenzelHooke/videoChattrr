@@ -178,6 +178,7 @@ class Rooms {
 
     try {
       console.log("BEFORE getUser");
+      console.log(remoteID);
       //TODO Call api func to return username with same uid from stream to get a username as a string.
       const res = await getUserFromRunningRoom(this.roomID, remoteID);
       console.log("AFTER getUser");

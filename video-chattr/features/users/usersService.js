@@ -5,7 +5,7 @@ const API_URL =
     ? process.env.NEXT_PUBLIC_BACKEND_URL + "/users"
     : process.env.NEXT_PUBLIC_DEVELOPMENT_BACKEND_URL + "/users";
 
-console.log(process.env.NODE_ENV);
+// console.log(process.env.NODE_ENV);
 const getUsers = async (payload) => {
   const { userData, config } = payload;
   if (userData.length < 1) {
@@ -14,7 +14,7 @@ const getUsers = async (payload) => {
     };
   }
 
-  console.log(userData, config);
+  // console.log(userData, config);
 
   const res = await axios.get(`${API_URL}?username=${userData}`, config);
 
@@ -39,7 +39,7 @@ const getSavedRooms = async (data) => {
   };
 
   const res = await axios.get(`${API_URL}/room?userID=${user._id}`, config);
-  console.log("RES: ", res);
+  // console.log("RES: ", res);
   if (res.data) {
     return res.data;
   }
@@ -55,7 +55,7 @@ const getIncomingFriendRequests = async (data) => {
   };
 
   const res = await axios.get(`${API_URL}/requests?userID=${user._id}`, config);
-  console.log("RES: ", res);
+  // console.log("RES: ", res);
   if (res.data) {
     return res.data;
   }
@@ -69,7 +69,7 @@ const getIncomingFriendRequests = async (data) => {
 const unsaveRoom = async (data) => {
   const { user, roomData } = data;
   const { roomID } = roomData;
-  console.log("DATA: ", roomID);
+  // console.log("DATA: ", roomID);
 
   const config = {
     headers: {
@@ -81,7 +81,7 @@ const unsaveRoom = async (data) => {
     `${API_URL}/room?userID=${user._id}&roomID=${roomID}`,
     config
   );
-  console.log("RES: ", res);
+  // console.log("RES: ", res);
   if (res.data) {
     return res.data;
   }
@@ -105,7 +105,7 @@ const deleteFriendRequest = async (data) => {
     `${API_URL}/requests?clientID=${user._id}&requestSenderID=${to}&type=friendRequest`,
     config
   );
-  console.log("RES: ", res);
+  // console.log("RES: ", res);
   if (res.data) {
     return res.data;
   }
@@ -131,7 +131,7 @@ const createFriend = async (data) => {
   };
 
   const res = await axios.post(`${API_URL}/friends`, payload, config);
-  console.log("RES: ", res);
+  // console.log("RES: ", res);
   if (res.data) {
     return res.data;
   }
@@ -152,7 +152,7 @@ const getFriends = async (data) => {
   };
 
   const res = await axios.get(`${API_URL}/friends?userID=${user._id}`, config);
-  console.log("RES: ", res);
+  // console.log("RES: ", res);
   if (res.data) {
     return res.data;
   }
@@ -176,7 +176,7 @@ const deleteFriend = async (data) => {
     `${API_URL}/friends?userID=${user._id}&friendID=${friendID}`,
     config
   );
-  console.log("RES: ", res);
+  // console.log("RES: ", res);
   if (res.data) {
     return res.data;
   }
