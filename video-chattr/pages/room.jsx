@@ -34,7 +34,7 @@ export default function Room({ mode, rtcToken }) {
     (state) => state.room
   );
 
-  const [_roomClient, set_roomClient] = useState(null);
+  const [_roomClient, setRoomClient] = useState();
 
   const socketRef = useRef();
   const router = useRouter();
@@ -63,19 +63,22 @@ export default function Room({ mode, rtcToken }) {
     return () => removeListeners();
   }, []);
 
-  const cleanUp = () => {
+  const cleanUp = (_roomClient) => {
     console.info("Cleaning up now..");
     try {
-      location.reload();
       removeRoomCookie();
       console.log("Room client: ", _roomClient);
       socketRef.current.disconnect();
+      console.log("before removeLocal");
       _roomClient.removeLocalStream();
+      console.log("after removeLocal");
       _roomClient.reset();
 
       //Removes the user token on page dismount because the state persits unless page is refreshed.
       dispatch(removeToken());
       dispatch(resetRoomState());
+      // location.reload();
+      console.log("room client at end of cleanUp: ", _roomClient);
     } catch (error) {
       console.log(error);
       dispatch(setError({ message: `${error.message}` }));
@@ -83,15 +86,33 @@ export default function Room({ mode, rtcToken }) {
   };
 
   const removeListeners = () => {
-    cleanUp();
+    // cleanUp();
     window.removeEventListener("beforeunload", cleanUp);
   };
 
   /**
    * Initializes my Agora room connection class wrapper
    */
-  const setUpClient = async (roomID) => {
-    set_roomClient(new RoomClient(roomID, uid, user.username));
+  const setUpClient = (roomID) => {
+    setRoomClient(new RoomClient(roomID, uid, user.username));
+  };
+
+  const leaveRoom = () => {
+    console.log("Room client before cleanup: ", _roomClient);
+    router.push("/dashboard");
+  };
+
+  const onUserLeft = (user) => {
+    try {
+      console.log("Room client userLeft: ", _roomClient);
+      console.log("USER LEFT: ", user);
+      _roomClient.removeRemoteStream(user.agoraUID);
+      console.log("after removeRemoteSTream");
+      // //* Execute unsubscribing user on Agora.
+    } catch (error) {
+      console.error(error);
+      dispatch(setError({ message: `${error.message}` }));
+    }
   };
 
   const onIconClick = (e) => {
@@ -147,10 +168,14 @@ export default function Room({ mode, rtcToken }) {
     if (!_roomClient) {
       return;
     }
+
+    socketRef.current.on("userLeft", onUserLeft);
     console.log("CLIENT LIVE", _roomClient);
 
     _roomClient.init(rtcToken);
     dispatch(setLoading(false));
+
+    return () => cleanUp(_roomClient);
   }, [_roomClient]);
 
   useEffect(() => {
@@ -223,19 +248,6 @@ export default function Room({ mode, rtcToken }) {
         console.log("_______ROOM JOINED_______");
         //* INIT socket.io connection to server
       });
-
-      // On remote user leaving
-      socketRef.current.on("userLeft", (user) => {
-        try {
-          _roomClient.removeRemoteStream(user.agoraUID);
-          //* Execute remove user from dom func
-          console.log("USER LEFT: ", user);
-
-          //* Execute unsubscribing user on Agora.
-        } catch (error) {
-          dispatch(setError({ message: `${error.messae}` }));
-        }
-      });
     }
   }, [rtcToken, isServer, roomID]);
 
@@ -257,11 +269,6 @@ export default function Room({ mode, rtcToken }) {
       }
     }
   }, [rtcToken]);
-
-  const leaveRoom = () => {
-    console.log("Room client before cleanup: ", _roomClient);
-    router.push("/dashboard");
-  };
 
   return (
     <div>

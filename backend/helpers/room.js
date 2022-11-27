@@ -143,8 +143,8 @@ const getUserFromRoomInMemory = async (agoraUID, roomID) => {
   try {
     const room = await isRoomActive(roomID);
     let user;
-    console.log("ROOM: ", room);
     if (room) {
+      console.log("room found");
       // console.log("room: ", room);
       user = room.users.find((item) => item.agoraUID === agoraUID);
       // console.log("user ", user);

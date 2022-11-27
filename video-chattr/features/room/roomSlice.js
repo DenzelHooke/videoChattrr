@@ -148,7 +148,7 @@ export const roomSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(createRoom.fulfilled, (state, action) => {
-        // state.isLoading = false;
+        state.isLoading = false;
         state.roomName = action.payload.roomName;
         state.roomID = action.payload.roomID;
         state.mode = "create";

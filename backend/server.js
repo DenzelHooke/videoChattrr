@@ -88,7 +88,7 @@ io.on("connection", (socket) => {
     removeUserFromRoomInMemory(userID, roomID, rooms);
 
     // Emit userLeft signal to other clients that were in the same room as user.
-    io.to(roomID).emit("userLeft", {
+    socket.to(roomID).emit("userLeft", {
       username: username,
       userID: userID,
       agoraUID: agoraUID,

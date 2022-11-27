@@ -190,7 +190,7 @@ class Rooms {
         );
       }
 
-      const { exists, user } = res.data;
+      const { user } = res.data;
 
       //* Add user stream to dom
       const peerStreams = document.querySelector("#remote-streams");
@@ -202,7 +202,7 @@ class Rooms {
       const info = document.createElement("p");
       info.className = "info";
 
-      info.innerText = user["username"];
+      info.innerText = user.username;
 
       remoteStreamContainer.appendChild(info);
       peerStreams.appendChild(remoteStreamContainer);
@@ -229,6 +229,7 @@ class Rooms {
   }
 
   removeRemoteStream(uid) {
+    console.log("removing stream: ", uid);
     try {
       console.log(`Removing stream ${uid}`);
       const remoteStream = this.remoteStreams[uid];
@@ -246,18 +247,24 @@ class Rooms {
       //TODO Unsubsribe
 
       this.#client.unsubscribe(remoteStream.camera.stream);
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   removeLocalStream() {
     try {
-      const remoteStreamElement = document.getElementById(`${this.uid}`);
-      remoteStreamElement.remove();
+      console.log("Removing local stream!");
+      // const remoteStreamElement = document.getElementById(`${this.uid}`);
+      // remoteStreamElement.remove();
       const localStream = this.localStreams.camera.stream;
       console.log("Remvoing local stream.");
       localStream.stop();
       localStream.close();
-    } catch (error) {}
+      console.log("Done removing local stream!");
+    } catch (error) {
+      console.error("Error while attempting to remove local stream: ", error);
+    }
   }
 }
 
