@@ -14,11 +14,6 @@ export default function Home() {
   const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    // if (user) {
-    //   toast.notify(`Welcome, ${user.username}`, {
-    //     type: "success",
-    //   });
-    // }
     dispatch(reset());
   }, [user]);
 
@@ -36,7 +31,7 @@ export default function Home() {
               </h1>
               <p>
                 VideoChattr makes it easy to stay connected with crystal clear
-                video calling and instant messaging
+                video calling.
               </p>
             </div>
             <Form

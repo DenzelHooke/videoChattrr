@@ -15,13 +15,6 @@ import { saveRoom } from "../features/room/roomSlice";
 import { setError } from "../features/utils/utilsSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 
-// const SOCKET_URI =
-//   process.env.NODE_ENV === "production"
-//     ? process.env.NEXT_PUBLIC_SOCKET_URL
-//     : process.env.NEXT_PUBLIC_DEVELOPMENT_SOCKET_URL;
-
-const SOCKET_URI = process.env.NEXT_PUBLIC_DEVELOPMENT_SOCKET_URL;
-
 /**
  * A room page for generating video call enviroments.
  * @param {object} Data
@@ -29,6 +22,11 @@ const SOCKET_URI = process.env.NEXT_PUBLIC_DEVELOPMENT_SOCKET_URL;
  */
 
 export default function Room({ mode, rtcToken }) {
+  const SOCKET_URI =
+    process.env.NODE_ENV === "production"
+      ? process.env.NEXT_PUBLIC_SOCKET_URL
+      : process.env.NEXT_PUBLIC_DEVELOPMENT_SOCKET_URL;
+
   const { uid, user } = useSelector((state) => state.auth);
   const { roomID, isLoading, message, isError } = useSelector(
     (state) => state.room
