@@ -8,21 +8,16 @@ const http = require("http");
 const { connectDB } = require("./config/db");
 const { errorHandler } = require("./middleware/errorMiddleware");
 const jwt = require("jsonwebtoken");
-const log = require("loglevel");
 const {
-  verifyRoomExistsInDB,
   isRoomActive,
-  isRoomJoinable,
   createUserInMemory,
   removeUserFromRoomInMemory,
   createRoomInMemory,
   addUserToRoomInMemory,
   getRoomFromDB,
-  isRoomOverCapacity,
   setJoinedRoom,
   rooms,
 } = require("./helpers/room");
-const { on } = require("events");
 
 const PORT = process.env.PORT || 8080;
 const dev = process.env.NODE_ENV !== "production";
