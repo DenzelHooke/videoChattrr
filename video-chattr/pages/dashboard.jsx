@@ -111,14 +111,12 @@ export default function Dashboard({ user }) {
   return (
     <>
       <div className="growContainer grow">
-        <div className={`${styles.mainWrapper}`}>
-          <div id="sidebar">
-            <Sidebar
-              dispatch={dispatch}
-              roomService={roomService}
-              toast={toast}
-            />
-          </div>
+        <div className={`${styles.mainWrapper}`} id="main-dashboard-wrapper">
+          <Sidebar
+            dispatch={dispatch}
+            roomService={roomService}
+            toast={toast}
+          />
           <div id={styles.mainContent} className="dashboard-outter-container">
             <div className="dashboard-inner-container">
               <div className="greeting">

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import { AiFillCloseCircle } from "react-icons/ai";
 import SidebarList from "./SidebarList";
 import {
   getSavedRooms,
@@ -20,6 +20,7 @@ const Sidebar = () => {
   const dispatch = useDispatch();
 
   const [fetchData, setFetchData] = useState(false);
+  const [sidebarStatus, setSidebarStatus] = useState(false);
   const { savedRooms, friendRequests, friends } = useSelector(
     (state) => state.users
   );
@@ -197,34 +198,53 @@ const Sidebar = () => {
     }
   };
 
+  const onSidebarBtnClick = () => {
+    setSidebarStatus((prevState) => !prevState);
+  };
+
   return (
     <>
-      <div id="saved-rooms-wrapper" className="sidebar-section">
-        <h3>Saved Rooms</h3>
-        <SidebarList
-          data={sidebarData["rooms"]}
-          arr={savedRooms}
-          onClick={onButtonClick}
-          type="savedRooms"
-        />
+      <div className="sidebar-btn clickable" onClick={onSidebarBtnClick}>
+        <div></div>
       </div>
-      <div id="friend-requests" className="sidebar-section">
-        <h3>Friend Requests</h3>
-        <SidebarList
-          data={sidebarData["friendRequests"]}
-          arr={friendRequests}
-          onClick={onButtonClick}
-          type="friendRequests"
-        />
-      </div>
-      <div id="friends" className="sidebar-section">
-        <h3>Friends</h3>
-        <SidebarList
-          data={sidebarData["friends"]}
-          arr={friends}
-          onClick={onButtonClick}
-          type="friends"
-        />
+      <div
+        id="sidebar"
+        className={sidebarStatus ? "open-sidebar" : "hide-sidebar"}
+      >
+        <div className="sidebarCloseBtnWrapper">
+          <AiFillCloseCircle
+            className="clickable sidebarCloseBtn"
+            size={40}
+            onClick={onSidebarBtnClick}
+          />
+        </div>
+        <div id="saved-rooms-wrapper" className="sidebar-section">
+          <h3>Saved Rooms</h3>
+          <SidebarList
+            data={sidebarData["rooms"]}
+            arr={savedRooms}
+            onClick={onButtonClick}
+            type="savedRooms"
+          />
+        </div>
+        <div id="friend-requests" className="sidebar-section">
+          <h3>Friend Requests</h3>
+          <SidebarList
+            data={sidebarData["friendRequests"]}
+            arr={friendRequests}
+            onClick={onButtonClick}
+            type="friendRequests"
+          />
+        </div>
+        <div id="friends" className="sidebar-section">
+          <h3>Friends</h3>
+          <SidebarList
+            data={sidebarData["friends"]}
+            arr={friends}
+            onClick={onButtonClick}
+            type="friends"
+          />
+        </div>
       </div>
     </>
   );

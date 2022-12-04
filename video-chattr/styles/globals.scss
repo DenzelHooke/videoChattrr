@@ -719,6 +719,7 @@ video {
   background: var(--eerie-black);
   padding: 5px 10px;
   color: white;
+  transition: all 0.5s ease-in-out;
 
   p,
   h1,
@@ -727,6 +728,9 @@ video {
     color: white !important;
   }
 
+  .sidebarCloseBtnWrapper {
+    display: none;
+  }
   .sidebar-section {
     margin-bottom: 30px;
   }
@@ -760,5 +764,95 @@ video {
         padding: 0 10px;
       }
     }
+  }
+}
+
+.sidebar-btn {
+  display: none;
+}
+
+//* ─── Media queries ─────────────────────────────────────────────────────────────────
+
+@media screen and (max-width: 850px) {
+  #main-dashboard-wrapper {
+    position: relative;
+    grid-template-columns: 1fr;
+  }
+
+  #sidebar {
+    position: fixed;
+    z-index: 9999;
+    min-height: 100vh;
+    width: 50%;
+    .sidebarCloseBtnWrapper {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 10px;
+    }
+  }
+
+  .hide-sidebar {
+    transform: translateX(-100%);
+  }
+
+  .open-sidebar {
+    transform: translateX(0%);
+  }
+
+  .sidebar-btn {
+    display: block;
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    background-color: var(--eerie-black);
+    top: 80px;
+    left: 10px;
+    z-index: 9999;
+    border-radius: 4px;
+    cursor: pointer;
+
+    div {
+      position: absolute;
+      width: 20px;
+      height: 2px;
+      background-color: white;
+
+      top: 20px;
+      left: 10px;
+
+      &::before {
+        position: absolute;
+        content: "";
+        display: block;
+        background-color: inherit;
+        width: 20px;
+        height: 2px;
+        top: 5px;
+        // left: 10px;
+      }
+      &::after {
+        position: absolute;
+        content: "";
+        display: block;
+        background-color: inherit;
+        width: 20px;
+        height: 2px;
+        top: -5.5px;
+        // left: 10px;
+      }
+    }
+  }
+
+  .sidebar-open {
+    z-index: 1000;
+    top: 65px;
+    height: 100%;
+    width: 300px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  #sidebar {
+    width: 65%;
   }
 }

@@ -578,12 +578,16 @@ video {
   background: var(--eerie-black);
   padding: 5px 10px;
   color: white;
+  transition: all 0.5s ease-in-out;
 }
 #sidebar p,
 #sidebar h1,
 #sidebar h2,
 #sidebar h3 {
   color: white !important;
+}
+#sidebar .sidebarCloseBtnWrapper {
+  display: none;
 }
 #sidebar .sidebar-section {
   margin-bottom: 30px;
@@ -614,4 +618,81 @@ video {
 }
 #sidebar .sidebar-li .ui-wrapper #badBtn {
   padding: 0 10px;
+}
+
+.sidebar-btn {
+  display: none;
+}
+
+@media screen and (max-width: 850px) {
+  #main-dashboard-wrapper {
+    position: relative;
+    grid-template-columns: 1fr;
+  }
+  #sidebar {
+    position: fixed;
+    z-index: 9999;
+    min-height: 100vh;
+    width: 50%;
+  }
+  #sidebar .sidebarCloseBtnWrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+  }
+  .hide-sidebar {
+    transform: translateX(-100%);
+  }
+  .open-sidebar {
+    transform: translateX(0%);
+  }
+  .sidebar-btn {
+    display: block;
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    background-color: var(--eerie-black);
+    top: 80px;
+    left: 10px;
+    z-index: 9999;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .sidebar-btn div {
+    position: absolute;
+    width: 20px;
+    height: 2px;
+    background-color: white;
+    top: 20px;
+    left: 10px;
+  }
+  .sidebar-btn div::before {
+    position: absolute;
+    content: "";
+    display: block;
+    background-color: inherit;
+    width: 20px;
+    height: 2px;
+    top: 5px;
+  }
+  .sidebar-btn div::after {
+    position: absolute;
+    content: "";
+    display: block;
+    background-color: inherit;
+    width: 20px;
+    height: 2px;
+    top: -5.5px;
+  }
+  .sidebar-open {
+    z-index: 1000;
+    top: 65px;
+    height: 100%;
+    width: 300px;
+  }
+}
+@media screen and (max-width: 600px) {
+  #sidebar {
+    width: 65%;
+  }
 }/*# sourceMappingURL=globals.css.map */
