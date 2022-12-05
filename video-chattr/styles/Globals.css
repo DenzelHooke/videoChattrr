@@ -695,4 +695,16 @@ video {
   #sidebar {
     width: 65%;
   }
+}
+@media screen and (max-width: 650px) {
+  #room-container #main-container {
+    grid-template-columns: 1fr;
+  }
+  #room-container #remote-streams {
+    grid-column: 1;
+    grid-row: 3/4;
+  }
+  #room-container #video-controls {
+    grid-row: 4/-1;
+  }
 }/*# sourceMappingURL=globals.css.map */

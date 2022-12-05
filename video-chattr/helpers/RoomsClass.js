@@ -117,7 +117,7 @@ class Rooms {
   async createCameraStream() {
     const localStream = AgoraRTC.createStream({
       streamID: this.uid,
-      audio: this.#hasAudio,
+      audio: true,
       video: this.#hasVideo,
       screen: false,
     });

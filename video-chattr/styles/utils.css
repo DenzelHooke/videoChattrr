@@ -64,6 +64,10 @@
   pointer-events: none;
 }
 
+.display-none {
+  display: none !important;
+}
+
 .clickable {
   cursor: pointer;
 }

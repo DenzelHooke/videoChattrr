@@ -856,3 +856,22 @@ video {
     width: 65%;
   }
 }
+
+@media screen and (max-width: 650px) {
+  #main-container {
+    // color: red;
+  }
+  #room-container {
+    // color: red;
+    #main-container {
+      grid-template-columns: 1fr;
+    }
+    #remote-streams {
+      grid-column: 1;
+      grid-row: 3/4;
+    }
+    #video-controls {
+      grid-row: 4/-1;
+    }
+  }
+}

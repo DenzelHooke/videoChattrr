@@ -5,6 +5,9 @@ import { useSelector } from "react-redux";
 
 const Video = ({ leaveRoom, onIconClick, roomState, buttonState }) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [remoteStreamsHide, setRemoveStreamsHide] = useState(false);
+  const [remoteStreamsChildrenLength, setRemoteStreamsChildrenLength] =
+    useState(0);
   let localStreamChildrenLength = 0;
 
   const { roomName, roomID } = useSelector((state) => state.room);
@@ -28,6 +31,15 @@ const Video = ({ leaveRoom, onIconClick, roomState, buttonState }) => {
     console.log(localStreamChildrenLength);
     setIsLoading(false);
   }, [localStreamChildrenLength]);
+
+  useEffect(() => {
+    const remoteStreamContainer = document.querySelector("div#remote-streams");
+    console.log(remoteStreamContainer.children);
+    setRemoteStreamsChildrenLength(remoteStreamContainer.children.length);
+    if (remoteStreamContainer.children.length > 0) {
+      console.log("greter then---");
+    }
+  }, []);
 
   return (
     <div id="main-container" className="constrain">
@@ -70,7 +82,10 @@ const Video = ({ leaveRoom, onIconClick, roomState, buttonState }) => {
             </div> */}
         </div>
       </div>
-      <div id="remote-streams" className="panel">
+      <div
+        id="remote-streams"
+        className={remoteStreamsHide ? "panel display-none" : "panel"}
+      >
         {/* <div className="info">Invite</div> */}
       </div>
       <div id="video-controls" className="panel">
