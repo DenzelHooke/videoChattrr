@@ -1,4 +1,4 @@
-import "../styles/globals.css";
+import "../styles/Globals.css";
 // import "../styles/Index.css";
 import "../styles/Forms.scss";
 import "../styles/utils.scss";
