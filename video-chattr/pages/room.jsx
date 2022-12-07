@@ -113,8 +113,8 @@ export default function Room({ mode, rtcToken }) {
     }
   };
 
-  const onIconClick = (e) => {
-    const targetName = e.target.id;
+  const onIconClick = (value) => {
+    const targetName = value;
 
     //Runs when icons are clicked on the video call page
     if (targetName === "saveVideo") {

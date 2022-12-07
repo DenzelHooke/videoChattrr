@@ -89,19 +89,23 @@ const Video = ({ leaveRoom, onIconClick, roomState, buttonState }) => {
         {/* <div className="info">Invite</div> */}
       </div>
       <div id="video-controls" className="panel">
-        <button
+        <a
           className={`btn ${muteAudioClass} uniformRound`}
           onClick={onIconClick}
           id="muteAudio"
         >
-          <GoUnmute color="white" size={30} className="no-click-svg" />
-        </button>
+          <GoUnmute
+            color="white"
+            size={30}
+            onClick={() => onIconClick("muteAudio")}
+          />
+        </a>
         <button id="exit" className="btn falseVideoBtn" onClick={leaveRoom}>
           LEAVE
         </button>
         <button
           className={`btn ${hideVideoClass} uniformRound`}
-          onClick={onIconClick}
+          onClick={() => onIconClick("hideVideo")}
           id="hideVideo"
         >
           <BsFillCameraVideoFill
