@@ -5,7 +5,6 @@ import { setLoading } from "../features/room/roomSlice";
 import { removeToken } from "../features/auth/authSlice";
 import { resetRoomState } from "../features/room/roomSlice";
 
-import RoomClient from "../helpers/RoomsClass";
 import LoadingCircle from "../components/LoadingCircle";
 import Video from "../components/Video";
 import io from "socket.io-client";
@@ -14,14 +13,18 @@ import { removeRoomCookie } from "../helpers/RoomsFuncs";
 import { saveRoom } from "../features/room/roomSlice";
 import { setError } from "../features/utils/utilsSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
+import Cookies from "js-cookie";
+import dynamic from "next/dynamic";
 
+import RoomClient from "../helpers/RoomsClass";
 /**
  * A room page for generating video call enviroments.
  * @param {object} Data
  * @returns
  */
 
-export default function Room({ mode, rtcToken }) {
+export default function Room() {
+  const isServer = typeof window === "undefined";
   const SOCKET_URI =
     process.env.NODE_ENV === "production"
       ? process.env.NEXT_PUBLIC_SOCKET_URL
@@ -33,11 +36,11 @@ export default function Room({ mode, rtcToken }) {
   );
 
   const [_roomClient, setRoomClient] = useState();
-
+  const [mode, setMode] = useState(false);
+  const [rtcToken, setRtcToken] = useState(false);
   const socketRef = useRef();
   const router = useRouter();
   const dispatch = useDispatch();
-  const isServer = typeof window === "undefined";
   const [socketState, setSocketState] = useState({
     socketStateMessage: "",
     isSocketStateError: false,
@@ -57,6 +60,17 @@ export default function Room({ mode, rtcToken }) {
     dispatch(setLoading(true));
     console.log("Listener set");
     window.addEventListener("beforeunload", cleanUp);
+
+    let roomData = Cookies.get("roomData");
+    roomData = JSON.parse(roomData);
+    try {
+      setMode(roomData.mode);
+      setRtcToken(roomData.rtcToken);
+      console.log(roomData);
+    } catch (error) {
+      console.error("No rtc token", roomData);
+      setError({ message: "You are not authorized to view this page." });
+    }
 
     return () => removeListeners();
   }, []);
@@ -92,7 +106,11 @@ export default function Room({ mode, rtcToken }) {
    * Initializes my Agora room connection class wrapper
    */
   const setUpClient = (roomID) => {
-    setRoomClient(new RoomClient(roomID, uid, user.username));
+    console.log("client: ");
+
+    const cli = new RoomClient(roomID, uid, user.username);
+    setRoomClient(cli);
+    return;
   };
 
   const leaveRoom = () => {
@@ -163,7 +181,7 @@ export default function Room({ mode, rtcToken }) {
   };
 
   useEffect(() => {
-    if (!_roomClient) {
+    if (!_roomClient || !rtcToken) {
       return;
     }
 
@@ -177,6 +195,10 @@ export default function Room({ mode, rtcToken }) {
   }, [_roomClient]);
 
   useEffect(() => {
+    if (!rtcToken) {
+      return;
+    }
+
     if (isError && message) {
       dispatch(setError({ message: message }));
       console.trace("isError: ", message);
@@ -197,14 +219,6 @@ export default function Room({ mode, rtcToken }) {
 
   useEffect(() => {
     if (!rtcToken) {
-      // No RTC found, push client to dashboard
-      dispatch(
-        setError({
-          message: "Please log in before viewing this page.",
-          push: "/dashboard",
-        })
-      );
-      console.error("No RTC token found! Sending back to dashboard.");
       return;
     }
 
@@ -239,10 +253,11 @@ export default function Room({ mode, rtcToken }) {
       });
 
       // On client room join
-      socketRef.current.on("roomJoined", () => {
+      socketRef.current.on("roomJoined", async () => {
         console.log(rtcToken, roomID);
         //* Start Agora
-        setUpClient(roomID);
+        console.log("joining room");
+        await setUpClient(roomID);
         console.log("_______ROOM JOINED_______");
         //* INIT socket.io connection to server
       });
@@ -250,6 +265,10 @@ export default function Room({ mode, rtcToken }) {
   }, [rtcToken, isServer, roomID]);
 
   useEffect(() => {
+    if (!rtcToken) {
+      return;
+    }
+
     if (rtcToken) {
       if (mode === "create" && roomID) {
         // If room is set to create:
@@ -293,28 +312,3 @@ export default function Room({ mode, rtcToken }) {
 }
 
 //! Make this page private
-
-export const getServerSideProps = wrapper.getServerSideProps(
-  (store) =>
-    async ({ res, req }) => {
-      try {
-        let { roomData } = req.cookies;
-        roomData = JSON.parse(roomData);
-
-        return {
-          props: {
-            mode: roomData.mode,
-            rtcToken: roomData.rtcToken,
-          },
-        };
-      } catch (error) {
-        console.log("ERRPRRRR");
-        return {
-          redirect: {
-            destination: "/dashboard",
-            permanent: false,
-          },
-        };
-      }
-    }
-);

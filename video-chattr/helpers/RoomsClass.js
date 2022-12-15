@@ -1,5 +1,5 @@
 import { getUserFromRunningRoom } from "../helpers/RoomsFuncs";
-
+import AgoraRTC from "agora-rtc-sdk-ng";
 class Rooms {
   #token = null;
   #client = null;
@@ -30,15 +30,22 @@ class Rooms {
     };
     this.remoteStreams = {};
     this.cameraVideoProfile = this.videoProfile;
+    this.streamOptions = {
+      // Pass your App ID here.
+      appId: this.#appID,
+      // Set the channel name.
+      channel: this.roomID,
+      // Pass your temp token here.
+      token: this.#token,
+      // Set the user ID.
+      uid: this.uid,
+    };
   }
 
   // /**
   //  * @param {str} token
   //  */
-  // set token(token) {
-  //   this.#token = token;
-  //   console.log(this.#token);
-  // }
+
   getStream() {
     return this.localStream;
   }
@@ -62,19 +69,17 @@ class Rooms {
     this.cameraVideoProfile = this.videoProfile;
   }
   init(token) {
+    console.log("initializing client");
     this.#token = token;
-    this.#client = AgoraRTC.createClient({ mode: "rtc", codec: "h264" });
+    this.#client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
     console.log("client: ", this.#client);
     //Init client
-    this.#client.init(
-      this.#appID,
-      () => {
-        this.joinChannel();
-      },
-      (err) => {
-        console.log.warn("[ERROR] - Agora client failed to initialize!");
-      }
-    );
+    this.setUpHooks();
+    if (!this.#client) {
+      console.error("[ERROR] - Agora client failed to initialize!");
+    }
+
+    this.joinChannel();
   }
 
   muteLocal() {
@@ -104,91 +109,135 @@ class Rooms {
   }
 
   async joinChannel() {
+    console.log("Joining channel");
     // joins channel and creates camera stream object.
 
-    this.setUpHooks();
+    // this.setUpHooks();
 
-    this.#client.join(this.#token, this.roomID, this.uid, () => {
-      this.localStreams.camera.id = this.uid;
-      this.createCameraStream();
-    });
+    await this.#client.join(this.#appID, this.roomID, this.#token, this.uid);
+
+    this.localStreams.camera.id = this.uid;
+    this.createCameraStream();
   }
 
-  async createCameraStream() {
-    const localStream = AgoraRTC.createStream({
-      streamID: this.uid,
-      audio: true,
-      video: this.#hasVideo,
-      screen: false,
-    });
-    localStream.setVideoProfile(this.cameraVideoProfile);
-    localStream.init(() => {
-      console.log("GetUserMedia successful!");
-      localStream.play("local-stream");
-      console.log("LOCAL STREAM: ", localStream);
-      // const streamElement = document.querySelector("#local-stream").children[0];
-      // this.localStreams.camera.element = streamElement;
-      // streamElement.classList.add("video");
-      // streamElement.id = "local-element";
-      // streamElement.children[0].id = "local-camera";
-      this.localStreams.camera.stream = localStream;
-      // streamElement.removeAttribute("style");
-      // streamElement.children[0].removeAttribute("style");
+  createLocalElement() {
+    const promise = new Promise((resolve, reject) => {
+      try {
+        const localStreamContainer = document.querySelector("div#local-stream");
 
-      this.#client.publish(localStream, (err) => {
-        console.error("[ERROR] : Publishing stream failed.", err);
-      });
-    });
-  }
-
-  setUpHooks() {
-    this.#client.on("stream-added", (e) => {
-      const stream = e.stream;
-      const streamID = stream.getId();
-      // Check if stream is local
-      if (streamID != this.localStreams.camera.id) {
-        console.log(`__-- Stream added: `, e.stream);
-        stream.setVideoProfile(this.cameraVideoProfile);
-        this.#client.subscribe(stream, (err) => {
-          console.log("[ERROR] : Subscribe to stream has failed.", err);
-        });
+        // const localStreamElement = document.createElement("div");
+        // localStreamElement.id = `${this.uid}`;
+        // localStreamContainer.appendChild(this.localStreams.camera.stream.video);
+        resolve();
+      } catch (error) {
+        reject(error);
       }
     });
 
-    this.#client.on("stream-subscribed", (e) => {
-      const remoteStream = e.stream;
-      const remoteID = remoteStream.getId();
-      this.remoteStreams[remoteID] = {
-        camera: {
-          stream: remoteStream,
-          id: null,
-          element: null,
-        },
-      };
-      this.remoteStreams[remoteID].camera.id = remoteID;
-
-      console.log("Subscribed to remote stream successfully: " + remoteID);
-      this.addStream(remoteStream);
-    });
+    return promise;
   }
 
-  async addStream(remoteStream) {
+  async createCameraStream() {
+    console.log("Creating stream objects");
+    const streamTrack = await AgoraRTC.createMicrophoneAndCameraTracks();
+    const localAudio = streamTrack[0];
+    const localVideo = streamTrack[1];
+    localAudio.setEnabled(true);
+    console.log(streamTrack);
+    // const localAudio = await AgoraRTC.createMicrophoneAudioTrack();
+    // console.log("LOCAL AUDIO: ", localAudio);
+    // const localVideo = await AgoraRTC.createCameraVideoTrack({
+    //   encoderConfig: {
+    //     width: 640,
+    //     // Specify a value range and an ideal value
+    //     height: { ideal: 480, min: 400, max: 500 },
+    //     frameRate: 30,
+    //     bitrateMin: 600,
+    //     bitrateMax: 1000,
+    //   },
+    // });
+    // console.log(localVideo);
+    // localStream.setVideoProfile(this.cameraVideoProfile);
+    if (localAudio && localVideo) {
+      this.localStreams.camera.stream.video = localVideo;
+      this.localStreams.camera.stream.audio = localAudio;
+      console.log("GetUserMedia successful!");
+      await this.createLocalElement();
+      this.localStreams.camera.stream.video.play("local-stream");
+      console.log("LOCAL STREAM: ", this.localStreams);
+
+      await this.#client.publish([localAudio, localVideo], (err) => {
+        console.error("[ERROR] : Publishing stream failed.", err);
+      });
+    }
+  }
+  setUpHooks() {
+    try {
+      this.#client.on("user-published", async (user, mediaType) => {
+        console.log("stream published: ", user, mediaType);
+        console.log("myID: ", this.localStreams.camera.id);
+        console.log("userID: ", user.uid);
+        const streamID = user.uid;
+
+        // Check if stream is local
+        if (streamID === this.localStreams.camera.id) {
+          return;
+        }
+        await this.#client.subscribe(user, mediaType);
+        console.log("user: ", user);
+
+        // Assign property
+        this.remoteStreams[streamID] = {
+          camera: {
+            id: streamID,
+            stream: {},
+          },
+        };
+        //Run when video track is published
+        if (mediaType === "video") {
+          // Once we subscribe, we have access to the getter videoTrack attribute.
+          console.log(user);
+          // user.videoTrack.setVideoProfile(this.cameraVideoProfile);
+
+          // Set object properties
+          this.remoteStreams[streamID].camera.stream.video = user.videoTrack;
+          const videoTrack = this.remoteStreams[streamID].camera.stream.video;
+
+          this.addVideoStream({
+            streamID,
+            remoteStream: videoTrack,
+          });
+        }
+        //Run when audio track is published
+        else if (mediaType === "audio") {
+          // Set object properties
+          console.log("Playing audio track");
+          this.remoteStreams[streamID].camera.stream.audio = user.audioTrack;
+          this.remoteStreams[streamID].camera.stream.audio.play();
+        }
+      });
+    } catch (error) {
+      console.error("[ERROR] - ", error);
+    }
+  }
+
+  async addVideoStream({ streamID, remoteStream }) {
+    // const remoteStream = this.remoteStreams[streamID].camera.stream.video;
     console.log("REMOTE: ", remoteStream);
-    const remoteID = remoteStream.getId();
+    const remoteID = streamID;
 
     try {
       console.log("BEFORE getUser");
       console.log(remoteID);
       //TODO Call api func to return username with same uid from stream to get a username as a string.
       const res = await getUserFromRunningRoom(this.roomID, remoteID);
-      console.log("AFTER getUser");
-
       //! Throw err is no res.data.
       if (!res.data) {
         throw new Error(
           "Couldn't add connecting user stream because user could not be found on server."
         );
       }
+      console.log("AFTER getUser");
 
       const { user } = res.data;
 
@@ -228,25 +277,23 @@ class Rooms {
     }
   }
 
+  async addAudioStream({ streamID, remoteStream }) {
+    remoteStream.play();
+  }
+
   removeRemoteStream(uid) {
     console.log("removing stream: ", uid);
     try {
       console.log(`Removing stream ${uid}`);
       const remoteStream = this.remoteStreams[uid];
       console.log("REMOTE STREAM: ", remoteStream);
-      //TODO Find stream with uid
-      //? Maybe use element ID.
 
-      delete this.remoteStreams[uid];
-
-      //TODO Remove from dom
       const remoteStreamElement = document.getElementById(`${uid}`);
       remoteStreamElement.remove();
       console.log(remoteStreamElement);
 
-      //TODO Unsubsribe
-
-      this.#client.unsubscribe(remoteStream.camera.stream);
+      delete this.remoteStreams[uid];
+      // this.#client.unsubscribe(remoteStream.camera.stream);
     } catch (error) {
       console.error(error);
     }
@@ -255,12 +302,13 @@ class Rooms {
   removeLocalStream() {
     try {
       console.log("Removing local stream!");
-      // const remoteStreamElement = document.getElementById(`${this.uid}`);
-      // remoteStreamElement.remove();
-      const localStream = this.localStreams.camera.stream;
+
+      const videoStream = this.localStreams.camera.stream.video;
+      const audioStream = this.localStreams.camera.stream.audio;
       console.log("Remvoing local stream.");
-      localStream.stop();
-      localStream.close();
+      audioStream.close();
+      videoStream.close();
+      this.#client.leave();
       console.log("Done removing local stream!");
     } catch (error) {
       console.error("Error while attempting to remove local stream: ", error);
