@@ -15,7 +15,7 @@ const Layout = ({ children }) => {
           content="upgrade-insecure-requests"
         />
       </Head>
-      <Script src="/js/AgoraRTCSDK-3.6.10.js"></Script>
+      {/* <Script src="/js/AgoraRTCSDK-3.6.10.js"></Script> */}
       <StateWatcher />
       <ToastContainer id="toast-container" />
       <Navbar />
