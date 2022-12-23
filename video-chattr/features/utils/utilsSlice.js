@@ -5,6 +5,7 @@ const initialState = {
   isSuccess: false,
   message: "",
   push: "",
+  page: "",
 };
 
 export const utilsSlice = createSlice({
@@ -31,10 +32,13 @@ export const utilsSlice = createSlice({
       state.message = "";
       state.push = "";
     },
+    setPage: (state, action) => {
+      state.page = action.payload.page;
+    },
   },
 });
 
-export const { setError, resetError, setSuccess, resetSuccess } =
+export const { setError, resetError, setSuccess, resetSuccess, setPage } =
   utilsSlice.actions;
 
 export default utilsSlice.reducer;

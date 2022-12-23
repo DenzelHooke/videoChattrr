@@ -43,34 +43,34 @@ const Video = ({ leaveRoom, onIconClick, roomState, buttonState }) => {
 
   return (
     <div id="main-container" className="constrain">
-      <div id="main-hub" className="panel">
-        <div className="room-info">
-          <div id="immediate-room-info">
-            <h1>
-              <span className="room-name">{roomName}</span>
-            </h1>
-            <div className="roomID">Room ID: {roomID}</div>
-          </div>
-          <div className="room-icons">
-            {roomState.saveVideo ? (
-              <button
-                id="saveVideo"
-                className="button successBg"
-                onClick={onIconClick}
-              >
-                Roomed Pinned
-              </button>
-            ) : (
-              <button
-                id="saveVideo"
-                className="button azureBg"
-                onClick={onIconClick}
-              >
-                Pin Room
-              </button>
-            )}
-          </div>
+      <div id="room-info">
+        <div id="immediate-room-info">
+          <h1>
+            <span className="room-name">{roomName}</span>
+          </h1>
+          <div className="roomID">Room ID: {roomID}</div>
         </div>
+        <div className="room-icons">
+          {roomState.saveVideo ? (
+            <button
+              id="saveVideo"
+              className="button successBg"
+              onClick={onIconClick}
+            >
+              Roomed Pinned
+            </button>
+          ) : (
+            <button
+              id="saveVideo"
+              className="button azureBg"
+              onClick={onIconClick}
+            >
+              Pin Room
+            </button>
+          )}
+        </div>
+      </div>
+      <div id="main-hub">
         <div id="local-stream" className="focus">
           {/* <div id="local-element">
               <video
@@ -82,13 +82,8 @@ const Video = ({ leaveRoom, onIconClick, roomState, buttonState }) => {
             </div> */}
         </div>
       </div>
-      <div
-        id="remote-streams"
-        className={remoteStreamsHide ? "panel display-none" : "panel"}
-      >
-        {/* <div className="info">Invite</div> */}
-      </div>
-      <div id="video-controls" className="panel">
+      <div id="remote-streams">{/* <div className="info">Invite</div> */}</div>
+      {/* <div id="video-controls" className="hide">
         <button
           className={`btn ${muteAudioClass} uniformRound`}
           onClick={onIconClick}
@@ -110,7 +105,7 @@ const Video = ({ leaveRoom, onIconClick, roomState, buttonState }) => {
             className="no-click-svg"
           />
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

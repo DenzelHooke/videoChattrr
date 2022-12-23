@@ -11,12 +11,12 @@ import io from "socket.io-client";
 import { wrapper } from "../app/store";
 import { removeRoomCookie } from "../helpers/RoomsFuncs";
 import { saveRoom } from "../features/room/roomSlice";
-import { setError } from "../features/utils/utilsSlice";
+import { setError, setPage } from "../features/utils/utilsSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
-import dynamic from "next/dynamic";
+import NoSSRWrapper from "../components/noSSR";
+var RoomClient;
 
-import RoomClient from "../helpers/RoomsClass";
 /**
  * A room page for generating video call enviroments.
  * @param {object} Data
@@ -25,6 +25,7 @@ import RoomClient from "../helpers/RoomsClass";
 
 export default function Room() {
   const isServer = typeof window === "undefined";
+
   const SOCKET_URI =
     process.env.NODE_ENV === "production"
       ? process.env.NEXT_PUBLIC_SOCKET_URL
@@ -57,6 +58,13 @@ export default function Room() {
   const { socketStateMessage, isSocketStateError } = socketState;
 
   useEffect(() => {
+    // Import module when page loads
+    import("../helpers/RoomsClass").then((module) => {
+      RoomClient = module.default;
+      console.log("MOD:", RoomClient);
+    });
+
+    dispatch(setPage({ page: "room" }));
     dispatch(setLoading(true));
     console.log("Listener set");
     window.addEventListener("beforeunload", cleanUp);
@@ -76,6 +84,7 @@ export default function Room() {
   }, []);
 
   const cleanUp = (_roomClient) => {
+    dispatch(setPage({ page: "" }));
     console.info("Cleaning up now..");
     try {
       removeRoomCookie();
@@ -98,7 +107,7 @@ export default function Room() {
   };
 
   const removeListeners = () => {
-    // cleanUp();
+    cleanUp();
     window.removeEventListener("beforeunload", cleanUp);
   };
 
@@ -257,7 +266,7 @@ export default function Room() {
         console.log(rtcToken, roomID);
         //* Start Agora
         console.log("joining room");
-        await setUpClient(roomID);
+        setUpClient(roomID);
         console.log("_______ROOM JOINED_______");
         //* INIT socket.io connection to server
       });
@@ -288,26 +297,30 @@ export default function Room() {
   }, [rtcToken]);
 
   return (
-    <div>
-      {isServer ? (
-        <LoadingCircle />
-      ) : (
+    <NoSSRWrapper>
+      {
         <>
-          <div id="room-container" className="grow">
-            {!isLoading ? (
-              <Video
-                leaveRoom={leaveRoom}
-                onIconClick={onIconClick}
-                roomState={roomState}
-                buttonState={buttonState}
-              />
-            ) : (
-              ""
-            )}
-          </div>
+          {isServer ? (
+            <LoadingCircle />
+          ) : (
+            <>
+              <div id="room-container" className="grow">
+                {!isLoading ? (
+                  <Video
+                    leaveRoom={leaveRoom}
+                    onIconClick={onIconClick}
+                    roomState={roomState}
+                    buttonState={buttonState}
+                  />
+                ) : (
+                  ""
+                )}
+              </div>
+            </>
+          )}
         </>
-      )}
-    </div>
+      }
+    </NoSSRWrapper>
   );
 }
 
