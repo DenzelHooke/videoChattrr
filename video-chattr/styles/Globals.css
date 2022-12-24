@@ -11,6 +11,7 @@
   --happyGreen: rgb(95, 206, 95);
   --happyGreenHover: rgb(84, 180, 84);
   --light-text: rgb(77, 77, 77);
+  --muted: var(--errorRed);
   --sidebar-li-bg: rgba(255, 255, 255, 0.137);
   --result-hover: rgba(255, 0, 0, 0.089);
   --input-bg: rgb(233, 233, 233);
@@ -462,6 +463,15 @@ button {
 }
 #room-info .room-icons {
   margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+#room-info .room-icons .center-icons button {
+  width: 35px;
+  height: 35px;
+  margin: 0 10px;
+  padding: 6px;
 }
 
 .video {
@@ -522,13 +532,12 @@ video {
   border-radius: 10px;
   overflow: hidden;
   margin: 5px 0;
-  height: 100%;
+  max-height: 100%;
   max-width: 45%;
   position: relative;
 }
 .streamContainer div {
   background: none !important;
-  border-radius: 20px;
 }
 .streamContainer .info {
   padding: 2% 2%;

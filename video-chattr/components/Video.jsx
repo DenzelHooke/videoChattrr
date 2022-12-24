@@ -68,6 +68,31 @@ const Video = ({ leaveRoom, onIconClick, roomState, buttonState }) => {
               Pin Room
             </button>
           )}
+          <div className="center-icons flexRow flex">
+            <button
+              className={`btn ${hideVideoClass} round`}
+              onClick={onIconClick}
+              id="hideVideo"
+            >
+              <BsFillCameraVideoFill
+                color="white"
+                size={30}
+                className="no-click-svg"
+              />
+            </button>
+            <button
+              className={`btn ${muteAudioClass} round`}
+              onClick={onIconClick}
+              id="muteAudio"
+            >
+              <GoUnmute color="white" size={30} className="no-click-svg" />
+            </button>
+          </div>
+          <div className="important">
+            <button id="exit" className="btn falseVideoBtn" onClick={leaveRoom}>
+              LEAVE
+            </button>
+          </div>
         </div>
       </div>
       <div id="main-hub">

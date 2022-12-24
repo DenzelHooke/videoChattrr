@@ -140,7 +140,7 @@ export default function Room() {
     }
   };
 
-  const onIconClick = (e) => {
+  const onIconClick = async (e) => {
     const targetName = e.target.id;
 
     //Runs when icons are clicked on the video call page
@@ -176,7 +176,14 @@ export default function Room() {
         ...prevState,
         muteAudio: !prevState.muteAudio,
       }));
-      _roomClient.muteLocal();
+      try {
+        const muteStatus = await _roomClient.muteLocal();
+
+        // Send to server
+        socketRef.current.emit("setMute", { id: uid, state: muteStatus });
+      } catch (error) {
+        dispatch(setError({ message: error }));
+      }
     }
 
     if (targetName === "hideVideo") {
@@ -251,6 +258,21 @@ export default function Room() {
       });
 
       console.log(socketRef.current);
+
+      socketRef.current.on("userMute", (data) => {
+        const { id, state } = data;
+        console.log("MUTE EVENT: ", data);
+        const element = document.querySelector(`[id='${id}']`);
+
+        if (state) {
+          console.log("state true");
+          console.log(element);
+          element.classList.add("muted");
+        } else {
+          console.log("state false");
+          element.classList.remove("muted");
+        }
+      });
 
       // On error trigger from server
       socketRef.current.on("errorTriggered", (data) => {

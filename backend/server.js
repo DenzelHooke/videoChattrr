@@ -179,6 +179,18 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("setMute", async (data) => {
+    const { id, state } = data;
+    const { roomID } = socket.handshake.auth.room;
+
+    //Send data to all clients except sender
+    socket.to(roomID).emit("userMute", {
+      id,
+      state,
+    });
+    console.log(data);
+  });
+
   socket.on("init", async (data) => {});
 });
 
