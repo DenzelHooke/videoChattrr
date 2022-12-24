@@ -256,6 +256,11 @@ button {
   background: var(--panelBG);
 }
 
+.flexCenter {
+  display: flex;
+  justify-content: center;
+}
+
 .center {
   width: 100%;
   display: flex;
@@ -483,6 +488,12 @@ button {
 }
 
 .focus {
+  display: flex;
+  justify-content: center;
+  > div {
+    width: 90% !important;
+  }
+
   :nth-child(1) {
     width: 100%;
     // padding-top: 56.25%;
