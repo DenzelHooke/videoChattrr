@@ -11,6 +11,7 @@
   --happyGreen: rgb(95, 206, 95);
   --happyGreenHover: rgb(84, 180, 84);
   --light-text: rgb(77, 77, 77);
+  --muted: var(--errorRed);
   --sidebar-li-bg: rgba(255, 255, 255, 0.137);
   --result-hover: rgba(255, 0, 0, 0.089);
   --input-bg: rgb(233, 233, 233);
@@ -205,6 +206,11 @@ button {
   background: var(--panelBG);
 }
 
+.flexCenter {
+  display: flex;
+  justify-content: center;
+}
+
 .center {
   width: 100%;
   display: flex;
@@ -392,13 +398,26 @@ button {
   display: flex;
 }
 
+.focus {
+  display: flex;
+  justify-content: center;
+}
+.focus > div {
+  width: 90% !important;
+}
+.focus :nth-child(1) {
+  width: 100%;
+  height: 0px;
+  position: relative;
+}
+
 #main-container {
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 0.5fr;
-  grid-template-rows: 1fr 1fr 0.5fr;
+  grid-template-columns: 1fr 0.3fr 1fr;
+  grid-template-rows: 0.2fr 1fr minmax(0fr, 0.5fr);
   gap: 10px;
-  max-width: 1200px;
+  max-width: 750px;
   padding: 10px;
 }
 #main-container #video-controls {
@@ -410,22 +429,49 @@ button {
   align-items: center;
 }
 #main-container #main-hub {
-  grid-row: 1/3;
+  grid-column: 1/-1;
+  grid-row: 2/3;
   font-size: 15px !important;
 }
-#main-container #main-hub .room-info {
-  padding: 5px 0;
-  margin-bottom: 10px;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.116);
+#main-container #main-hub .focus {
+  height: 100%;
 }
-#main-container #main-hub .room-info button {
+#main-container #main-hub .focus div {
+  overflow: hidden !important;
+  position: relative !important;
+  background: none !important;
+}
+#main-container #main-hub .focus div video {
+  border-radius: 20px;
+  position: relative !important;
+}
+
+#room-info {
+  grid-column: 1/-1;
+  grid-row: 1/2;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0px 4px 5px 2px rgba(2, 0, 0, 0.179);
+  background: white;
+  border-radius: 20px;
+}
+#room-info button {
   padding: 10px;
   font-size: 15px !important;
   width: 125px;
   height: 35px;
 }
-#main-container #main-hub .room-info .room-icons {
+#room-info .room-icons {
   margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+#room-info .room-icons .center-icons button {
+  width: 35px;
+  height: 35px;
+  margin: 0 10px;
+  padding: 6px;
 }
 
 .video {
@@ -441,6 +487,12 @@ button {
 
 .centerMe {
   margin: 0 auto;
+}
+
+video {
+  height: 100%;
+  width: 100%;
+  position: relative;
 }
 
 #local-element {
@@ -463,22 +515,12 @@ video {
 
 #local-stream {
   z-index: 100;
-  position: relative;
-  display: flex;
-}
-#local-stream video {
-  position: relative !important;
-}
-#local-stream > div {
-  border: 3px solid var(--leaveBG);
-  height: auto !important;
 }
 
 #remote-streams {
-  grid-column: 2/-1;
-  grid-row: 1/-1;
+  grid-column: 1/-1;
+  grid-row: 3/4;
   display: flex;
-  flex-direction: column;
   overflow: hidden;
 }
 #remote-streams video {
@@ -489,12 +531,20 @@ video {
 .streamContainer {
   border-radius: 10px;
   overflow: hidden;
-  background: rgb(238, 0, 0);
-  background: rgb(36, 36, 36);
   margin: 5px 0;
+  max-height: 100%;
+  max-width: 45%;
+  position: relative;
+}
+.streamContainer div {
+  background: none !important;
 }
 .streamContainer .info {
   padding: 2% 2%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10000;
 }
 .streamContainer > div {
   height: auto !important;
@@ -691,6 +741,10 @@ video {
     width: 300px;
   }
 }
+.hide {
+  display: none !important;
+}
+
 @media screen and (max-width: 600px) {
   #sidebar {
     width: 65%;

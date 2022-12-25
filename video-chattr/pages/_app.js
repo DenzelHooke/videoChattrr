@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import "../styles/Globals.css";
+=======
+import "../styles/globals.scss";
+>>>>>>> ui
 // import "../styles/Index.css";
 import "../styles/Forms.scss";
 import "../styles/utils.scss";

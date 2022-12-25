@@ -83,29 +83,49 @@ class Rooms {
   }
 
   muteLocal() {
-    // Mute/unmute client's local audio for other users.
+    return new Promise((resolve, reject) => {
+      try {
+        // Mute/unmute client's local audio for other users.
 
-    // Runs if client is already muted
-    if (this.isMuted) {
-      this.isMuted = false;
-      this.localStreams.camera.stream.unmuteAudio();
-      return;
-    }
-    this.isMuted = true;
-    this.localStreams.camera.stream.muteAudio();
+        // Runs if client is already muted
+        if (this.isMuted) {
+          this.isMuted = false;
+          this.localStreams.camera.stream.audio.setMuted(false);
+          resolve(this.isMuted);
+          return;
+        }
+        // If not muted, mute.
+        this.isMuted = true;
+        this.localStreams.camera.stream.audio.setMuted(true);
+        resolve(this.isMuted);
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 
   hideCameraLocal() {
     // Mute/unmute client's local audio for other users.
+    return new Promise((resolve, reject) => {
+      try {
+        //If already hidden, unhide camera.
+        if (this.hideCamera) {
+          this.hideCamera = false;
+          //! Disabled
+          // this.localStreams.camera.stream.video.setMuted(false);
+          resolve(this.hideCamera);
+          return;
+        }
 
-    // Runs if client is already muted
-    if (this.hideCamera) {
-      this.hideCamera = false;
-      this.localStreams.camera.stream.unmuteVideo();
-      return;
-    }
-    this.hideCamera = true;
-    this.localStreams.camera.stream.muteVideo();
+        // If not hidden, hide camera.
+        this.hideCamera = true;
+        //! Disabled
+        // this.localStreams.camera.stream.video.setMuted(true);
+        resolve(this.hideCamera);
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 
   async joinChannel() {
@@ -138,6 +158,7 @@ class Rooms {
   }
 
   async createCameraStream() {
+    console.log("UID: ", this.uid);
     console.log("Creating stream objects");
     const streamTrack = await AgoraRTC.createMicrophoneAndCameraTracks();
     const localAudio = streamTrack[0];
@@ -162,8 +183,11 @@ class Rooms {
       this.localStreams.camera.stream.video = localVideo;
       this.localStreams.camera.stream.audio = localAudio;
       console.log("GetUserMedia successful!");
-      await this.createLocalElement();
       this.localStreams.camera.stream.video.play("local-stream");
+
+      //Add ID to localstream
+      document.querySelector("div#local-stream").classList.add(this.uid);
+
       console.log("LOCAL STREAM: ", this.localStreams);
 
       await this.#client.publish([localAudio, localVideo], (err) => {

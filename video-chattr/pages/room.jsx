@@ -9,14 +9,14 @@ import LoadingCircle from "../components/LoadingCircle";
 import Video from "../components/Video";
 import io from "socket.io-client";
 import { wrapper } from "../app/store";
-import { removeRoomCookie } from "../helpers/RoomsFuncs";
+import { removeRoomCookie, hideRemoteCamera } from "../helpers/RoomsFuncs";
 import { saveRoom } from "../features/room/roomSlice";
-import { setError } from "../features/utils/utilsSlice";
+import { setError, setPage } from "../features/utils/utilsSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
-import dynamic from "next/dynamic";
+import NoSSRWrapper from "../components/noSSR";
+var RoomClient;
 
-import RoomClient from "../helpers/RoomsClass";
 /**
  * A room page for generating video call enviroments.
  * @param {object} Data
@@ -25,6 +25,7 @@ import RoomClient from "../helpers/RoomsClass";
 
 export default function Room() {
   const isServer = typeof window === "undefined";
+
   const SOCKET_URI =
     process.env.NODE_ENV === "production"
       ? process.env.NEXT_PUBLIC_SOCKET_URL
@@ -57,6 +58,13 @@ export default function Room() {
   const { socketStateMessage, isSocketStateError } = socketState;
 
   useEffect(() => {
+    // Import module when page loads
+    import("../helpers/RoomsClass").then((module) => {
+      RoomClient = module.default;
+      console.log("MOD:", RoomClient);
+    });
+
+    dispatch(setPage({ page: "room" }));
     dispatch(setLoading(true));
     console.log("Listener set");
     window.addEventListener("beforeunload", cleanUp);
@@ -76,6 +84,7 @@ export default function Room() {
   }, []);
 
   const cleanUp = (_roomClient) => {
+    dispatch(setPage({ page: "" }));
     console.info("Cleaning up now..");
     try {
       removeRoomCookie();
@@ -98,7 +107,7 @@ export default function Room() {
   };
 
   const removeListeners = () => {
-    // cleanUp();
+    cleanUp();
     window.removeEventListener("beforeunload", cleanUp);
   };
 
@@ -131,8 +140,13 @@ export default function Room() {
     }
   };
 
+<<<<<<< HEAD
   const onIconClick = (value) => {
     const targetName = value;
+=======
+  const onIconClick = async (e) => {
+    const targetName = e.target.id;
+>>>>>>> ui
 
     //Runs when icons are clicked on the video call page
     if (targetName === "saveVideo") {
@@ -167,7 +181,14 @@ export default function Room() {
         ...prevState,
         muteAudio: !prevState.muteAudio,
       }));
-      _roomClient.muteLocal();
+      try {
+        const muteStatus = await _roomClient.muteLocal();
+
+        // Send to server
+        socketRef.current.emit("setMute", { id: uid, state: muteStatus });
+      } catch (error) {
+        dispatch(setError({ message: error }));
+      }
     }
 
     if (targetName === "hideVideo") {
@@ -176,7 +197,16 @@ export default function Room() {
         ...prevState,
         hideVideo: !prevState.hideVideo,
       }));
-      _roomClient.hideCameraLocal();
+      try {
+        const cameraStatus = await _roomClient.hideCameraLocal();
+
+        socketRef.current.emit("setCameraVisibility", {
+          id: uid,
+          state: cameraStatus,
+        });
+      } catch (error) {
+        dispatch(setError({ message: error }));
+      }
     }
   };
 
@@ -243,6 +273,34 @@ export default function Room() {
 
       console.log(socketRef.current);
 
+      socketRef.current.on("cameraVisibility", (data) => {
+        const { id, state } = data;
+        console.log("CAMERA VISIBILITY EVENT: ", data);
+
+        const element = document.querySelector(`[id='${id}']`);
+
+        if (state) {
+          element.classList.add("hideCamera");
+        } else {
+          element.classList.remove("hideCamera");
+        }
+      });
+
+      socketRef.current.on("userMute", (data) => {
+        const { id, state } = data;
+        console.log("MUTE EVENT: ", data);
+        const element = document.querySelector(`[id='${id}']`);
+
+        if (state) {
+          console.log("state true");
+          console.log(element);
+          element.classList.add("muted");
+        } else {
+          console.log("state false");
+          element.classList.remove("muted");
+        }
+      });
+
       // On error trigger from server
       socketRef.current.on("errorTriggered", (data) => {
         setSocketState((prevState) => ({
@@ -257,7 +315,7 @@ export default function Room() {
         console.log(rtcToken, roomID);
         //* Start Agora
         console.log("joining room");
-        await setUpClient(roomID);
+        setUpClient(roomID);
         console.log("_______ROOM JOINED_______");
         //* INIT socket.io connection to server
       });
@@ -288,26 +346,30 @@ export default function Room() {
   }, [rtcToken]);
 
   return (
-    <div>
-      {isServer ? (
-        <LoadingCircle />
-      ) : (
+    <NoSSRWrapper>
+      {
         <>
-          <div id="room-container" className="grow">
-            {!isLoading ? (
-              <Video
-                leaveRoom={leaveRoom}
-                onIconClick={onIconClick}
-                roomState={roomState}
-                buttonState={buttonState}
-              />
-            ) : (
-              ""
-            )}
-          </div>
+          {isServer ? (
+            <LoadingCircle />
+          ) : (
+            <>
+              <div id="room-container" className="grow">
+                {!isLoading ? (
+                  <Video
+                    leaveRoom={leaveRoom}
+                    onIconClick={onIconClick}
+                    roomState={roomState}
+                    buttonState={buttonState}
+                  />
+                ) : (
+                  ""
+                )}
+              </div>
+            </>
+          )}
         </>
-      )}
-    </div>
+      }
+    </NoSSRWrapper>
   );
 }
 

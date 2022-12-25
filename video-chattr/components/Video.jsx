@@ -43,34 +43,59 @@ const Video = ({ leaveRoom, onIconClick, roomState, buttonState }) => {
 
   return (
     <div id="main-container" className="constrain">
-      <div id="main-hub" className="panel">
-        <div className="room-info">
-          <div id="immediate-room-info">
-            <h1>
-              <span className="room-name">{roomName}</span>
-            </h1>
-            <div className="roomID">Room ID: {roomID}</div>
+      <div id="room-info">
+        <div id="immediate-room-info">
+          <h1>
+            <span className="room-name">{roomName}</span>
+          </h1>
+          <div className="roomID">Room ID: {roomID}</div>
+        </div>
+        <div className="room-icons">
+          {roomState.saveVideo ? (
+            <button
+              id="saveVideo"
+              className="button successBg"
+              onClick={onIconClick}
+            >
+              Roomed Pinned
+            </button>
+          ) : (
+            <button
+              id="saveVideo"
+              className="button azureBg"
+              onClick={onIconClick}
+            >
+              Pin Room
+            </button>
+          )}
+          <div className="center-icons flexRow flex">
+            <button
+              className={`btn ${hideVideoClass} round`}
+              onClick={onIconClick}
+              id="hideVideo"
+            >
+              <BsFillCameraVideoFill
+                color="white"
+                size={30}
+                className="no-click-svg"
+              />
+            </button>
+            <button
+              className={`btn ${muteAudioClass} round`}
+              onClick={onIconClick}
+              id="muteAudio"
+            >
+              <GoUnmute color="white" size={30} className="no-click-svg" />
+            </button>
           </div>
-          <div className="room-icons">
-            {roomState.saveVideo ? (
-              <button
-                id="saveVideo"
-                className="button successBg"
-                onClick={onIconClick}
-              >
-                Roomed Pinned
-              </button>
-            ) : (
-              <button
-                id="saveVideo"
-                className="button azureBg"
-                onClick={onIconClick}
-              >
-                Pin Room
-              </button>
-            )}
+          <div className="important">
+            <button id="exit" className="btn falseVideoBtn" onClick={leaveRoom}>
+              LEAVE
+            </button>
           </div>
         </div>
+      </div>
+      <div id="main-hub">
         <div id="local-stream" className="focus">
           {/* <div id="local-element">
               <video
@@ -82,6 +107,7 @@ const Video = ({ leaveRoom, onIconClick, roomState, buttonState }) => {
             </div> */}
         </div>
       </div>
+<<<<<<< HEAD
       <div
         id="remote-streams"
         className={remoteStreamsHide ? "panel display-none" : "panel"}
@@ -90,6 +116,11 @@ const Video = ({ leaveRoom, onIconClick, roomState, buttonState }) => {
       </div>
       <div id="video-controls" className="panel">
         <a
+=======
+      <div id="remote-streams">{/* <div className="info">Invite</div> */}</div>
+      {/* <div id="video-controls" className="hide">
+        <button
+>>>>>>> ui
           className={`btn ${muteAudioClass} uniformRound`}
           onClick={onIconClick}
           id="muteAudio"
@@ -114,7 +145,7 @@ const Video = ({ leaveRoom, onIconClick, roomState, buttonState }) => {
             className="no-click-svg"
           />
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };
