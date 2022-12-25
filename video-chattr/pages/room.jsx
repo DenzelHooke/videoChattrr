@@ -140,13 +140,8 @@ export default function Room() {
     }
   };
 
-<<<<<<< HEAD
-  const onIconClick = (value) => {
-    const targetName = value;
-=======
   const onIconClick = async (e) => {
     const targetName = e.target.id;
->>>>>>> ui
 
     //Runs when icons are clicked on the video call page
     if (targetName === "saveVideo") {

@@ -107,20 +107,9 @@ const Video = ({ leaveRoom, onIconClick, roomState, buttonState }) => {
             </div> */}
         </div>
       </div>
-<<<<<<< HEAD
-      <div
-        id="remote-streams"
-        className={remoteStreamsHide ? "panel display-none" : "panel"}
-      >
-        {/* <div className="info">Invite</div> */}
-      </div>
-      <div id="video-controls" className="panel">
-        <a
-=======
       <div id="remote-streams">{/* <div className="info">Invite</div> */}</div>
       {/* <div id="video-controls" className="hide">
         <button
->>>>>>> ui
           className={`btn ${muteAudioClass} uniformRound`}
           onClick={onIconClick}
           id="muteAudio"
