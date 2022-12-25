@@ -146,6 +146,10 @@ const joinUserToRoom = async ({ roomService, userInput, dispatch, user }) => {
     });
 };
 
+const hideRemoteCamera = (data) => {
+  const { id, state } = data;
+};
+
 export {
   roomExists,
   createRoomCookie,
@@ -153,4 +157,5 @@ export {
   getRunningRoom,
   getUserFromRunningRoom,
   joinUserToRoom,
+  hideRemoteCamera,
 };

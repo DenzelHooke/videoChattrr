@@ -94,6 +94,7 @@ class Rooms {
           resolve(this.isMuted);
           return;
         }
+        // If not muted, mute.
         this.isMuted = true;
         this.localStreams.camera.stream.audio.setMuted(true);
         resolve(this.isMuted);
@@ -105,15 +106,26 @@ class Rooms {
 
   hideCameraLocal() {
     // Mute/unmute client's local audio for other users.
+    return new Promise((resolve, reject) => {
+      try {
+        //If already hidden, unhide camera.
+        if (this.hideCamera) {
+          this.hideCamera = false;
+          //! Disabled
+          // this.localStreams.camera.stream.video.setMuted(false);
+          resolve(this.hideCamera);
+          return;
+        }
 
-    // Runs if client is already muted
-    if (this.hideCamera) {
-      this.hideCamera = false;
-      this.localStreams.camera.stream.video.setMuted(false);
-      return;
-    }
-    this.hideCamera = true;
-    this.localStreams.camera.stream.video.setMuted(true);
+        // If not hidden, hide camera.
+        this.hideCamera = true;
+        //! Disabled
+        // this.localStreams.camera.stream.video.setMuted(true);
+        resolve(this.hideCamera);
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 
   async joinChannel() {

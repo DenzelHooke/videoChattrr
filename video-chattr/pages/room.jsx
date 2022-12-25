@@ -9,7 +9,7 @@ import LoadingCircle from "../components/LoadingCircle";
 import Video from "../components/Video";
 import io from "socket.io-client";
 import { wrapper } from "../app/store";
-import { removeRoomCookie } from "../helpers/RoomsFuncs";
+import { removeRoomCookie, hideRemoteCamera } from "../helpers/RoomsFuncs";
 import { saveRoom } from "../features/room/roomSlice";
 import { setError, setPage } from "../features/utils/utilsSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -192,7 +192,16 @@ export default function Room() {
         ...prevState,
         hideVideo: !prevState.hideVideo,
       }));
-      _roomClient.hideCameraLocal();
+      try {
+        const cameraStatus = await _roomClient.hideCameraLocal();
+
+        socketRef.current.emit("setCameraVisibility", {
+          id: uid,
+          state: cameraStatus,
+        });
+      } catch (error) {
+        dispatch(setError({ message: error }));
+      }
     }
   };
 
@@ -258,6 +267,19 @@ export default function Room() {
       });
 
       console.log(socketRef.current);
+
+      socketRef.current.on("cameraVisibility", (data) => {
+        const { id, state } = data;
+        console.log("CAMERA VISIBILITY EVENT: ", data);
+
+        const element = document.querySelector(`[id='${id}']`);
+
+        if (state) {
+          element.classList.add("hideCamera");
+        } else {
+          element.classList.remove("hideCamera");
+        }
+      });
 
       socketRef.current.on("userMute", (data) => {
         const { id, state } = data;

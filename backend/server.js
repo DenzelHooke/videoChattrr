@@ -179,6 +179,18 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("setCameraVisibility", async (data) => {
+    const { id, state } = data;
+    const { roomID } = socket.handshake.auth.room;
+
+    //Send data to all clients except sender
+    socket.to(roomID).emit("cameraVisibility", {
+      id,
+      state,
+    });
+    console.log(data);
+  });
+
   socket.on("setMute", async (data) => {
     const { id, state } = data;
     const { roomID } = socket.handshake.auth.room;
