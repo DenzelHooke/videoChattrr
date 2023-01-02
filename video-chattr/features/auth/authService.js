@@ -16,7 +16,7 @@ const register = async (userData) => {
   if (res.data) {
     localStorage.setItem("user", JSON.stringify(res.data));
     document.cookie = `user=${JSON.stringify(res.data)}; expires=${new Date(
-      2023,
+      9999,
       0,
       1
     ).toUTCString()}`;
@@ -31,7 +31,7 @@ const login = async (userData) => {
   if (res.data) {
     localStorage.setItem("user", JSON.stringify(res.data));
     document.cookie = `user=${JSON.stringify(res.data)}; expires=${new Date(
-      2023,
+      9999,
       0,
       1
     ).toUTCString()}`;

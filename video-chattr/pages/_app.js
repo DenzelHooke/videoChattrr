@@ -1,7 +1,7 @@
-import "../styles/globals.scss";
+import "../styles/Globals.scss";
 // import "../styles/Index.css";
 import "../styles/Forms.scss";
-import "../styles/utils.scss";
+import "../styles/Utils.scss";
 import Layout from "../components/Layout";
 import { store } from "../app/store";
 import { Provider } from "react-redux";

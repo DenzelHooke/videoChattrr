@@ -78,7 +78,7 @@ const Video = ({ leaveRoom, onIconClick, roomState, buttonState }) => {
                 color="white"
                 size={30}
                 className="no-click-svg"
-                onClick={() => onIconClick({ e: null, type: "hideVideo" })}
+                // onClick={(e) => onIconClick({ e: null, type: "hideVideo" })}
               />
             </button>
             <button
@@ -91,7 +91,7 @@ const Video = ({ leaveRoom, onIconClick, roomState, buttonState }) => {
                 color="white"
                 size={30}
                 className="no-click-svg"
-                onClick={() => onIconClick({ e: null, type: "muteAudio" })}
+                onClick={() => onIconClick({ type: "muteAudio" })}
               />
             </button>
           </div>
