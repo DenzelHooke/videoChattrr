@@ -63,7 +63,7 @@ const Video = ({ leaveRoom, onIconClick, roomState, buttonState }) => {
             <button
               id="saveVideo"
               className="button azureBg"
-              onClick={onIconClick}
+              onClick={(e) => onIconClick({ e: e })}
             >
               Pin Room
             </button>
@@ -71,21 +71,28 @@ const Video = ({ leaveRoom, onIconClick, roomState, buttonState }) => {
           <div className="center-icons flexRow flex">
             <button
               className={`btn ${hideVideoClass} round`}
-              onClick={onIconClick}
+              onClick={(e) => onIconClick({ e: e })}
               id="hideVideo"
             >
               <BsFillCameraVideoFill
                 color="white"
                 size={30}
                 className="no-click-svg"
+                // onClick={(e) => onIconClick({ e: null, type: "hideVideo" })}
               />
             </button>
             <button
               className={`btn ${muteAudioClass} round`}
-              onClick={onIconClick}
+              onClick={(e) => onIconClick({ e: e })}
               id="muteAudio"
             >
-              <GoUnmute color="white" size={30} className="no-click-svg" />
+              <GoUnmute
+                id="muteAudio"
+                color="white"
+                size={30}
+                className="no-click-svg"
+                onClick={() => onIconClick({ type: "muteAudio" })}
+              />
             </button>
           </div>
           <div className="important">

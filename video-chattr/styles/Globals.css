@@ -528,6 +528,13 @@ video {
   min-height: auto;
 }
 
+.no-click-svg {
+  pointer-events: none !important;
+}
+.no-click-svg * > {
+  pointer-events: none !important;
+}
+
 .streamContainer {
   border-radius: 10px;
   overflow: hidden;

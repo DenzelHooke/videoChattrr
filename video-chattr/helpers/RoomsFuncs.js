@@ -49,7 +49,7 @@ const createRoomCookie = (mode, rtcToken) => {
     rtcToken,
   };
   document.cookie = `roomData=${JSON.stringify(bundle)}; expires=${new Date(
-    2023,
+    9999,
     0,
     1
   ).toUTCString()}`;

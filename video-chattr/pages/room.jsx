@@ -64,9 +64,12 @@ export default function Room() {
       console.log("MOD:", RoomClient);
     });
 
+    // Set page to room. This tells other pages and components which room we've entered for correct state handling
     dispatch(setPage({ page: "room" }));
     dispatch(setLoading(true));
     console.log("Listener set");
+
+    // Add a cleanup func that runs when the user refreshes the page.
     window.addEventListener("beforeunload", cleanUp);
 
     let roomData = Cookies.get("roomData");
@@ -140,8 +143,8 @@ export default function Room() {
     }
   };
 
-  const onIconClick = async (e) => {
-    const targetName = e.target.id;
+  const onIconClick = async ({ e, type }) => {
+    const targetName = e.target.id || type;
 
     //Runs when icons are clicked on the video call page
     if (targetName === "saveVideo") {

@@ -66,9 +66,9 @@
 }
 
 .no-click-svg {
-  pointer-events: none;
+  pointer-events: none !important;
   * > {
-    pointer-events: none;
+    pointer-events: none !important;
   }
 }
 
