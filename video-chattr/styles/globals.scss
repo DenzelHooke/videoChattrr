@@ -649,7 +649,7 @@ video {
 
 .no-click-svg {
   pointer-events: none !important;
-  * > {
+   * > {
     pointer-events: none !important;
   }
 }
