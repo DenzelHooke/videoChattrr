@@ -73,14 +73,19 @@ export default function Room() {
     window.addEventListener("beforeunload", cleanUp);
 
     let roomData = Cookies.get("roomData");
-    roomData = JSON.parse(roomData);
     try {
+      roomData = JSON.parse(roomData);
       setMode(roomData.mode);
       setRtcToken(roomData.rtcToken);
       console.log(roomData);
     } catch (error) {
       console.error("No rtc token", roomData);
-      setError({ message: "You are not authorized to view this page." });
+      dispatch(
+        setError({
+          message: "You are not authorized to view this page.",
+          push: "/dashboard",
+        })
+      );
     }
 
     return () => removeListeners();
@@ -92,17 +97,23 @@ export default function Room() {
     try {
       removeRoomCookie();
       console.log("Room client: ", _roomClient);
-      socketRef.current.disconnect();
+
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+      }
       console.log("before removeLocal");
-      _roomClient.removeLocalStream();
-      console.log("after removeLocal");
-      _roomClient.reset();
+
+      if (_roomClient) {
+        _roomClient.removeLocalStream();
+        console.log("after removeLocal");
+        _roomClient.reset();
+        console.log("room client at end of cleanUp: ", _roomClient);
+      }
 
       //Removes the user token on page dismount because the state persits unless page is refreshed.
       dispatch(removeToken());
       dispatch(resetRoomState());
       // location.reload();
-      console.log("room client at end of cleanUp: ", _roomClient);
     } catch (error) {
       console.log(error);
       dispatch(setError({ message: `${error.message}` }));
