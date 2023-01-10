@@ -15,7 +15,7 @@
 
   --muted: var(--errorRed);
   --sidebar-li-bg: rgba(255, 255, 255, 0.137);
-  --result-hover: rgba(255, 0, 0, 0.089);
+  --result-hover: rgba(156, 156, 156, 0.089);
   --input-bg: rgb(233, 233, 233);
   --videoBG: rgb(255, 255, 255);
   --localBG: rgb(226, 73, 73);
@@ -649,7 +649,7 @@ video {
 
 .no-click-svg {
   pointer-events: none !important;
-   * > {
+  * > {
     pointer-events: none !important;
   }
 }

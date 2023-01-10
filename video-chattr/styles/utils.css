@@ -167,7 +167,7 @@
 }
 
 .offOverflow {
-  overflow: visible;
+  overflow: visible !important;
 }
 
 .small {
