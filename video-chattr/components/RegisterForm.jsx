@@ -7,7 +7,7 @@ import { setError } from "../features/utils/utilsSlice";
 import { setSuccess } from "../features/utils/utilsSlice";
 
 const RegisterForm = () => {
-  const { isError, message } = useSelector((state) => state.auth);
+  const { isError, message, isSuccess } = useSelector((state) => state.auth);
   const passLength = 4;
   const [valid, setValid] = useState(true);
   const [formData, setFormData] = useState({
@@ -22,6 +22,17 @@ const RegisterForm = () => {
       dispatch(setError({ message: message }));
     }
   }, [isError, message]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(
+        setSuccess({
+          message: "An account has been succesfully created!",
+          push: "/dashboard",
+        })
+      );
+    }
+  }, [isSuccess]);
 
   useEffect(() => {
     const inputs = document.querySelectorAll("input.input");
@@ -70,12 +81,6 @@ const RegisterForm = () => {
     if (!valid) return;
     // await register({ username, password: password2 });
     dispatch(register({ username: username, password: password2 }));
-    dispatch(
-      setSuccess({
-        message: "An account has been succesfully created!",
-        push: "/dashboard",
-      })
-    );
   };
 
   const onChange = (e) => {
