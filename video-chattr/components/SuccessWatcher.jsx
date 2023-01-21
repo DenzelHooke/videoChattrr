@@ -1,8 +1,6 @@
 import React from "react";
 
 const SuccessWatcher = () => {
-  const dispatch = useDispatch();
-
   const { isSuccess, message, push } = useSelector((state) => state.utils);
   // 5 seconds before err dissapears
   const duration = 5;

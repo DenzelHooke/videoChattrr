@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { reset } from "../features/auth/authSlice";
 import Form from "../components/Form";
 import SignupForm from "../components/SignupForm";
+import RegisterForm from "../components/RegisterForm";
 import styles from "../styles/Index.module.scss";
 import { MdHome } from "react-icons/md";
 import { AiFillThunderbolt } from "react-icons/ai";
@@ -35,7 +36,7 @@ export default function Home() {
               </p>
             </div>
             <Form
-              form={<SignupForm />}
+              form={<RegisterForm />}
               svg={<MdHome size={55} />}
               message="Get Started"
               className="card"
