@@ -60,7 +60,7 @@ const NewUserForm = ({ onSubmit, onChange, formData }) => {
         />
       </div>
       <button type="submit" className="button btn_blue">
-        Create Account
+        Create account
       </button>
     </form>
   );

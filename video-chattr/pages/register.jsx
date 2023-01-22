@@ -19,7 +19,8 @@ export default function Register() {
     <div className="main center">
       {
         <Form
-          message="Register Now"
+          className="box-panel"
+          message="Create account"
           form={<RegisterForm />}
           svg={<BsFillPersonPlusFill size={55} />}
         />

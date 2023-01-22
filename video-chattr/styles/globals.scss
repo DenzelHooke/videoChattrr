@@ -4,7 +4,7 @@
   --azure: rgba(0, 122, 235, 1);
   --azureHover: rgb(16, 116, 209);
   --eerie-black: rgba(33, 33, 33, 1);
-  --white: rgb(247, 247, 247);
+  --white: #f7f7f7
   --yellowish: #ffe333;
   --callBG: rgba(190, 190, 190, 0.157);
   --errorRed: rgb(221, 50, 50);
@@ -29,6 +29,7 @@
   --dashedBG: rgb(0, 0, 0);
   --not-savedBG: rgba(255, 255, 255, 0.394);
   --savedBG: rgb(37, 37, 37);
+  --box-panelBG: #89AB92;
 }
 
 body {
@@ -94,6 +95,13 @@ a {
 //     outline: none;
 //   }
 // }
+
+.box-panel {
+  // background-color: #e5e5e5;
+  padding: 40px 10px;
+  border-radius: 10px;
+  // box-shadow: 0px 8px 4px 5px rgba(0, 0, 0, 0.176);
+}
 
 .form-control {
   // --input-color: rgba(0, 0, 0, 0.519);

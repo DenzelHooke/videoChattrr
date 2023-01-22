@@ -24,8 +24,9 @@ export default function Login() {
   return (
     <div className="main center">
       <Form
+        className="box-panel"
         form={<LoginForm />}
-        message="Welcome Back!"
+        message="Welcome Back"
         svg={<AiOutlineLogin size={55} />}
       />
     </div>
